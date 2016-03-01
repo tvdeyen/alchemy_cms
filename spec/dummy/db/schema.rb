@@ -205,6 +205,12 @@ ActiveRecord::Schema.define(version: 2018_04_09_171801) do
     t.index ["urlname"], name: "index_alchemy_legacy_page_urls_on_urlname"
   end
 
+  create_table "alchemy_page_versions", force: :cascade do |t|
+    t.integer "page_id"
+    t.string "title"
+    t.index ["page_id"], name: "index_alchemy_page_versions_on_page_id"
+  end
+
   create_table "alchemy_pages", force: :cascade do |t|
     t.string "name"
     t.string "urlname"
