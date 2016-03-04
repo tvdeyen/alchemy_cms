@@ -49,7 +49,7 @@ module Alchemy
 
         context 'and the root page is not public' do
           before do
-            default_language_root.update!(public_on: nil)
+            default_language_root.update!(public_on: nil, public_version_id: nil)
           end
 
           context 'and redirect_to_public_child is set to false' do

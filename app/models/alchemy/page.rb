@@ -88,6 +88,14 @@ module Alchemy
 
     belongs_to :language, optional: true
 
+    belongs_to :current_version,
+      class_name: 'Alchemy::PageVersion',
+      optional: true
+
+    belongs_to :public_version,
+      class_name: 'Alchemy::PageVersion',
+      optional: true
+
     has_one :site, through: :language
     has_many :site_languages, through: :site, source: :languages
     has_many :folded_pages
@@ -125,6 +133,9 @@ module Alchemy
     before_create :set_language_from_parent_or_default,
       if: -> { language_id.blank? },
       unless: :systempage?
+
+    after_create :create_current_version!,
+      unless: -> { systempage? || redirects_to_external? }
 
     after_update :create_legacy_url,
       if: :should_create_legacy_url?,
@@ -469,6 +480,12 @@ module Alchemy
       fixed_attributes.all.each do |attribute, value|
         send("#{attribute}=", value)
       end
+    end
+
+    # ActiveRecord doesn't seem to be as smart as one might think :(
+    def create_current_version!
+      build_current_version(page_id: id)
+      save!
     end
 
     def select_page(pages, options = {})

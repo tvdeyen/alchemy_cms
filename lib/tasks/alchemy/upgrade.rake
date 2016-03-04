@@ -45,11 +45,19 @@ namespace :alchemy do
     end
 
     namespace '4.1' do
-      task run: ['alchemy:upgrade:4.1:harden_acts_as_taggable_on_migrations']
+      task run: [
+        'alchemy:upgrade:4.1:harden_acts_as_taggable_on_migrations',
+        'alchemy:upgrade:4.1:create_page_versions'
+      ]
 
       desc 'Harden acts_as_taggable_on migrations'
       task harden_acts_as_taggable_on_migrations: [:environment] do
         Alchemy::Upgrader::FourPointOne.harden_acts_as_taggable_on_migrations
+      end
+
+      desc 'Create versions for pages'
+      task create_page_versions: [:environment] do |t|
+        Alchemy::Upgrader::FourPointOne.create_page_versions
       end
 
       task :todo do
