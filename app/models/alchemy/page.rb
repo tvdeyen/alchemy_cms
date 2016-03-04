@@ -403,7 +403,7 @@ module Alchemy
       end
     end
 
-    # Publishes the page.
+    # Takes the current version and sets it as public version.
     #
     # Sets +public_on+ and the +published_at+ value to current time
     # and resets +public_until+ to nil
@@ -413,6 +413,7 @@ module Alchemy
     def publish!
       current_time = Time.current
       update_columns(
+        public_version_id: current_version_id,
         published_at: current_time,
         public_on: already_public_for?(current_time) ? public_on : current_time,
         public_until: still_public_for?(current_time) ? public_until : nil
