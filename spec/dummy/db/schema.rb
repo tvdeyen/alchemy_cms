@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(version: 2018_04_09_171801) do
   create_table "alchemy_elements", force: :cascade do |t|
     t.string "name"
     t.integer "position"
-    t.integer "page_id", null: false
+    t.integer "page_version_id", null: false
     t.boolean "public", default: true
     t.boolean "folded", default: false
     t.boolean "unique", default: false
@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(version: 2018_04_09_171801) do
     t.integer "cell_id"
     t.integer "parent_element_id"
     t.index ["cell_id"], name: "index_alchemy_elements_on_cell_id"
-    t.index ["page_id", "parent_element_id"], name: "index_alchemy_elements_on_page_id_and_parent_element_id"
-    t.index ["page_id", "position"], name: "index_elements_on_page_id_and_position"
+    t.index ["page_version_id", "parent_element_id"], name: "alchemy_elements_page_version_parent_element_idx"
+    t.index ["page_version_id", "position"], name: "index_elements_on_page_id_and_position"
   end
 
   create_table "alchemy_elements_alchemy_pages", id: false, force: :cascade do |t|
