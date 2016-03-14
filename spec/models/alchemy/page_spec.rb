@@ -979,9 +979,7 @@ module Alchemy
     describe "#elements" do
       let(:page) do
         page = create(:alchemy_page, :public)
-        # TODO: Investigate why this is horribly broken in AR!
-        page.build_public_version(page_id: page.id)
-        page.save!
+        page.create_public_version
         page
       end
 
@@ -1062,7 +1060,7 @@ module Alchemy
     describe "#descendent_elements" do
       let!(:page) do
         page = create(:alchemy_page)
-        page.create_public_version!(page_id: page.id)
+        page.create_public_version
         page
       end
 
@@ -1088,7 +1086,7 @@ module Alchemy
     describe "#descendent_contents" do
       let!(:page) do
         page = create(:alchemy_page)
-        page.create_public_version!(page_id: page.id)
+        page.create_public_version
         page
       end
 
@@ -1285,7 +1283,7 @@ module Alchemy
     describe '#feed_elements' do
       let(:page) do
         page = create(:alchemy_page, :public, page_layout: 'news')
-        page.create_public_version!(page_id: page.id)
+        page.create_public_version
         page
       end
 

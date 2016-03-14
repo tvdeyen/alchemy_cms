@@ -220,10 +220,7 @@ module Alchemy
       end
 
       it "should include content" do
-        # TODO: Investigate why this is horribly broken in AR!
-        page.build_public_version(page_id: page.id)
-        page.save!
-        page.public_version.elements << page.current_elements
+        page.create_public_version
         page.elements.first.content_by_name('news_headline').essence.update_attributes({body: 'Peters Petshop'})
         get :show, params: {urlname: 'news', format: :rss}
         expect(response.body).to match /Peters Petshop/
@@ -257,9 +254,7 @@ module Alchemy
       before do
         allow(Alchemy.user_class).to receive(:admins).and_return(OpenStruct.new(count: 1))
         stub_alchemy_config(:url_nesting, true)
-        product.build_public_version(page_id: product.id)
-        product.save!
-        product.public_version.elements << product.current_elements
+        product.create_public_version
         product.elements.find_by(name: 'article').contents.essence_texts.first.essence.update_column(:body, 'screwdriver')
       end
 
@@ -316,19 +311,13 @@ module Alchemy
 
         let!(:klingon_page) do
           page = create(:alchemy_page, :public, language: klingon, name: "same-name", do_not_autogenerate: false)
-          # TODO: Investigate why this is horribly broken in AR!
-          page.build_public_version(page_id: page.id)
-          page.save!
-          page.public_version.elements << page.current_elements
+          page.create_public_version
           page
         end
 
         let!(:english_page) do
           page = create(:alchemy_page, :public, language: default_language, name: "same-name")
-          # TODO: Investigate why this is horribly broken in AR!
-          page.build_public_version(page_id: page.id)
-          page.save!
-          page.public_version.elements << page.current_elements
+          page.create_public_version
           page
         end
 
