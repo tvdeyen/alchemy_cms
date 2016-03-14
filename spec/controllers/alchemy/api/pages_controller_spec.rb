@@ -73,7 +73,7 @@ module Alchemy
     describe '#nested' do
       let!(:page) do
         page = create(:alchemy_page, :public, page_layout: 'contact')
-        page.create_public_version
+        page.publish!
         page
       end
 
