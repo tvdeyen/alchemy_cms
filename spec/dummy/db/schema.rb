@@ -208,18 +208,17 @@ ActiveRecord::Schema.define(version: 2018_04_09_171801) do
   create_table "alchemy_page_versions", force: :cascade do |t|
     t.integer "page_id"
     t.string "title"
+    t.string "meta_keywords"
+    t.string "meta_description"
     t.index ["page_id"], name: "index_alchemy_page_versions_on_page_id"
   end
 
   create_table "alchemy_pages", force: :cascade do |t|
     t.string "name"
     t.string "urlname"
-    t.string "title"
     t.string "language_code"
     t.boolean "language_root"
     t.string "page_layout"
-    t.text "meta_keywords"
-    t.text "meta_description"
     t.integer "lft"
     t.integer "rgt"
     t.integer "parent_id"
