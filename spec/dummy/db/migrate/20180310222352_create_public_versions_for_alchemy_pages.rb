@@ -1,0 +1,1 @@
+../../../../db/migrate/20180310222352_create_public_versions_for_alchemy_pages.rb
