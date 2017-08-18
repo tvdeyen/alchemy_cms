@@ -77,8 +77,10 @@ module Alchemy
       end
 
       context "as author" do
+        let(:user) { create(:alchemy_dummy_user, :as_author) }
+
         before do
-          authorize_user(build(:alchemy_dummy_user, :as_author))
+          authorize_user(user)
         end
 
         it "returns all pages as nested json tree with admin related infos", :aggregate_failures do
@@ -102,6 +104,20 @@ module Alchemy
           expect(child).to have_key('locked')
           expect(child).to have_key('permissions')
           expect(child).to have_key('status_titles')
+        end
+
+        context 'when full is set to false' do
+          context 'when page is folded' do
+            before do
+              page.parent.fold!(user.id, true)
+            end
+
+            it 'does not include children' do
+              get :nested, params: {full: false, format: :json}
+              result = JSON.parse(response.body)
+              expect(result['pages'][0]['children']).to be_empty
+            end
+          end
         end
       end
 
