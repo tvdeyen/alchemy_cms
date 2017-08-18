@@ -11,13 +11,12 @@ module Alchemy
         except: [:show]
 
       before_action :load_page,
-        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold,
-               :tree]
+        only: [:show, :info, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold]
 
       before_action :set_root_page,
         only: [:index, :show, :sort, :order]
 
-      authorize_resource class: Alchemy::Page, except: [:index, :tree]
+      authorize_resource class: Alchemy::Page, except: [:index]
 
       before_action :run_on_page_layout_callbacks,
         if: :run_on_page_layout_callbacks?,
@@ -32,14 +31,6 @@ module Alchemy
           @languages_with_page_tree = Language.on_current_site.with_root_page
           @page_layouts = PageLayout.layouts_for_select(@language.id)
         end
-      end
-
-      # Returns all pages as a tree from the root given by the id parameter
-      #
-      def tree
-        authorize! :tree, :alchemy_admin_pages
-
-        render json: serialized_page_tree
       end
 
       # Used by page preview iframe in Page#edit view.
