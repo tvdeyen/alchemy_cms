@@ -44,7 +44,7 @@ Alchemy.Sitemap =
     spinner.spin(spinTarget[0])
 
     request = $.ajax url: @options.url, data:
-      id: pageId
+      page_id: pageId
       full: @options.full
 
     request.done (data) ->
