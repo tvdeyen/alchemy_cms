@@ -68,6 +68,7 @@ module Alchemy
 
         child = result['pages'][0]['children'][0]
 
+        expect(child['id']).to eq(page.id)
         expect(child['name']).to eq(page.name)
         expect(child).to_not have_key('definition_missing')
         expect(child).to_not have_key('folded')
@@ -98,12 +99,37 @@ module Alchemy
 
           child = result['pages'][0]['children'][0]
 
+          expect(child['id']).to eq(page.id)
           expect(child['name']).to eq(page.name)
           expect(child).to have_key('definition_missing')
           expect(child).to have_key('folded')
           expect(child).to have_key('locked')
           expect(child).to have_key('permissions')
           expect(child).to have_key('status_titles')
+        end
+
+        context "when page is locked" do
+          before do
+            page.lock_to!(user)
+          end
+
+          it 'includes locked_notice if page is locked' do
+            get :nested, params: {format: :json}
+
+            expect(response.status).to eq(200)
+            expect(response.content_type).to eq('application/json')
+
+            result = JSON.parse(response.body)
+
+            expect(result).to have_key('pages')
+            expect(result['pages'].size).to eq(1)
+            expect(result['pages'][0]).to have_key('children')
+            expect(result['pages'][0]['children'].size).to eq(1)
+
+            child = result['pages'][0]['children'][0]
+            expect(child).to have_key('locked_notice')
+            expect(child['locked_notice']).to match(/#{user.name}/)
+          end
         end
 
         context 'when full is set to false' do
