@@ -1,6 +1,8 @@
 // Alchemy CMS Sprockets Manifest
 // ------------------------------
 //= require jquery2
+//= require underscore
+//= require backbone
 //= require jquery_ujs
 //= require turbolinks
 //= require jquery-ui/draggable
