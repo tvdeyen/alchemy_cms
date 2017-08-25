@@ -101,6 +101,8 @@
       Alchemy.locale = '<%= ::I18n.locale %>';
       // Setting the correct locale for select2 dropdown replacement.
       $.extend($.fn.select2.defaults, $.fn.select2.locales['<%= ::I18n.locale %>']);
+      // Expose Rails translation into JS land
+      $.extend(Alchemy.translations['<%= I18n.locale %>'], <%== I18n.t(:alchemy).to_json %>);
     </script>
     <%= render 'alchemy/admin/uploader/setup' %>
     <%= yield(:javascripts) %>

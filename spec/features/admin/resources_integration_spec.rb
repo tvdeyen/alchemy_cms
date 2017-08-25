@@ -84,11 +84,15 @@ describe "Resources" do
       end
 
       it "lists invalid fields" do
-        expect(page).to have_content("can't be blank")
+        within 'form.alchemy' do
+          expect(page).to have_content("can't be blank")
+        end
       end
 
       it "should not display success notice" do
-        expect(page).not_to have_content("successfully created")
+        within 'form.alchemy' do
+          expect(page).not_to have_content("successfully created")
+        end
       end
     end
   end
