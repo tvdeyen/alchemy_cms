@@ -23,6 +23,7 @@ require 'simple_form'
 require 'select2-rails'
 require 'turbolinks'
 require 'userstamp'
+require 'sprockets/es6'
 
 # Require globally used Alchemy mixins
 require_relative 'alchemy/ability_helper'
