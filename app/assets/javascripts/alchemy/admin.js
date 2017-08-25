@@ -23,6 +23,7 @@
 //= require select2_locale_ru
 //= require select2_locale_it
 //= require handlebars
+//= require alchemy/handlebars_helpers
 //= require alchemy/templates
 //= require alchemy/models
 //= require alchemy/views
