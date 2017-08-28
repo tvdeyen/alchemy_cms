@@ -34,7 +34,7 @@ Alchemy.Views.ElementsWindow = Backbone.View.extend({
     $(this.options.container).append(this.$el);
     $(window).resize(()=> this.resize());
     this.render();
-    // TODO: Show spinner and load elements collection and append editors to element area
+    this._fetchElements();
   },
 
   render() {
@@ -70,6 +70,20 @@ Alchemy.Views.ElementsWindow = Backbone.View.extend({
   show() {
     this.$el.css({right: 0});
     this.hidden = false;
+  },
+
+  _fetchElements() {
+    let collection = new Alchemy.Collections.Elements(this.page_id);
+    let spinner = new Alchemy.Spinner('medium');
+    spinner.spin(this.$('#element_area')[0]);
+    collection.fetch({
+      reset: true,
+      success: (collection) => {
+        let view = new Alchemy.Views.ElementEditors({collection});
+        spinner.stop();
+        view.render();
+      }
+    });
   },
 
   _clickNewElementButton() {

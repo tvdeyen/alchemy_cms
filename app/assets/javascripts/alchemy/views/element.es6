@@ -5,6 +5,10 @@
 //= require jquery_plugins/jquery.scrollTo.min
 
 Alchemy.Views.Element = Backbone.View.extend({
+  model: Alchemy.Models.Element,
+  className: 'element-editor',
+  template: HandlebarsTemplates.element,
+
   SCROLL_TO_OPTIONS: {
     duration: 400,
     offset: -10
@@ -19,10 +23,14 @@ Alchemy.Views.Element = Backbone.View.extend({
   },
 
   initialize() {
-    this.element_id = this.$el.attr('id').replace(/\D/g, '');
+    this.element_id = this.model.get('id');
     this.$element_area = $('#element_area');
     this.$element_editors = $('.element-editor', this.$element_area);
     this.model.on('change', () => this.render());
+  },
+
+  render() {
+    this.$el.html(this.template(this.model.attributes));
   },
 
   // Click event handler for element head.
@@ -66,11 +74,10 @@ Alchemy.Views.Element = Backbone.View.extend({
   // Selects and scrolls to element with given id in the preview window.
   //
   selectElementInPreview() {
-    var element_id = this.$el.attr('id').replace(/\D/g, '');
-    var $frame_elements = document.getElementById("alchemy_preview_window")
+    let $frame_elements = document.getElementById("alchemy_preview_window")
       .contentWindow.jQuery("[data-alchemy-element]");
 
-    $selected_element = $frame_elements.closest('[data-alchemy-element="'+element_id+'"]');
+    let $selected_element = $frame_elements.closest(`[data-alchemy-element="${this.element_id}"]`);
     $selected_element.trigger('SelectPreviewElement.Alchemy');
   },
 
