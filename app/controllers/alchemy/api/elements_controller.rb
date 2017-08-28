@@ -2,6 +2,8 @@
 
 module Alchemy
   class Api::ElementsController < Api::BaseController
+    before_action :load_element, only: [:show, :update]
+
     # Returns all elements as json object
     #
     # You can either load all or only these for :page_id param
@@ -22,9 +24,31 @@ module Alchemy
     # Returns a json object for element
     #
     def show
-      @element = Element.find(params[:id])
       authorize! :show, @element
       respond_with @element
+    end
+
+    def update
+      authorize! :update, @element
+
+      if @element.update(element_params)
+        respond_with @element
+      else
+        render json: {
+          error: 'Invalid resource',
+          errors: @element.errors.to_hash
+        }, status: 422
+      end
+    end
+
+    private
+
+    def load_element
+      @element = Element.find(params[:id])
+    end
+
+    def element_params
+      params.require(:element).permit(:folded, :public)
     end
   end
 end
