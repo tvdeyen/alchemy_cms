@@ -1,0 +1,24 @@
+{{> 'element/_header'}}
+
+{{#unless folded}}
+  {{> 'element/_toolbar'}}
+
+  <form class="element-content element-form" id="element-{{id}}-form">
+    <div class="element_errors"></div>
+    <div class="element-content-editors">
+      <!-- render_editor(element) -->
+    </div>
+  </form>
+
+  <div class="element-footer">
+    {{#if hasValidations }}
+      <p class="validation_notice">
+        <span class="validation_indicator">*</span>
+        {{t 'Mandatory'}}
+      </p>
+    {{/if}}
+    <button type="submit" class="button" data-alchemy-button form="element-{{id}}-form">
+      {{t 'save'}}
+    </button>
+  </div>
+{{/unless}}

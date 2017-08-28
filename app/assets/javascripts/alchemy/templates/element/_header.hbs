@@ -1,0 +1,23 @@
+<div class="element-header">
+  <span class="element-handle">
+    <span class="icon element"></span>
+    {{#if public}}
+      <span class="icon element_public"></span>
+    {{else}}
+      <span class="icon element_draft"></span>
+    {{/if}}
+  </span>
+  <span class="element-title">
+    <span class="preview_text_element_name">{{display_name}}</span>
+    <span class="preview_text_quote">
+      {{preview_text}}
+    </span>
+  </span>
+  <span class="ajax-folder">
+    {{#if folded}}
+      <a class="expand_element" title="{{ t 'show_element_content' }}"></a>
+    {{else}}
+      <a class="fold_element" title="{{ t 'hide_element_content' }}"></a>
+    {{/if}}
+  </span>
+</div>

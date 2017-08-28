@@ -1,0 +1,32 @@
+<div class="element-toolbar">
+  <span class="element_tools">
+    <div class="button_with_label">
+      <a class="icon_button">
+        <span class="icon element_copy"></span>
+      </a>
+      <label>{{t 'copy_element'}}</label>
+    </div>
+    <div class="button_with_label">
+      <a class="icon_button">
+        <span class="icon cut"></span>
+      </a>
+      <label>{{t 'cut_element'}}</label>
+    </div>
+    <div class="button_with_label">
+      <a class="icon_button">
+        <span class="icon remove"></span>
+      </a>
+      <label>{{t 'trash element'}}</label>
+    </div>
+    <div class="button_with_label publish-element-button">
+      <a class="icon_button">
+        <span class="icon element-hide"></span>
+      </a>
+      {{#if public}}
+        <label>{{t 'hide_element'}}</label>
+      {{else}}
+        <label>{{t 'show_element'}}</label>
+      {{/if}}
+    </div>
+  </span>
+</div>
