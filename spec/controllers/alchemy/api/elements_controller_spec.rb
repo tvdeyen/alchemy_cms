@@ -122,5 +122,35 @@ module Alchemy
         end
       end
     end
+
+    describe '#update' do
+      let(:page)    { create(:alchemy_page) }
+      let(:element) { create(:alchemy_element, page: page, position: 1) }
+
+      before do
+        expect(Element).to receive(:find).and_return(element)
+      end
+
+      context 'as guest' do
+        it 'refuses request' do
+          put :update, params: {id: element.id, format: :json}
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context 'as author' do
+        before do
+          authorize_user(build(:alchemy_dummy_user, :as_author))
+        end
+
+        it 'updates element' do
+          expect {
+            put :update, params: {id: element.id, element: {folded: true, public: false}, format: :json}
+          }.to change { element.folded? }.from(false).to(true)
+
+          expect(response.status).to eq(204)
+        end
+      end
+    end
   end
 end
