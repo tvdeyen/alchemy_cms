@@ -119,7 +119,7 @@ module Alchemy
         expect(Element).to receive(:find).and_return(element)
       end
 
-      it "returns element as json" do
+      it "returns element as json without admin relevant attributes" do
         get :show, params: {id: element.id, format: :json}
 
         expect(response.status).to eq(200)
@@ -128,6 +128,30 @@ module Alchemy
         result = JSON.parse(response.body)
 
         expect(result['id']).to eq(element.id)
+        expect(result).to_not have_key('folded')
+        expect(result).to_not have_key('public')
+        expect(result).to_not have_key('display_name')
+        expect(result).to_not have_key('preview_text')
+      end
+
+      context 'as author' do
+        before do
+          authorize_user(build(:alchemy_dummy_user, :as_author))
+        end
+
+        it "returns element as json including admin relevant attributes" do
+          get :show, params: {id: element.id, format: :json}
+
+          expect(response.status).to eq(200)
+          expect(response.content_type).to eq('application/json')
+
+          result = JSON.parse(response.body)
+
+          expect(result).to have_key('folded')
+          expect(result).to have_key('public')
+          expect(result).to have_key('display_name')
+          expect(result).to have_key('preview_text')
+        end
       end
 
       context 'requesting an restricted element' do

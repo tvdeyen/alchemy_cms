@@ -67,7 +67,7 @@ module Alchemy
       }
 
       if opts[:elements]
-        p_hash.update(elements: ActiveModel::ArraySerializer.new(page_elements(page)))
+        p_hash.update(elements: ActiveModel::ArraySerializer.new(page_elements(page), scope: opts[:ability]))
       end
 
       if opts[:ability].can?(:index, :alchemy_admin_pages)

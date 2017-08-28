@@ -13,7 +13,19 @@ module Alchemy
       :created_at,
       :updated_at,
       :ingredients,
-      :content_ids
+      :content_ids,
+      :folded,
+      :public,
+      :preview_text,
+      :display_name
+
+    def filter(keys)
+      if scope.can?(:manage, object)
+        keys
+      else
+        keys - [:folded, :public, :preview_text, :display_name]
+      end
+    end
 
     has_many :nested_elements
 
