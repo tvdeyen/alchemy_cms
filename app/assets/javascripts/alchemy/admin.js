@@ -26,6 +26,7 @@
 //= require alchemy/handlebars_helpers
 //= require alchemy/templates
 //= require alchemy/models
+//= require alchemy/collections
 //= require alchemy/views
 //= require alchemy/alchemy.base
 //= require alchemy/alchemy.autocomplete

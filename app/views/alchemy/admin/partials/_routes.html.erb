@@ -32,6 +32,14 @@
     order_admin_pages_path: '<%= alchemy.order_admin_pages_path %>',
     link_admin_pages_path: '<%= alchemy.link_admin_pages_path %>',
 
-    api_elements_path: '<%= alchemy.api_elements_path %>'
+    api_elements_path: function(page_id) {
+      var url;
+      if (page_id) {
+        url = '<%= alchemy.api_page_elements_path(page_id: ':page_id') %>'.replace(':page_id', page_id);
+      } else {
+        url = '<%= alchemy.api_elements_path %>';
+      }
+      return url;
+    }
   };
 </script>
