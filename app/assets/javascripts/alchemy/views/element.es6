@@ -19,7 +19,8 @@ Alchemy.Views.Element = Backbone.View.extend({
     'dblclick .element-header': 'onDoubleClick',
     'click .ajax-folder': 'onDoubleClick',
     'FocusElementEditor.Alchemy': 'onFocusElement',
-    'SaveElement.Alchemy': 'onSaveElement'
+    'SaveElement.Alchemy': 'onSaveElement',
+    'click .publish-element-button a': 'onPublishElement'
   },
 
   initialize() {
@@ -53,6 +54,11 @@ Alchemy.Views.Element = Backbone.View.extend({
     e.preventDefault();
     e.stopPropagation();
     this.toggle();
+    return false;
+  },
+
+  onPublishElement(e) {
+    this.model.set('public', !this.model.get('public'));
     return false;
   },
 
