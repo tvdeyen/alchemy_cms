@@ -15,18 +15,15 @@ Alchemy.Views.Element = Backbone.View.extend({
   },
 
   events: {
-    'click .element-header': 'onClick',
-    'dblclick .element-header': 'onDoubleClick',
-    'click .ajax-folder': 'onDoubleClick',
-    'FocusElementEditor.Alchemy': 'onFocusElement',
-    'SaveElement.Alchemy': 'onSaveElement',
-    'click .publish-element-button a': 'onPublishElement'
+    'click .element-header': 'focus',
+    'dblclick .element-header': 'toggle',
+    'click .ajax-folder': 'toggle',
+    'click .publish-element-button a': 'publish'
   },
 
   initialize() {
     this.element_id = this.model.get('id');
     this.$element_area = $('#element_area');
-    this.$element_editors = $('.element-editor', this.$element_area);
     this.model.on('change', () => this.render());
   },
 
@@ -34,35 +31,19 @@ Alchemy.Views.Element = Backbone.View.extend({
     this.$el.html(this.template(this.model.attributes));
   },
 
-  // Click event handler for element head.
+  // Focus element editor.
   //
-  // - Focuses the element
-  // - Triggers custom 'SelectPreviewElement.Alchemy' event on target element in preview frame.
+  // Triggers custom 'SelectPreviewElement.Alchemy' event on target element in preview frame.
   //
-  onClick(e) {
-    this.$element_editors.removeClass('selected');
+  focus() {
+    $('.element-editor', this.$element_area).removeClass('selected');
     this.$el.addClass('selected');
     this.$element_area.scrollTo(this.$el, this.SCROLL_TO_OPTIONS);
-    this.selectElementInPreview();
-    e.preventDefault();
-    e.stopPropagation();
+    this._selectElementInPreview();
     return false;
   },
 
-  // Double click event handler for element head.
-  onDoubleClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.toggle();
-    return false;
-  },
-
-  onPublishElement(e) {
-    this.model.set('public', !this.model.get('public'));
-    return false;
-  },
-
-  // Expands or folds a element editor
+  // Expands or folds an element editor
   //
   toggle() {
     if (Alchemy.isElementDirty(this.el)) {
@@ -77,13 +58,20 @@ Alchemy.Views.Element = Backbone.View.extend({
     }
   },
 
+  // Publishes or unpublishes an element
+  //
+  publish() {
+    this.model.set('public', !this.model.get('public'));
+    return false;
+  },
+
   // Selects and scrolls to element with given id in the preview window.
   //
-  selectElementInPreview() {
+  _selectElementInPreview() {
     let $frame_elements = document.getElementById("alchemy_preview_window")
       .contentWindow.jQuery("[data-alchemy-element]");
-
-    let $selected_element = $frame_elements.closest(`[data-alchemy-element="${this.element_id}"]`);
+    let $selected_element = $frame_elements
+      .closest(`[data-alchemy-element="${this.element_id}"]`);
     $selected_element.trigger('SelectPreviewElement.Alchemy');
   },
 
