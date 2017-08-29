@@ -25,10 +25,17 @@ Alchemy.Views.Element = Backbone.View.extend({
     this.element_id = this.model.get('id');
     this.$element_area = $('#element_area');
     this.model.on('change', () => this.render());
+    if (this.model.contents.length > 0) {
+      this.$el.addClass('with-contents');
+    }
   },
 
   render() {
     this.$el.html(this.template(this.model.attributes));
+    // Render all content views unless element is folded
+    if (!this.model.get('folded')) {
+      this._renderContentViews();
+    }
   },
 
   // Focus element editor.
@@ -78,5 +85,22 @@ Alchemy.Views.Element = Backbone.View.extend({
   _toggleFold() {
     this.model.set('folded', !this.model.get('folded'));
     Alchemy.setElementClean(this.$el);
+  },
+
+  _renderContentViews() {
+    let $content_area = this.$('.element-content-editors');
+    _.each(this.model.contents, (content) => {
+      // Render the view for content's essence class with data from content's essence model
+      let essence_class_name = content.get('essence_class_name');
+      let essence_view_class = Alchemy.Views[essence_class_name];
+
+      if (essence_view_class) {
+        let view = new essence_view_class({model: content});
+        view.$el.appendTo($content_area);
+        view.render();
+      } else {
+        console.warn(`No Backbone view found for ${essence_class_name}!`);
+      }
+    });
   }
 });
