@@ -1,0 +1,35 @@
+<label>{{label}}</label>
+<div class="picture_thumbnail">
+  <span class="picture_tool delete">
+    <a></a>
+  </span>
+  <div class="picture_handle"></div>
+  <div class="picture_image">
+    {{#with essence}}
+      {{#if thumbnail_url}}
+        <div class="thumbnail_background">
+          <img class="img_paddingtop" src="{{thumbnail_url}}">
+        </div>
+      {{else}}
+        <div class="thumbnail_background missing"></div>
+      {{/if}}
+    {{/with}}
+  </div>
+  <div class="edit_images_bottom">
+    <a title="Edit picturemask">
+      <span class="icon crop"></span>
+    </a>
+    <a title="Change image">
+      <span class="icon swap_picture"></span>
+    </a>
+    <a title="Link this image">
+      <span class="icon link"></span>
+    </a>
+    <a title="Remove link from this image" class="disabled">
+      <span class="icon unlink"></span>
+    </a>
+    <a title="Edit image properties">
+      <span class="icon edit"></span>
+    </a>
+  </div>
+</div>
