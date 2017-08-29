@@ -124,6 +124,7 @@ module Alchemy
         expect(result['id']).to eq(element.id)
         expect(result).to_not have_key('folded')
         expect(result).to_not have_key('public')
+        expect(result).to_not have_key('contents')
       end
 
       context 'as author' do
@@ -141,6 +142,7 @@ module Alchemy
 
           expect(result).to have_key('folded')
           expect(result).to have_key('public')
+          expect(result).to have_key('contents')
         end
       end
 
