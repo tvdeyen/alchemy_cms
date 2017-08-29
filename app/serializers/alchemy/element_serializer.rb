@@ -19,11 +19,13 @@ module Alchemy
       :preview_text,
       :display_name
 
+    has_many :contents
+
     def filter(keys)
       if scope.can?(:manage, object)
-        keys
+        keys - [:content_ids, :ingredients]
       else
-        keys - [:folded, :public, :preview_text, :display_name]
+        keys - [:folded, :public, :preview_text, :display_name, :contents]
       end
     end
 

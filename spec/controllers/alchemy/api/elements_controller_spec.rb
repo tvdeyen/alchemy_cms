@@ -132,6 +132,9 @@ module Alchemy
         expect(result).to_not have_key('public')
         expect(result).to_not have_key('display_name')
         expect(result).to_not have_key('preview_text')
+        expect(result).to_not have_key('contents')
+        expect(result).to have_key('ingredients')
+        expect(result).to have_key('content_ids')
       end
 
       context 'as author' do
@@ -151,6 +154,9 @@ module Alchemy
           expect(result).to have_key('public')
           expect(result).to have_key('display_name')
           expect(result).to have_key('preview_text')
+          expect(result).to have_key('contents')
+          expect(result).to_not have_key('ingredients')
+          expect(result).to_not have_key('content_ids')
         end
       end
 
