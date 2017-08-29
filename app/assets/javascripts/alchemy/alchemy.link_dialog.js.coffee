@@ -1,3 +1,5 @@
+#= require alchemy/alchemy.dialog
+#
 # Represents the link Dialog that appears, if a user clicks the link buttons
 # in TinyMCE or on an Essence that has links enabled (e.g. EssencePicture)
 #

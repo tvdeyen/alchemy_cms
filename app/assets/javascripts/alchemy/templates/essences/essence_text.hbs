@@ -1,4 +1,7 @@
-<label>
-  {{label}}
-  <input value="{{ingredient}}" class="thin_border" type="text">
-</label>
+<label>{{label}}</label>
+<input value="{{ingredient}}" class="thin_border" type="text">
+{{#with settings}}
+  {{#if linkable}}
+    {{> 'essences/_linkable_essence_tools'}}
+  {{/if}}
+{{/with}}
