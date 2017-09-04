@@ -223,23 +223,5 @@ module Alchemy
         it { is_expected.to be_nil }
       end
     end
-
-    describe '#link_url_regexp' do
-      subject { helper.link_url_regexp }
-
-      it "returns the regular expression for external link urls" do
-        expect(subject).to be_a(Regexp)
-      end
-
-      context 'if the expression from config is nil' do
-        before do
-          stub_alchemy_config(:format_matchers, {link_url: nil})
-        end
-
-        it "returns the default expression" do
-          expect(subject).to_not be_nil
-        end
-      end
-    end
   end
 end
