@@ -143,30 +143,6 @@ kbd {
   @extend %rounded-border;
 }
 
-.top-rounded-border {
-  @include border-top-radius($default-border-radius);
-}
-
-.left-rounded-border {
-  @include border-left-radius($default-border-radius);
-}
-
-.right-rounded-border {
-  @include border-right-radius($default-border-radius);
-}
-
-.bottom-rounded-border {
-  @include border-bottom-radius($default-border-radius);
-}
-
-.bottom-left-rounded-border {
-  border-bottom-left-radius: $default-border-radius;
-}
-
-.disable-user-select {
-  user-select: none;
-}
-
 span.updated_at {
   float: right;
 }
