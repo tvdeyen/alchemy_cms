@@ -10,11 +10,13 @@ Alchemy.Views.EssenceText = Backbone.View.extend({
 
   events: {
     'click .link-essence': 'link',
-    'click .unlink-essence': 'unlink'
+    'click .unlink-essence': 'unlink',
+    'change input': 'update'
   },
 
   render() {
     this.$el.html(this.template(this.model.viewAtributes()));
+    this.$input = this.$('input');
   },
 
   link(e) {
@@ -25,5 +27,11 @@ Alchemy.Views.EssenceText = Backbone.View.extend({
   unlink(e) {
     Alchemy.LinkDialog.removeLink(e.target.parentNode, this.model.get('id'));
     return false;
+  },
+
+  update(e) {
+    this.model.setEssence('body', e.target.value);
+    this.$input.blur();
+    return true;
   }
 });
