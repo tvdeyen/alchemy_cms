@@ -32,5 +32,17 @@ module Alchemy
       authorize! :show, @content
       respond_with @content
     end
+
+    def batch
+      authorize! :update, Alchemy::Content
+      @contents = params['_json'].map do |content_params|
+        content = Alchemy::Content.find(content_params[:id])
+        essence_params = content_params[:essence]
+        essence_attributes = essence_params[essence_params[:type]].permit(:body, :link)
+        content.essence.update(essence_attributes)
+        content
+      end
+      render json: @contents
+    end
   end
 end
