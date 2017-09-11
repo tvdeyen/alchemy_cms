@@ -130,6 +130,7 @@ Alchemy::Engine.routes.draw do
 
   namespace :api, defaults: {format: 'json'} do
     resources :contents, only: [:index, :show]
+    patch '/contents' => 'contents#batch', as: 'batch_contents'
 
     resources :elements, only: [:index, :show, :update] do
       get '/contents' => 'contents#index', as: 'contents'
