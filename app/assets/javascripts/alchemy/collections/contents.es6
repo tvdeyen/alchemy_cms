@@ -3,7 +3,7 @@
 
 Alchemy.Collections.Contents = Backbone.Collection.extend({
   model: Alchemy.Models.Content,
-  url: Alchemy.routes.batch_contents_path,
+  url: Alchemy.routes.api_batch_contents_path,
   comparator: 'position',
 
   save: function() {

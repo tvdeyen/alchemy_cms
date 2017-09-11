@@ -18,7 +18,8 @@ Alchemy.Views.Element = Backbone.View.extend({
     'click .element-header': 'focus',
     'dblclick .element-header': 'toggle',
     'click .ajax-folder': 'toggle',
-    'click .publish-element-button a': 'publish'
+    'click .publish-element-button a': 'publish',
+    'submit .element-form': '_saveContents'
   },
 
   initialize() {
@@ -27,11 +28,16 @@ Alchemy.Views.Element = Backbone.View.extend({
     this.model.on('change', () => this.render());
     if (this.model.contents.length > 0) {
       this.$el.addClass('with-contents');
+      // Re-enable the button after persisting state to the server
+      this.model.contents.on('sync', () => {
+        this._afterSaveContents();
+      });
     }
   },
 
   render() {
     this.$el.html(this.template(this.model.attributes));
+    this.$submit = this.$(`button[form="element-${this.element_id}-form"]`);
     // Render all content views unless element is folded
     if (!this.model.get('folded')) {
       this._renderContentViews();
@@ -102,5 +108,19 @@ Alchemy.Views.Element = Backbone.View.extend({
         console.warn(`No Backbone view found for ${essence_class_name}!`);
       }
     });
+  },
+
+  _saveContents() {
+    Alchemy.Buttons.disable(this.$submit);
+    this.model.contents.save();
+    return false;
+  },
+
+  _afterSaveContents() {
+    Alchemy.Buttons.enableButton(this.$submit);
+    Alchemy.setElementClean(this.$el);
+    if (Alchemy.PreviewWindow) {
+      Alchemy.PreviewWindow.reload();
+    }
   }
 });
