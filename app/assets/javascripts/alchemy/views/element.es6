@@ -89,7 +89,7 @@ Alchemy.Views.Element = Backbone.View.extend({
 
   _renderContentViews() {
     let $content_area = this.$('.element-content-editors');
-    _.each(this.model.contents, (content) => {
+    _.each(this.model.contents.models, (content) => {
       // Render the view for content's essence class with data from content's essence model
       let essence_class_name = content.get('essence_class_name');
       let essence_view_class = Alchemy.Views[essence_class_name];
