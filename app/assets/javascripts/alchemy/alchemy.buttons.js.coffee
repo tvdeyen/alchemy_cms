@@ -32,10 +32,14 @@ Alchemy.Buttons =
 
   enable: (scope) ->
     $buttons = $('form :submit:disabled, [data-alchemy-button].disabled', scope)
-    $.each $buttons, ->
-      $button = $(this)
-      $button.removeClass('disabled')
-      $button.removeAttr('disabled')
-      $button.css("width", "")
-      $button.html($button.data('content'))
+    $.each $buttons, (button) =>
+      @enableButton(button)
+    return true
+
+  enableButton: (button) =>
+    $button = $(button)
+    $button.removeClass('disabled')
+    $button.removeAttr('disabled')
+    $button.css("width", "")
+    $button.html($button.data('content'))
     return true
