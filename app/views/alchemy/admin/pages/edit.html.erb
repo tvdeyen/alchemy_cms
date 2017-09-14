@@ -127,69 +127,8 @@
     });
     Alchemy.Sitemap.watchPagePublicationState();
     Alchemy.PageLeaveObserver();
-    Alchemy.ElementsWindow.init('<%= alchemy.admin_elements_path(page_id: @page.id) %>', {
-      texts: {
-        title: '<%= Alchemy.t("Elements") %>',
-        dirtyTitle: '<%= Alchemy.t("Warning!") %>',
-        dirtyMessage: '<%= Alchemy.t(:element_dirty_close_window_notice) %>',
-        ok_label: '<%= Alchemy.t("Yes") %>',
-        cancel_label: '<%= Alchemy.t("No") %>',
-        hideElements: '<%= Alchemy.t(:hide_elements) %>',
-        showElements: '<%= Alchemy.t(:show_elements) %>'
-      },
-      toolbarButtons: [
-        {
-          title: '<%= Alchemy.t("New Element") %>',
-          label: '<%= Alchemy.t("New Element") %>',
-          hotkey: 'alt+n',
-          iconClass: 'new_element',
-          onClick: function() {
-            Alchemy.openDialog('<%= alchemy.new_admin_element_path(page_id: @page.id) %>', {
-              title: '<%= Alchemy.t("New Element") %>',
-              size: '320x125'
-            });
-          }
-        },
-        {
-          title: '<%= Alchemy.t("Clipboard") %>',
-          label: '<%= Alchemy.t("Show clipboard") %>',
-          iconClass: 'clipboard<%= clipboard_empty?("elements") ? "" : " full" %>',
-          buttonId: 'clipboard_button',
-          onClick: function() {
-            Alchemy.openDialog('<%= alchemy.admin_clipboard_path(remarkable_type: "elements") %>', {
-              title :'<%= Alchemy.t("Clipboard") %>',
-              size: '400x305'
-            });
-          }
-        },
-        {
-          title: '<%= Alchemy.t("Show trash") %>',
-          label: '<%= Alchemy.t("Show trash") %>',
-          iconClass: 'trash<%= trash_empty?("elements") ? "" : " full" %>',
-          buttonId: 'element_trash_button',
-          onClick: function() {
-            Alchemy.TrashWindow.open(<%= @page.id %>, '<%= Alchemy.t("Trash") %>');
-          }
-        }
-      ]
-    }, function() {
-      Alchemy.ImageLoader('#element_area');
-      Alchemy.SortableElements(<%= @page.id %>, '<%= form_authenticity_token %>');
-      Alchemy.ElementEditors.init();
-      Alchemy.SelectBox('.element-editor');
-      Alchemy.Tinymce.init(<%= @page.richtext_contents_ids.to_json %>);
-      $('#cells').tabs().tabs('paging', { follow: true, followOnSelect: true } );
-      Alchemy.ElementDirtyObserver('#element_area');
-      if (window.location.hash) {
-        $(window.location.hash).trigger('FocusElementEditor.Alchemy');
-      }
-    });
-
-    Alchemy.PreviewWindow = new Alchemy.Views.PreviewWindow('<%= alchemy.admin_page_path(@page) %>')
-
-    $(window).resize(function() {
-      Alchemy.ElementsWindow.resize();
-    });
+    Alchemy.ElementsWindow = new Alchemy.Views.ElementsWindow(<%= @page.id %>);
+    Alchemy.PreviewWindow = new Alchemy.Views.PreviewWindow('<%= alchemy.admin_page_path(@page) %>');
   });
 
 </script>
