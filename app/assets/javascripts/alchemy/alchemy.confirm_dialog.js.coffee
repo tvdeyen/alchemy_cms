@@ -1,3 +1,5 @@
+#= require alchemy/alchemy.dialog
+
 class window.Alchemy.ConfirmDialog extends Alchemy.Dialog
 
   DEFAULTS:
