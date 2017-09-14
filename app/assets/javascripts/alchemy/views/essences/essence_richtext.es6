@@ -8,15 +8,18 @@ Alchemy.Views.EssenceRichtext = Backbone.View.extend({
   className: 'essence_richtext content_editor',
   template: HandlebarsTemplates['essences/essence_richtext'],
 
-  render() {
-    let content_id = this.model.get('id');
-    this.$el.html(this.template(this.model.viewAtributes()));
-    Alchemy.Tinymce.initEditor(content_id);
-    let editor = tinymce.get(`tinymce_${content_id}`);
-    editor.on('blur', (e) => { this.update(e); });
+  initialize() {
+    this.content_id = this.model.get('id');
   },
 
-  update(e) {
-    this.model.setEssence('body', e.target.getContent());
+  render() {
+    this.$el.html(this.template(this.model.viewAtributes()));
+    Alchemy.Tinymce.initEditor(this.content_id);
+    this.$el.closest('form').on('submit', ()=> this.update());
+  },
+
+  update() {
+    let editor = tinymce.get(`tinymce_${this.content_id}`);
+    this.model.setEssence('body', editor.getContent());
   }
 });
