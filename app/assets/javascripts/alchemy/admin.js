@@ -24,6 +24,7 @@
 //= require select2_locale_it
 //= require handlebars
 //= require alchemy/templates
+//= require alchemy/views
 //= require alchemy/alchemy.base
 //= require alchemy/alchemy.autocomplete
 //= require alchemy/alchemy.browser
@@ -48,7 +49,6 @@
 //= require alchemy/alchemy.initializer
 //= require alchemy/alchemy.page_sorter
 //= require alchemy/alchemy.uploader
-//= require alchemy/alchemy.preview_window
 //= require alchemy/alchemy.sitemap
 //= require alchemy/alchemy.spinner
 //= require alchemy/alchemy.tinymce
