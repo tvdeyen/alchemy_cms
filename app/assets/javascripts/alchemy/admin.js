@@ -24,6 +24,7 @@
 //= require select2_locale_it
 //= require handlebars
 //= require alchemy/templates
+//= require alchemy/models
 //= require alchemy/views
 //= require alchemy/alchemy.base
 //= require alchemy/alchemy.autocomplete
