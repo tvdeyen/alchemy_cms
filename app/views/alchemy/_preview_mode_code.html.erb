@@ -1,6 +1,4 @@
-<% if @preview_mode %>
-  <script type="text/javascript">
-    Alchemy = { locale: "<%= session[:alchemy_locale] %>" };
-  </script>
-  <%= javascript_include_tag("alchemy/preview") %>
-<% end %>
+<script type="text/javascript">
+  Alchemy = { locale: "<%= local_assigns[:locale] || session[:alchemy_locale] %>" };
+</script>
+<%= javascript_include_tag("alchemy/preview") %>
