@@ -45,6 +45,7 @@
   border-right: 1px solid $border-inset-color;
   width: 100%;
   font-size: 12px;
+  color: $input-text-color;
   line-height: 12px;
   height: $default-form-field-height;
   transition-property: box-shadow, background-color, border;
