@@ -1,20 +1,6 @@
 <script>
   // Global Alchemy JavaScript object.
   var Alchemy = {};
-  // Setting TinyMCE path.
-  var tinyMCEPreInit = {
-    base: '<%= asset_url(assets_prefix + '/tinymce') %>',
-    suffix: '.min'
-  };
   // Store regular expression for external link url matching.
   Alchemy.link_url_regexp = <%= Alchemy::Config.get(:format_matchers)['link_url'].inspect %>;
-  // Holds the default Alchemy TinyMCE configuration
-  Alchemy.Tinymce = {
-    defaults: {
-      plugins: '<%= Alchemy::Tinymce.plugins.join(',') %>',
-      <% Alchemy::Tinymce.init.each do |k, v| %>
-      <%= k %>: <%== v.to_json %>,
-      <% end %>
-    }
-  };
 </script>
