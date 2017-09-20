@@ -1,3 +1,5 @@
+//= require alchemy/templates/spinner
+
 Alchemy.Spinner = function Spinner(size, styles) {
   var html = HandlebarsTemplates.spinner(),
       $spinner = $(html),
