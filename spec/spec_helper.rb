@@ -92,7 +92,7 @@ RSpec.configure do |config|
 
   # All specs are running in transactions, but feature specs not.
   config.before(:each) do |example|
-    Alchemy::Site.current = nil
+    RequestStore.clear!
     ::I18n.locale = :en
     if example.metadata[:type] == :feature
       DatabaseCleaner.strategy = :truncation
