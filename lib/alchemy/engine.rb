@@ -4,6 +4,12 @@ module Alchemy
     engine_name 'alchemy'
     config.mount_at = '/'
 
+    def self.mounted_at
+      route = Rails.application.routes.named_routes.get(engine_name)
+      return unless route
+      route.path.source.split('/').last
+    end
+
     initializer 'alchemy.dependency_tracker' do
       [:erb, :slim, :haml].each do |handler|
         ActionView::DependencyTracker.register_tracker(handler, CacheDigests::TemplateTracker)
