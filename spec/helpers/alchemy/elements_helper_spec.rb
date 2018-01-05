@@ -1,5 +1,6 @@
 require 'spec_helper'
-include Alchemy::BaseHelper
+# Required for the render_icon helper used by the editor_not_found partial
+include Alchemy::Admin::BaseHelper
 
 module Alchemy
   describe ElementsHelper do

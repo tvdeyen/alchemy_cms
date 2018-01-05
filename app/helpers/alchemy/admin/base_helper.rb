@@ -380,6 +380,11 @@ module Alchemy
           method.to_sym, {type: "text", class: type, "data-datepicker-type" => type, value: value}.merge(html_options)
       end
 
+      # Returns an icon
+      def render_icon(icon_class)
+        content_tag('span', '', class: "icon #{icon_class}")
+      end
+
       # Render a hint icon with tooltip for given object.
       # The model class needs to include the hints module
       def render_hint_for(element)

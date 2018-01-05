@@ -241,5 +241,13 @@ module Alchemy
         end
       end
     end
+
+    describe "#render_icon" do
+      subject { helper.render_icon(:info) }
+
+      it "returns span with icon class" do
+        is_expected.to have_css 'span.icon.info'
+      end
+    end
   end
 end
