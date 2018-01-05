@@ -242,6 +242,40 @@ module Alchemy
       end
     end
 
+    describe '#render_message' do
+      context 'if type argument passed' do
+        subject do
+          helper.render_message(:error, 'my notice')
+        end
+
+        it 'uses the type as the css class for the container and icon' do
+          is_expected.to have_css 'div.error.message .icon.error'
+        end
+      end
+
+      context 'if block is given' do
+        subject do
+          helper.render_message { 'Notice from block' }
+        end
+
+        it 'returns a div with an info icon and the given block content', :aggregate_failures do
+          is_expected.to have_css 'div.info.message .icon.info'
+          is_expected.to have_content 'Notice from block'
+        end
+
+        context 'and type argument passed' do
+          subject do
+            helper.render_message(:error) { 'Error from block' }
+          end
+
+          it 'uses the type as the css class for the container and icon', :aggregate_failures do
+            is_expected.to have_css 'div.error.message .icon.error'
+            is_expected.to have_content 'Error from block'
+          end
+        end
+      end
+    end
+
     describe "#render_icon" do
       subject { helper.render_icon(:info) }
 

@@ -20,24 +20,6 @@ module Alchemy
       end
     end
 
-    # Returns a div with an icon and the passed content
-    # The default message type is info, but you can also pass
-    # other types like :warning or :error
-    #
-    # === Usage:
-    #
-    #   <%= render_message :warning do
-    #     <p>Caution! This is a warning!</p>
-    #   <% end %>
-    #
-    def render_message(type = :info, msg = nil, &blk)
-      if block_given?
-        content_tag :div, render_icon(type) + capture(&blk), class: "#{type} message"
-      else
-        content_tag :div, render_icon(type) + msg, class: "#{type} message"
-      end
-    end
-
     # Renders the flash partial (+alchemy/admin/partials/flash+)
     #
     # @param [String] notice The notice you want to display
