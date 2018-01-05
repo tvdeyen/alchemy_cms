@@ -47,10 +47,12 @@ module Alchemy
     #
     # @param [String] notice The notice you want to display
     # @param [Symbol] style The style of this flash. Valid values are +:notice+ (default), +:warn+ and +:error+
-    #
+    # @deprecated Render `alchemy/admin/partials/flash` directly instead.
     def render_flash_notice(notice, style = :notice)
       render('alchemy/admin/partials/flash', flash_type: style, message: notice)
     end
+    deprecate render_flash_notice: 'Render `alchemy/admin/partials/flash` directly instead.',
+      deprecator: Alchemy::Deprecation
 
     # Checks if the given argument is a String or a Page object.
     # If a String is given, it tries to find the page via page_layout

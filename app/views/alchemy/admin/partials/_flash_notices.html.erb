@@ -1,5 +1,6 @@
 <div id="flash_notices" style="display: <%= flash.keys.blank? ? "none" : "block" %>">
 <% flash.keys.each do |flash_type| %>
-  <%= render_flash_notice(flash[flash_type.to_sym], flash_type) if flash[flash_type.to_sym].present? %>
+  <% next unless flash[flash_type].present? %>
+  <%= render 'alchemy/admin/partials/flash', message: flash[flash_type], flash_type: flash_type %>
 <% end %>
 </div>
