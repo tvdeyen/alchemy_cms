@@ -11,11 +11,11 @@
   <%= content_label(content) %>
 
   <% if select_values.nil? %>
-    <%== warning(':select_values is nil',
+    <%= warning(':select_values is nil',
     "<strong>No select values given.</strong>
     <br>Please provide :<code>select_values</code> either as argument to
     <code>render_essence_editor</code> helper or as setting on the content definition in
-    <code>elements.yml</code>.") %>
+    <code>elements.yml</code>.".html_safe) %>
   <% else %>
     <%
     if select_values.is_a?(Hash)
