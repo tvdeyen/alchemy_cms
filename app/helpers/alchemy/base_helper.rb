@@ -4,9 +4,12 @@ module Alchemy
   module BaseHelper
     # An alias for truncate.
     # Left here for downwards compatibilty.
+    # @deprecated Use Rails `truncate` helper instead.
     def shorten(text, length)
       text.truncate(length: length)
     end
+    deprecate shorten: 'Use Rails `truncate` helper instead.',
+      deprecator: Alchemy::Deprecation
 
     # Logs a message in the Rails logger (warn level)
     # and optionally displays an error message to the user.
