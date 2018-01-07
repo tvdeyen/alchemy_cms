@@ -49,7 +49,7 @@ module Alchemy
     def render_page_layout
       render @page, page: @page
     rescue ActionView::MissingTemplate
-      warning("PageLayout: '#{@page.page_layout}' not found. Rendering standard page_layout.")
+      Rails.logger.warn("PageLayout: '#{@page.page_layout}' not found. Rendering standard page_layout.")
       render 'alchemy/page_layouts/standard', page: @page
     end
 
@@ -68,7 +68,7 @@ module Alchemy
     def render_site_layout
       render current_alchemy_site
     rescue ActionView::MissingTemplate
-      warning("Site layout for #{current_alchemy_site.try(:name)} not found. Please run `rails g alchemy:site_layouts`")
+      Rails.logger.warn("Site layout for #{current_alchemy_site.try(:name)} not found. Please run `rails g alchemy:site_layouts`")
       return ""
     end
 
