@@ -2,7 +2,6 @@
 
 module Alchemy
   module PagesHelper
-    include Alchemy::BaseHelper
     include Alchemy::ElementsHelper
 
     def picture_essence_caption(content)
@@ -162,8 +161,14 @@ module Alchemy
         reverse: false,
         reverse_children: false
       }.merge(options)
-      page = page_or_find(options[:from_page])
-      return nil if page.blank?
+      page = options[:from_page]
+      if options[:from_page].is_a?(String)
+        page = Page.with_language(Language.current.id).find_by(page_layout: options[:from_page])
+      end
+      if page.nil?
+        Rails.logger.warn("No Page with page layout `#{page.inspect}` found to render navigation for.")
+        return
+      end
       pages = page.children.accessible_by(current_ability, :see)
       pages = pages.restricted if options.delete(:restricted_only)
       if depth = options[:deepness]

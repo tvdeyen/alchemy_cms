@@ -8,7 +8,7 @@ module Alchemy
     let(:default_language)         { Language.default }
     let(:language_root)            { create(:alchemy_page, :language_root) }
     let(:public_page)              { create(:alchemy_page, :public) }
-    let(:visible_page)             { create(:alchemy_page, :public, visible: true) }
+    let(:visible_page)             { create(:alchemy_page, :public, visible: true, page_layout: 'contact') }
     let(:restricted_page)          { create(:alchemy_page, :public, visible: true, restricted: true) }
     let(:level_2_page)             { create(:alchemy_page, :public, parent_id: visible_page.id, visible: true, name: 'Level 2') }
     let(:level_3_page)             { create(:alchemy_page, :public, parent_id: level_2_page.id, visible: true, name: 'Level 3') }
@@ -155,18 +155,25 @@ module Alchemy
           end
         end
 
-        context "passing a page_layout" do
+        context "passing a page_layout name" do
+          subject { helper.render_navigation(from_page: 'contact') }
+
           it "should render the pages underneath the page with the given page_layout" do
-            allow(helper).to receive(:page_or_find).with('contact').and_return(visible_page)
-            output = helper.render_navigation(from_page: 'contact')
-            expect(output).not_to have_selector("ul li a[href=\"/#{visible_page.urlname}\"]")
-            expect(output).to have_selector("ul li a[href=\"/#{level_2_page.urlname}\"]")
+            is_expected.not_to have_selector("ul li a[href=\"/#{visible_page.urlname}\"]")
+            is_expected.to have_selector("ul li a[href=\"/#{level_2_page.urlname}\"]")
           end
         end
 
         context "passing a page_layout of a not existing page" do
+          subject { helper.render_navigation(from_page: 'news') }
+
           it "should render nothing" do
-            expect(helper.render_navigation(from_page: 'news')).to be_nil
+            is_expected.to be_nil
+          end
+
+          it "logs a warning" do
+            expect(Rails.logger).to receive(:warn)
+            subject
           end
         end
       end

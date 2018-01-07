@@ -36,6 +36,7 @@ module Alchemy
     # Checks if the given argument is a String or a Page object.
     # If a String is given, it tries to find the page via page_layout
     # Logs a warning if no page is given.
+    # @deprecated Load page via `Alchemy::Page.with_language(Alchemy::Language.current.id).find_by(page_layout: "<your-layout>")` instead.
     def page_or_find(page)
       if page.is_a?(String)
         page = Language.current.pages.find_by(page_layout: page)
@@ -47,5 +48,7 @@ module Alchemy
         page
       end
     end
+    deprecate page_or_find: 'Load page via `Alchemy::Page.with_language(Alchemy::Language.current.id).find_by(page_layout: "<your-layout>")` instead.',
+      deprecator: Alchemy::Deprecation
   end
 end
