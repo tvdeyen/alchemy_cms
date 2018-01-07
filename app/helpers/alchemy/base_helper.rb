@@ -13,11 +13,14 @@ module Alchemy
 
     # Logs a message in the Rails logger (warn level)
     # and optionally displays an error message to the user.
+    # @deprecated Log to Rails.logger directly instead and if necessary use render_message to display a warning to the user.
     def warning(message, text = nil)
       Logger.warn(message, caller(0..0))
       return unless text.present?
       render_message(:warning, text)
     end
+    deprecate warning: 'Log to Rails.logger directly instead and if necessary use render_message to display a warning to the user.',
+      deprecator: Alchemy::Deprecation
 
     # Renders the flash partial (+alchemy/admin/partials/flash+)
     #
@@ -38,7 +41,7 @@ module Alchemy
         page = Language.current.pages.find_by(page_layout: page)
       end
       if page.blank?
-        warning("No Page found for #{page.inspect}")
+        Rails.logger.warn("No Page found for #{page.inspect}")
         return
       else
         page

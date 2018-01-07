@@ -21,7 +21,8 @@ module Alchemy
       #
       def render_essence_editor_by_name(element, name, options = {}, html_options = {})
         if element.blank?
-          return warning('Element is nil', Alchemy.t(:no_element_given))
+          Rails.logger.warn('Element is nil')
+          return render_message(:warning, Alchemy.t(:no_element_given))
         end
         content = element.content_by_name(name)
         if content.nil?

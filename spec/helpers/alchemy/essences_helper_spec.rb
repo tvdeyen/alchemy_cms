@@ -34,38 +34,18 @@ describe Alchemy::EssencesHelper do
     context 'if content is nil' do
       let(:content) { nil }
 
-      it "returns empty string" do
-        is_expected.to eq('')
-      end
-
-      context 'editor given as part' do
-        subject { helper.render_essence(content, :editor) }
-
-        before { allow(Alchemy).to receive(:t).and_return('') }
-
-        it "displays warning" do
-          expect(helper).to receive(:warning).and_return('')
-          is_expected.to eq('')
-        end
+      it "logs warning and returns nil" do
+        expect(Rails.logger).to receive(:warn)
+        is_expected.to be_nil
       end
     end
 
     context 'if essence is nil' do
       let(:essence) { nil }
 
-      it "returns empty string" do
-        is_expected.to eq('')
-      end
-
-      context 'editor given as part' do
-        subject { helper.render_essence(content, :editor) }
-
-        before { allow(Alchemy).to receive(:t).and_return('') }
-
-        it "displays warning" do
-          expect(helper).to receive(:warning).and_return('')
-          is_expected.to eq('')
-        end
+      it "logs warning and returns nil" do
+        expect(Rails.logger).to receive(:warn)
+        is_expected.to be_nil
       end
     end
   end

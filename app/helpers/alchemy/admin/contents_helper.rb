@@ -13,14 +13,14 @@ module Alchemy
       #
       def render_content_name(content)
         if content.blank?
-          warning('Content is nil')
+          Rails.logger.warn('Content is nil')
           return
         end
 
         content_name = content.name_for_label
 
         if content.definition.blank?
-          warning("Content #{content.name} is missing its definition")
+          Rails.logger.warn("Content #{content.name} is missing its definition")
 
           icon = hint_with_tooltip(
             Alchemy.t(:content_definition_missing),

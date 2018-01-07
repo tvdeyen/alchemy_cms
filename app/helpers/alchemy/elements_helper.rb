@@ -85,7 +85,7 @@ module Alchemy
       pages = pages_holding_elements(options.delete(:from_page))
 
       if pages.blank?
-        warning('No page to get elements from was found')
+        Rails.logger.warn('No page to get elements from was found')
         return
       end
 
@@ -154,7 +154,7 @@ module Alchemy
     #
     def render_element(element, part = :view, options = {}, counter = 1)
       if element.nil?
-        warning('Element is nil')
+        Rails.logger.warn('Element is nil')
         render "alchemy/elements/#{part}_not_found", {name: 'nil'}
         return
       end
@@ -169,7 +169,7 @@ module Alchemy
       element.store_page(@page) if part.to_sym == :view
       render "alchemy/elements/#{element.name}_#{part}", options
     rescue ActionView::MissingTemplate => e
-      warning(%(
+      Rails.logger.warn(%(
         Element #{part} partial not found for #{element.name}.\n
         #{e}
       ))
