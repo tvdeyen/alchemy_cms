@@ -66,13 +66,13 @@ Alchemy.ElementsWindow =
     @element_window.css(right: -400)
     @hidden = true
     @toggleButton()
-    Alchemy.PreviewWindow.resize()
+    Alchemy.resizePreview()
 
   show: ->
     @element_window.css(right: 0)
     @hidden = false
     @toggleButton()
-    Alchemy.PreviewWindow.resize()
+    Alchemy.resizePreview()
 
   toggleButton: ->
     if @hidden
