@@ -19,18 +19,27 @@ Vue.component('alchemy-elements-window', {
   template: `
   <div id="alchemy_elements_window">
     <div id="elements_toolbar">
-      <alchemy-dialog-button url="/admin/elements/new?page_id=3"
+      <alchemy-dialog-button :url="newElementUrl"
         :label="'New Element' | translate" :title="'New Element' | translate"
         icon-class="plus" hotkey="alt+n" size="320x125" />
-      <alchemy-dialog-button url="/admin/clipboard/elements"
+      <alchemy-dialog-button :url="clipboardUrl"
         :label="'Show clipboard' | translate" :title="'Clipboard' | translate"
         icon-class="clipboard" hotkey="alt+v" />
-      <alchemy-dialog-button url="/admin/trash"
+      <alchemy-dialog-button :url="trashPath"
         :label="'Show trash' | translate" :title="'Trash' | translate"
         icon-class="trash-alt" />
     </div>
     <div id="element_area"></div>
   </div>`,
+
+  data() {
+    const alchemy = Alchemy.routes;
+    return {
+      newElementUrl: alchemy.new_admin_element_path(this.pageId),
+      clipboardUrl: alchemy.admin_clipboard_path('elements'),
+      trashPath: alchemy.admin_trash_path(this.pageId)
+    }
+  },
 
   created() {
     this.hidden = false;
