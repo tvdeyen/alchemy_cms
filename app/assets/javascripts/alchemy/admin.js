@@ -54,3 +54,4 @@
 //= require alchemy/alchemy.translations
 //= require alchemy/alchemy.trash_window
 //= require alchemy/alchemy.dialog_button
+//= require alchemy/alchemy.vue_filters
