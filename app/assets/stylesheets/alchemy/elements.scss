@@ -1,11 +1,12 @@
 #alchemy_elements_window {
   position: absolute;
   right: 0;
-  top: 73px;
+  top: 75px;
   width: 400px;
   height: auto;
   border-left: $default-border;
   transition: 200ms ease-in-out;
+  background-color: $light-gray;
 }
 
 #element_area {
