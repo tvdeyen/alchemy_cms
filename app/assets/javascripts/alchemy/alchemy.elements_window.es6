@@ -6,6 +6,7 @@
 //= require alchemy/alchemy.dirty
 //= require alchemy/alchemy.dragndrop
 //= require alchemy/alchemy.tinymce
+//= require alchemy/alchemy.vue_filters
 
 Vue.component('alchemy-elements-window', {
   props: {
@@ -19,13 +20,13 @@ Vue.component('alchemy-elements-window', {
   <div id="alchemy_elements_window">
     <div id="elements_toolbar">
       <alchemy-dialog-button url="/admin/elements/new?page_id=3"
-        label="New Element" title="New Element"
+        :label="'New Element' | translate" :title="'New Element' | translate"
         icon-class="plus" hotkey="alt+n" size="320x125" />
       <alchemy-dialog-button url="/admin/clipboard/elements"
-        label="Show Clipboard" title="Clipboard"
+        :label="'Show clipboard' | translate" :title="'Clipboard' | translate"
         icon-class="clipboard" hotkey="alt+v" />
       <alchemy-dialog-button url="/admin/trash"
-        label="Show Trash" title="Trash"
+        :label="'Show trash' | translate" :title="'Trash' | translate"
         icon-class="trash-alt" />
     </div>
     <div id="element_area"></div>
