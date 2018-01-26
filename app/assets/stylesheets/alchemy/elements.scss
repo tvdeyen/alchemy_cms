@@ -9,6 +9,11 @@
   background-color: $light-gray;
 }
 
+#elements_toolbar {
+  @extend %gradiated-toolbar;
+  border-bottom: $default-border;
+}
+
 #element_area {
   overflow-x: hidden;
   overflow-y: auto;

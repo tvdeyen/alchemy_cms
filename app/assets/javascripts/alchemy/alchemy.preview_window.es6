@@ -77,7 +77,7 @@ Vue.component('alchemy-preview-window', {
 
     _calculateWidth() {
       let width = window.innerWidth - this.leftMenuWidth;
-      if (!Alchemy.ElementsWindow.hidden) {
+      if (!Alchemy.elementWindowHidden) {
         width -= this.elementsWindowWidth;
       }
       return width;
