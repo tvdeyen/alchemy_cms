@@ -33,7 +33,6 @@
 //= require alchemy/alchemy.dirty
 //= require alchemy/alchemy.dragndrop
 //= require alchemy/alchemy.element_editors
-//= require alchemy/alchemy.elements_window
 //= require alchemy/alchemy.growler
 //= require alchemy/alchemy.gui
 //= require alchemy/alchemy.hotkeys
@@ -46,12 +45,11 @@
 //= require alchemy/alchemy.initializer
 //= require alchemy/alchemy.page_sorter
 //= require alchemy/alchemy.uploader
-//= require alchemy/alchemy.preview_window
 //= require alchemy/alchemy.sitemap
 //= require alchemy/alchemy.spinner
 //= require alchemy/alchemy.tinymce
 //= require alchemy/alchemy.tooltips
 //= require alchemy/alchemy.translations
 //= require alchemy/alchemy.trash_window
-//= require alchemy/alchemy.dialog_button
 //= require alchemy/alchemy.vue_filters
+//= require alchemy/components
