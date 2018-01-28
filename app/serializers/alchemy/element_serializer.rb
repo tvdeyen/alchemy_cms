@@ -19,7 +19,7 @@ module Alchemy
       :preview_text,
       :display_name
 
-    has_many :contents
+    has_many :contents, :nested_elements
 
     def filter(keys)
       if scope.can?(:manage, object)
