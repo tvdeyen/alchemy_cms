@@ -17,7 +17,8 @@ module Alchemy
       :folded,
       :public,
       :preview_text,
-      :display_name
+      :display_name,
+      :nestable_elements
 
     has_many :contents, :nested_elements
 
@@ -25,7 +26,7 @@ module Alchemy
       if scope.can?(:manage, object)
         keys - [:content_ids, :ingredients]
       else
-        keys - [:folded, :public, :preview_text, :display_name, :contents]
+        keys - [:folded, :public, :preview_text, :display_name, :contents, :nestable_elements]
       end
     end
 
