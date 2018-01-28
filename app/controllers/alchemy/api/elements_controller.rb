@@ -16,7 +16,7 @@ module Alchemy
         @elements = Element.accessible_by(current_ability, :index)
       end
       if params[:page_id].present?
-        @elements = @elements.where(page_id: params[:page_id])
+        @elements = @elements.where(page_id: params[:page_id], parent_element_id: nil)
       end
       if params[:named].present?
         @elements = @elements.named(params[:named])
