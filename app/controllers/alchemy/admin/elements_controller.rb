@@ -82,12 +82,14 @@ module Alchemy
 
       def publish
         @element.update(public: !@element.public?)
+        render json: {public: @element.public?}
       end
 
       # Trashes the Element instead of deleting it.
       def trash
         @page = @element.page
         @element.trash!
+        render status: :ok
       end
 
       def order
@@ -109,9 +111,13 @@ module Alchemy
       end
 
       def fold
-        @page = @element.page
         @element.folded = !@element.folded
-        @element.save
+        if @element.save
+          render json: {folded: @element.folded}
+        else
+          render json: {error: @element.errors.full_messages.join},
+            status: :unprocessable_entity
+        end
       end
 
       private
