@@ -48,14 +48,12 @@ Vue.component('alchemy-elements-window', {
       trashPath: alchemy.admin_trash_path(this.pageId),
       elements: []
     }
-    if (element) {
-      data.elements = [element]
-    }
-    return data;
+    return data
   },
 
   created() {
     this.hidden = false;
+    this.elements = [];
     Alchemy.eventBus.$on('resize-elements-window', this.resize);
   },
 
@@ -69,7 +67,7 @@ Vue.component('alchemy-elements-window', {
       this.toggle();
     });
     this.resize();
-    // this.reload();
+    this.load();
   },
 
   methods: {
@@ -80,21 +78,22 @@ Vue.component('alchemy-elements-window', {
       });
     },
 
-    reload() {
+    load() {
       let spinner = new Alchemy.Spinner('medium');
       spinner.spin(this.$element_area[0]);
-      $.get(this.url, (data) => {
-        this.$element_area.html(data);
-        Alchemy.GUI.init(this.$element_area);
-        // Alchemy.ElementEditors.init();
-        Alchemy.ImageLoader(this.$element_area);
-        Alchemy.ElementDirtyObserver(this.$element_area);
-        Alchemy.Tinymce.init(this.richtextContentIds);
-        $('#cells').tabs().tabs('paging', {
-          follow: true,
-          followOnSelect: true
-        });
-        Alchemy.SortableElements(this.pageId);
+      $.getJSON(this.url, (responseData) => {
+        this.$data.elements = responseData.elements;
+        // this.$element_area.html(data);
+        // Alchemy.GUI.init(this.$element_area);
+        // // Alchemy.ElementEditors.init();
+        // Alchemy.ImageLoader(this.$element_area);
+        // Alchemy.ElementDirtyObserver(this.$element_area);
+        // Alchemy.Tinymce.init(this.richtextContentIds);
+        // $('#cells').tabs().tabs('paging', {
+        //   follow: true,
+        //   followOnSelect: true
+        // });
+        // Alchemy.SortableElements(this.pageId);
       }).fail((xhr, status, error) => {
         Alchemy.AjaxErrorHandler(this.$element_area, xhr.status, status, error);
       }).always(() => spinner.stop());
