@@ -13,7 +13,9 @@ module Alchemy
       :updated_at,
       :settings,
       :label,
-      :component_name
+      :component_name,
+      :form_field_id,
+      :form_field_name
 
     has_one :essence, polymorphic: true
 
@@ -21,7 +23,7 @@ module Alchemy
       if scope.can?(:manage, object)
         keys
       else
-        keys - [:label, :component_name]
+        keys - [:label, :component_name, :form_field_id, :form_field_name]
       end
     end
 
