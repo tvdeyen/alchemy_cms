@@ -172,7 +172,7 @@ uploader:
 #
 #   jQuery(a[data-link-target="overlay"]).dialog();
 #
-link_target_options: [blank]
+link_target_options: [_blank]
 
 # Should pages that redirect to an external url open the link in a new tab/window?
 open_external_links_in_new_tab: true
