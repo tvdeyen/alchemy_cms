@@ -121,10 +121,6 @@
 </div>
 
 <% content_for :javascripts do %>
-<% if Alchemy::Tinymce.custom_config_contents(@page).present? %>
-  <%= render 'tinymce_custom_config' %>
-<% end %>
-
 <script type="text/javascript" charset="utf-8">
   Alchemy.eventBus = new Vue();
   Alchemy.vueInstance = new Vue({el: '#vue-app'});

@@ -13,17 +13,6 @@ $.extend Alchemy.Tinymce,
     config.init_instance_callback = @initInstanceCallback
     return config
 
-  # Returns configuration for given custom tinymce editor selector.
-  #
-  # It uses the +.getDefaultConfig+ and merges the custom parts.
-  #
-  getConfig: (id, selector) ->
-    editor_config = @customConfigs[selector]
-    if editor_config
-      $.extend({}, @getDefaultConfig(id), editor_config)
-    else
-      @getDefaultConfig(id)
-
   # Initializes all TinyMCE editors with given ids
   #
   # @param ids [Array]
