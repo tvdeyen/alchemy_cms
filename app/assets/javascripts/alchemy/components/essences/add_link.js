@@ -1,15 +1,16 @@
-//= require alchemy/components/icon
 //= require alchemy/alchemy.link_dialog
-//= require alchemy/alchemy.dirty
+//= require alchemy/alchemy.i18n
 
-Vue.component('alchemy-linkable-essence-tools', {
+Vue.component('alchemy-add-essence-link', {
   props: {
     essence: {type: Object, required: true},
-    contentId: {type: Number, required: true}
+    contentId: {type: Number, required: true},
+    title: String,
+    linkClass: String
   },
 
   template: `
-    <span class="linkable_essence_tools">
+    <span class="add-essence-link">
       <input type="hidden" :value="essence.link"
         :name="link_form_field_name"
         :id="link_form_field_id">
@@ -22,11 +23,8 @@ Vue.component('alchemy-linkable-essence-tools', {
       <input type="hidden" :value="essence.link_target"
         :name="link_target_form_field_name"
         :id="link_target_form_field_id">
-      <a @click.prevent.stop="openLinkDialog" :title="'place_link' | translate" :class="linkCssClasses" :data-content-id="contentId">
-        <alchemy-icon name="link"></alchemy-icon>
-      </a>
-      <a @click.prevent.stop="removeLink" :title="'unlink' | translate" :class="unlinkCssClasses">
-        <alchemy-icon name="unlink"></alchemy-icon>
+      <a @click.prevent.stop="openLinkDialog" :title="linkTitle" :class="cssClasses" :data-content-id="contentId">
+        <i class="icon fas fa-link fa-fw"></i>
       </a>
     </span>
   `,
@@ -43,7 +41,8 @@ Vue.component('alchemy-linkable-essence-tools', {
       link_form_field_id: `${id_prefix}_link`,
       link_title_form_field_id: `${id_prefix}_link_title`,
       link_class_name_form_field_id: `${id_prefix}_link_class_name`,
-      link_target_form_field_id: `${id_prefix}_link_target`
+      link_target_form_field_id: `${id_prefix}_link_target`,
+      linkTitle: this.title || Alchemy.t('place_link')
     }
   },
 
@@ -66,28 +65,17 @@ Vue.component('alchemy-linkable-essence-tools', {
   },
 
   computed: {
-    linkCssClasses() {
-      return `icon_button${this.essence.link ? ' linked' : ''} link-essence`;
-    },
-
-    unlinkCssClasses() {
-      return `icon_button ${this.essence.link ? 'linked' : 'disabled'} unlink-essence`;
+    cssClasses() {
+      let classes = ['link-essence']
+      if (this.linkClass) classes.push(this.linkClass)
+      if (this.essence.link) classes.push('linked')
+      return classes.join(' ')
     }
   },
 
   methods: {
     openLinkDialog(e) {
       new Alchemy.LinkDialog(e.currentTarget).open();
-    },
-
-    removeLink() {
-      if (this.essence.link) {
-        Alchemy.setElementDirty($(this.$el).closest('.element-editor'));
-      }
-      this.essence.link = '';
-      this.essence.link_title = '';
-      this.essence.link_class_name = '';
-      this.essence.link_target = '';
     }
   }
 });
