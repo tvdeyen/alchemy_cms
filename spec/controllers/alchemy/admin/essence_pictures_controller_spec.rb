@@ -8,14 +8,13 @@ module Alchemy
 
     before { authorize_user(:as_admin) }
 
-    let(:essence) { EssencePicture.new }
+    let(:essence) { EssencePicture.new(content: content) }
     let(:content) { Content.new }
     let(:picture) { Picture.new }
 
     describe '#edit' do
       before do
         expect(EssencePicture).to receive(:find).and_return(essence)
-        expect(Content).to receive(:find).and_return(content)
       end
 
       it 'should assign @essence_picture and @content instance variables' do

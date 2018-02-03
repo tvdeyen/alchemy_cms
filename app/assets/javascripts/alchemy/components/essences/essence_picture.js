@@ -31,7 +31,7 @@ Vue.component('alchemy-essence-picture', {
           </a>
           <alchemy-add-essence-link :essence="essence" :content-id="content.id" title="link_image"></alchemy-add-essence-link>
           <alchemy-remove-essence-link :essence="essence"></alchemy-remove-essence-link>
-          <a title="Bildeigenschaften bearbeiten">
+          <a @click="editPicture" :title="'edit_image_properties' | translate">
             <i class="icon fas faw fa-edit"></i>
           </a>
         </div>
@@ -83,6 +83,14 @@ Vue.component('alchemy-essence-picture', {
         title: Alchemy.t('Edit Picturemask'),
         image_loader: false,
         padding: false
+      });
+    },
+
+    editPicture() {
+      let url = Alchemy.routes.edit_admin_essence_picture_path(this.essence.id);
+      Alchemy.openDialog(url, {
+        size: "380x255",
+        title: Alchemy.t('edit_image_properties')
       });
     },
 
