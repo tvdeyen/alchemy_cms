@@ -12,9 +12,18 @@ module Alchemy
       :css_class,
       :link,
       :created_at,
-      :updated_at
+      :updated_at,
+      :thumbnail_url
 
     has_one :picture
+
+    def filter(keys)
+      if scope.can?(:manage, object)
+        keys
+      else
+        keys - [:thumbnail_url]
+      end
+    end
 
     def link
       return if object.link.blank?
@@ -24,6 +33,10 @@ module Alchemy
         title: object.link_title,
         target: object.link_target
       }
+    end
+
+    def thumbnail_url
+      object.thumbnail_url
     end
   end
 end
