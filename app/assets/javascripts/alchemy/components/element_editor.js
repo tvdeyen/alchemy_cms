@@ -3,6 +3,8 @@
 //= require alchemy/components/element/toolbar
 //= require alchemy/components/element/footer
 //= require alchemy/components/content_editor
+//= require alchemy/alchemy.i18n
+//= require alchemy/alchemy.dialog
 
 Vue.component('alchemy-element-editor', {
   props: {
@@ -14,12 +16,23 @@ Vue.component('alchemy-element-editor', {
       <alchemy-element-header :element="element"></alchemy-element-header>
       <template v-if="!element.folded">
         <alchemy-element-toolbar :element="element"></alchemy-element-toolbar>
-        <form class="element-content" :id="formId">
+        <form class="element-content" :id="formId" v-if="contents.length">
           <alchemy-content-editor v-for="content in contents"
             :key="content.id"
             :content="content"></alchemy-content-editor>
         </form>
-        <alchemy-element-footer :element="element"></alchemy-element-footer>
+        <alchemy-element-footer :element="element" v-if="contents.length"></alchemy-element-footer>
+        <div class="nestable-elements" v-if="nestedElements.length">
+          <div class="nested-elements">
+            <alchemy-element-editor v-for="element in nestedElements"
+              :key="element.id"
+              :element="element"></alchemy-element-editor>
+          </div>
+          <a @click.prevent="newElement" class="button with_icon add-nestable-element-button">
+            <i class="icon fas fa-plus fa-fw fa-xs"></i>
+            {{ 'New Element' | translate }}
+          </a>
+        </div>
       </template>
     </div>
   `,
@@ -29,7 +42,8 @@ Vue.component('alchemy-element-editor', {
     return {
       elementId: `element_${element.id}`,
       formId: `element_${element.id}_form`,
-      contents: element.contents
+      contents: element.contents,
+      nestedElements: element.nested_elements
     }
   },
 
@@ -41,6 +55,19 @@ Vue.component('alchemy-element-editor', {
       classes.push(this.element.taggable ? 'taggable' : 'not-taggable');
       classes.push(this.element.folded ? 'folded' : 'expanded');
       return classes.join(' ');
+    }
+  },
+
+  methods: {
+    newElement() {
+      let url = Alchemy.routes.new_admin_element_path(
+        this.element.page_id,
+        this.element.id
+      );
+      Alchemy.openDialog(url, {
+        size: "320x125",
+        title: Alchemy.t("New Element")
+      });
     }
   }
 });
