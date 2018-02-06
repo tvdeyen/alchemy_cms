@@ -55,17 +55,13 @@ Vue.component('alchemy-element-toolbar', {
     afterCutElement() {
       let notice = Alchemy.t('item moved to clipboard', this.element.display_name);
       Alchemy.growl(notice);
-      $(`.element-editor[data-element-id="${this.element.id}"]`).remove();
+      this._removeElement();
       $('#clipboard_button .icon').removeClass('fa-clipboard').addClass('fa-paste');
     },
 
     afterTrashElement() {
-      const element = this.element;
-      this.$store.commit('removeElement', {
-        parent_id: this.element.parent_element_id,
-        element_id: element.id
-      });
       Alchemy.growl(Alchemy.t('Element trashed'));
+      this._removeElement();
       Alchemy.TrashWindow.refresh();
       $('#element_trash_button .icon').addClass('full');
       Alchemy.reloadPreview();
@@ -74,6 +70,13 @@ Vue.component('alchemy-element-toolbar', {
     afterHideElement(responseData) {
       this.element.public = responseData.public;
       Alchemy.reloadPreview();
+    },
+
+    _removeElement() {
+      this.$store.commit('removeElement', {
+        parent_id: this.element.parent_element_id,
+        element_id: this.element.id
+      });
     }
   }
 });
