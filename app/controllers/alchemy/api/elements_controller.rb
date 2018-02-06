@@ -20,7 +20,7 @@ module Alchemy
       if params[:named].present?
         @elements = @elements.named(params[:named])
       end
-      respond_with @elements
+      respond_with @elements.order(:position)
     end
 
     # Returns a json object for element
