@@ -23,9 +23,14 @@ Alchemy.initAlchemyPreviewMode = ->
           "outline-offset": "4px"
 
       init: ->
-        window.addEventListener "message", (message) =>
-          if message.data == "blurAlchemyElements"
-            @blurElements()
+        window.addEventListener "message", (event) =>
+          data = event.data
+          return unless data
+          switch data.message
+            when "blurAlchemyElements" then @blurElements()
+            when "selectAlchemyElement"
+              element = document.querySelector("[data-alchemy-element=\"#{data.element_id}\"]")
+              @selectElement(element) if element
         , false
         @elements = document.querySelectorAll("[data-alchemy-element]")
         @elements.forEach (element) =>

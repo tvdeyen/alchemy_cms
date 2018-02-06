@@ -9,11 +9,10 @@ Vue.component('alchemy-preview-window', {
   created() {
     this.min_width = 240;
     Alchemy.eventBus.$on('refresh-preview', (element_id) => {
-      this.refresh(function() {
-        Alchemy.ElementEditors.selectElementInPreview(`${element_id}`);
-      });
+      this.refresh(() => this.selectElementInPreview(element_id));
     });
     Alchemy.eventBus.$on('resize-preview', this.resize);
+    Alchemy.eventBus.$on('SelectElementInPreview', this.selectElementInPreview);
   },
 
   mounted() {
@@ -38,6 +37,13 @@ Vue.component('alchemy-preview-window', {
       this._showSpinner();
       $iframe.attr('src', this.url);
       return true;
+    },
+
+    selectElementInPreview(element_id) {
+      $('#alchemy_preview_window')[0].contentWindow.postMessage({
+        message: 'selectAlchemyElement',
+        element_id: element_id
+      }, window.location.origin);
     },
 
     // private

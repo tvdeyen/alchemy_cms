@@ -84,6 +84,7 @@ Vue.component('alchemy-element-editor', {
 
     focusElement(e) {
       this.$store.commit('selectElement', this.element.id);
+      Alchemy.eventBus.$emit('SelectElementInPreview', this.element.id);
     }
   }
 });

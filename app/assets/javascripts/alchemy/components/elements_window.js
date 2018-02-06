@@ -69,7 +69,7 @@ Vue.component('alchemy-elements-window', {
       this.$store.commit('selectElement');
       if (!element) {
         let frameWindow = $('#alchemy_preview_window')[0].contentWindow;
-        frameWindow.postMessage('blurAlchemyElements', window.location.origin);
+        frameWindow.postMessage({message: 'blurAlchemyElements'}, window.location.origin);
       }
     });
     this.show();
