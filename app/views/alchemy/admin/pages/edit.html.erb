@@ -123,7 +123,11 @@
 <% content_for :javascripts do %>
 <script type="text/javascript" charset="utf-8">
   Alchemy.eventBus = new Vue();
-  Alchemy.vueInstance = new Vue({el: '#vue-app'});
+
+  Alchemy.vueInstance = new Vue({
+    el: '#vue-app',
+    store: Alchemy.vuexStore
+  });
 
   $(function() {
     $('#unlock_page_form, #visit_page_form, #publish_page_form').on('submit', function(event) {
