@@ -65,16 +65,16 @@ Vue.component('alchemy-element-toolbar', {
 
     afterTrashElement() {
       const element = this.element;
-      $(`#element_${element.id}`).remove();
+      this.$store.commit('removeElement', {
+        parent_id: this.element.parent_element_id,
+        element_id: element.id
+      });
       Alchemy.growl(Alchemy.t('Element trashed'));
       // TODO: Refresh sortable elements after trash element
       // $('#element_area .sortable_cell').sortable('refresh');
       Alchemy.TrashWindow.refresh();
       $('#element_trash_button .icon').addClass('full');
       Alchemy.reloadPreview();
-      element.richtext_contents_ids.forEach(function() {
-        tinymce.get(`tinymce_${id}`).remove();
-      });
     },
 
     afterHideElement(responseData) {
