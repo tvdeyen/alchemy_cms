@@ -91,7 +91,7 @@ Vue.component('alchemy-elements-window', {
         //   prevButton: '<i class="fas fa-angle-double-left"></i>',
         //   nextButton: '<i class="fas fa-angle-double-right"></i>'
         // });
-        // Alchemy.SortableElements(this.pageId);
+        Alchemy.SortableElements(this.pageId);
       }).fail((xhr, status, error) => {
         Alchemy.AjaxErrorHandler(this.$element_area, xhr.status, status, error);
       }).always(() => spinner.stop());

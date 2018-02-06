@@ -48,16 +48,12 @@ Vue.component('alchemy-element-toolbar', {
   methods: {
     afterCopyElement() {
       let notice = Alchemy.t('item copied to clipboard', this.element.display_name);
-      // TODO: Refresh sortable elements after copy element
-      // $('#element_area .sortable_cell').sortable('refresh');
       Alchemy.growl(notice);
       $('#clipboard_button .icon').removeClass('fa-clipboard').addClass('fa-paste');
     },
 
     afterCutElement() {
       let notice = Alchemy.t('item moved to clipboard', this.element.display_name);
-      // TODO: Refresh sortable elements after copy element
-      // $('#element_area .sortable_cell').sortable('refresh');
       Alchemy.growl(notice);
       $(`.element-editor[data-element-id="${this.element.id}"]`).remove();
       $('#clipboard_button .icon').removeClass('fa-clipboard').addClass('fa-paste');
@@ -70,8 +66,6 @@ Vue.component('alchemy-element-toolbar', {
         element_id: element.id
       });
       Alchemy.growl(Alchemy.t('Element trashed'));
-      // TODO: Refresh sortable elements after trash element
-      // $('#element_area .sortable_cell').sortable('refresh');
       Alchemy.TrashWindow.refresh();
       $('#element_trash_button .icon').addClass('full');
       Alchemy.reloadPreview();

@@ -5,6 +5,7 @@
 //= require alchemy/components/content_editor
 //= require alchemy/alchemy.i18n
 //= require alchemy/alchemy.dialog
+//= require alchemy/alchemy.dragndrop
 
 Vue.component('alchemy-element-editor', {
   props: {
@@ -36,6 +37,10 @@ Vue.component('alchemy-element-editor', {
       </template>
     </div>
   `,
+
+  mounted() {
+    Alchemy.SortableElements(this.element.page_id, `#${this.elementId} .nested-elements`);
+  },
 
   computed: {
     contents() {
