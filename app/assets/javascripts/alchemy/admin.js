@@ -46,3 +46,4 @@
 //= require alchemy/alchemy.vue_filters
 //= require alchemy/vuex_store
 //= require alchemy/components
+//= require vue-turbolinks

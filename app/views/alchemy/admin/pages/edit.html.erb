@@ -126,7 +126,11 @@
 
   Alchemy.vueInstance = new Vue({
     el: '#vue-app',
-    store: Alchemy.vuexStore
+    store: Alchemy.vuexStore,
+    mixins: [TurbolinksAdapter],
+    beforeDestroy() {
+      new Alchemy.Spinner().spin(this.$el.parentNode);
+    }
   });
 
   $(function() {
