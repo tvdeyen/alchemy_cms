@@ -17,7 +17,7 @@ RSpec.feature "Attachment assignment overlay" do
       visit alchemy.edit_admin_page_path(a_page)
 
       within "div[data-element-name='download'] .essence_file_tools" do
-        click_on "Assign a file"
+        find("a .fa-file").click
       end
 
       within ".alchemy-dialog.modal" do
