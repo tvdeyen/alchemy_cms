@@ -11,6 +11,15 @@ module Alchemy
       :file_size,
       :tag_list,
       :created_at,
-      :updated_at
+      :updated_at,
+      :icon_css_class
+
+    def filter(keys)
+      if scope.can?(:manage, object)
+        keys
+      else
+        keys - [:icon_css_class]
+      end
+    end
   end
 end

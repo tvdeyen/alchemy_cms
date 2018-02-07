@@ -5,6 +5,7 @@ module Alchemy
     self.root = false
 
     attributes :id,
+      :attachment_id,
       :title,
       :css_class
 
