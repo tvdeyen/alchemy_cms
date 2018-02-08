@@ -1,4 +1,4 @@
-//= require alchemy/alchemy.buttons
+//= require alchemy/components/element/save_button
 
 Vue.component('alchemy-element-footer', {
   props: {
@@ -11,34 +11,7 @@ Vue.component('alchemy-element-footer', {
         <span class="validation_indicator">*</span>
         {{ 'Mandatory' | translate }}
       </p>
-
-      <button :form="elementForm" @click.prevent="save" type="submit" class="button" data-alchemy-button>
-        {{ 'save' | translate }}
-      </button>
+      <alchemy-save-element-button :element="element"></alchemy-save-element-button>
     </div>
-  `,
-
-  data() {
-    return {
-      elementForm: `element_${this.element.id}_form`
-    }
-  },
-
-  methods: {
-    save(e) {
-      const params = $(e.currentTarget.form).serialize();
-      Alchemy.Buttons.disable(this.$el.querySelector('button'));
-      $.ajax(
-        Alchemy.routes.admin_element_path(this.element.id),
-        {type: 'POST', method: 'PUT', data: params}
-      ).done((responseData) => {
-        Alchemy.growl(Alchemy.t('element_saved'));
-        Alchemy.reloadPreview(this.element.id);
-        Alchemy.setElementClean(`#element_${this.element.id}`);
-        this.$store.commit('updateElement', responseData.element);
-      }).always(() => {
-        Alchemy.Buttons.enable(this.$el.parentElement);
-      });
-    }
-  }
+  `
 });
