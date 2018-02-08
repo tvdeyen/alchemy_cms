@@ -18,7 +18,8 @@ module Alchemy
       :public,
       :preview_text,
       :display_name,
-      :nestable_elements
+      :nestable_elements,
+      :has_validations
 
     has_many :contents, :nested_elements
 
@@ -26,7 +27,7 @@ module Alchemy
       if scope.can?(:manage, object)
         keys - [:content_ids, :ingredients]
       else
-        keys - [:folded, :public, :preview_text, :display_name, :contents, :nestable_elements]
+        keys - [:folded, :public, :preview_text, :display_name, :contents, :nestable_elements, :has_validations]
       end
     end
 
@@ -34,6 +35,10 @@ module Alchemy
 
     def ingredients
       object.contents.collect(&:serialize)
+    end
+
+    def has_validations
+      object.has_validations?
     end
   end
 end
