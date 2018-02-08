@@ -31,10 +31,11 @@ Vue.component('alchemy-element-footer', {
       $.ajax(
         Alchemy.routes.admin_element_path(this.element.id),
         {type: 'POST', method: 'PUT', data: params}
-      ).done(() => {
+      ).done((responseData) => {
         Alchemy.growl(Alchemy.t('element_saved'));
         Alchemy.reloadPreview(this.element.id);
         Alchemy.setElementClean(`#element_${this.element.id}`);
+        this.$store.commit('updateElement', responseData.element);
       }).always(() => {
         Alchemy.Buttons.enable(this.$el.parentElement);
       });

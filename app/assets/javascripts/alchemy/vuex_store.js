@@ -32,6 +32,11 @@ Alchemy.vuexStore = new Vuex.Store({
       }
     },
 
+    updateElement(state, payload) {
+      let element = this.getters.elementById(payload.id);
+      Object.assign(element, payload);
+    },
+
     removeElement(state, payload) {
       if (payload.parent_id) {
         let parent = this.getters.elementById(payload.parent_id);
