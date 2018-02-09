@@ -1,11 +1,7 @@
 //= require vue-2.5.13/vue.js
 //= require alchemy/alchemy.spinner
-//= require alchemy/alchemy.gui
 //= require alchemy/alchemy.base
-//= require alchemy/alchemy.element_editors
-//= require alchemy/alchemy.dirty
 //= require alchemy/alchemy.dragndrop
-//= require alchemy/alchemy.tinymce
 //= require alchemy/alchemy.i18n
 //= require alchemy/alchemy.vue_filters
 //= require alchemy/components/element_editor
@@ -46,15 +42,11 @@ Vue.component('alchemy-elements-window', {
 
   data() {
     const alchemy = Alchemy.routes;
-    let data = {
+    return {
       newElementUrl: alchemy.new_admin_element_path(this.pageId),
       clipboardUrl: alchemy.admin_clipboard_path('elements'),
       elements: []
     }
-    if (element) {
-      data.elements = [element]
-    }
-    return data;
   },
 
   created() {
@@ -72,7 +64,7 @@ Vue.component('alchemy-elements-window', {
       this.toggle();
     });
     this.show();
-    // this.reload();
+    this.load();
   },
 
   methods: {
@@ -83,23 +75,24 @@ Vue.component('alchemy-elements-window', {
       });
     },
 
-    reload() {
+    load() {
       let spinner = new Alchemy.Spinner('medium');
       spinner.spin(this.$element_area[0]);
-      $.get(this.url, (data) => {
-        this.$element_area.html(data);
-        Alchemy.GUI.init(this.$element_area);
-        // Alchemy.ElementEditors.init();
-        Alchemy.ImageLoader(this.$element_area);
-        Alchemy.ElementDirtyObserver(this.$element_area);
-        Alchemy.Tinymce.init(this.richtextContentIds);
-        $('#cells').tabs().tabs('paging', {
-          follow: true,
-          followOnSelect: true,
-          prevButton: '<i class="fas fa-angle-double-left"></i>',
-          nextButton: '<i class="fas fa-angle-double-right"></i>'
-        });
-        Alchemy.SortableElements(this.pageId);
+      $.getJSON(this.url, (responseData) => {
+        this.$data.elements = responseData.elements;
+        // this.$element_area.html(data);
+        // Alchemy.GUI.init(this.$element_area);
+        // // Alchemy.ElementEditors.init();
+        // Alchemy.ImageLoader(this.$element_area);
+        // Alchemy.ElementDirtyObserver(this.$element_area);
+        // Alchemy.Tinymce.init(this.richtextContentIds);
+        // $('#cells').tabs().tabs('paging', {
+        //   follow: true,
+        //   followOnSelect: true,
+        //   prevButton: '<i class="fas fa-angle-double-left"></i>',
+        //   nextButton: '<i class="fas fa-angle-double-right"></i>'
+        // });
+        // Alchemy.SortableElements(this.pageId);
       }).fail((xhr, status, error) => {
         Alchemy.AjaxErrorHandler(this.$element_area, xhr.status, status, error);
       }).always(() => spinner.stop());
