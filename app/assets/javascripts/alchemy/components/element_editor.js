@@ -37,17 +37,23 @@ Vue.component('alchemy-element-editor', {
     </div>
   `,
 
-  data() {
-    const element = this.element;
-    return {
-      elementId: `element_${element.id}`,
-      formId: `element_${element.id}_form`,
-      contents: element.contents,
-      nestedElements: element.nested_elements
-    }
-  },
-
   computed: {
+    contents() {
+      return this.element.contents;
+    },
+
+    nestedElements() {
+      return this.element.nested_elements;
+    },
+
+    elementId() {
+      return `element_${this.element.id}`;
+    },
+
+    formId() {
+      return `element_${this.element.id}_form`;
+    },
+
     cssClasses() {
       let classes = ['element-editor', 'draggable'];
       classes.push(this.element.contents.length ? 'with-contents' : 'without-contents');
