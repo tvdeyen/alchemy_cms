@@ -13,7 +13,7 @@ Vue.component('alchemy-element-editor', {
   },
 
   template: `
-    <div :id="elementId" :data-element-id="element.id" :data-element-name="element.name" :class="cssClasses">
+    <div :id="elementId" :data-element-id="element.id" :data-element-name="element.name" :class="cssClasses" @click.stop="focusElement">
       <alchemy-element-header :element="element"></alchemy-element-header>
       <template v-if="!element.folded">
         <alchemy-element-toolbar :element="element"></alchemy-element-toolbar>
@@ -65,6 +65,7 @@ Vue.component('alchemy-element-editor', {
       classes.push(this.element.nestable_elements.length ? 'nestable' : 'not-nestable');
       classes.push(this.element.taggable ? 'taggable' : 'not-taggable');
       classes.push(this.element.folded ? 'folded' : 'expanded');
+      classes.push(this.element.selected ? 'selected' : '');
       return classes.join(' ');
     }
   },
@@ -79,6 +80,10 @@ Vue.component('alchemy-element-editor', {
         size: "320x125",
         title: Alchemy.t("New Element")
       });
+    },
+
+    focusElement(e) {
+      this.$store.commit('selectElement', this.element.id);
     }
   }
 });

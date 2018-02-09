@@ -43,6 +43,20 @@ Alchemy.vuexStore = new Vuex.Store({
           return element.id !== payload.element_id;
         });
       }
+    },
+
+    selectElement(state, element_id) {
+      function toggleElements(elements) {
+        for (let element of elements) {
+          if (element.id === element_id) {
+            element.selected = true;
+          } else {
+            element.selected = false;
+          }
+          toggleElements(element.nested_elements);
+        };
+      }
+      toggleElements(state.elements);
     }
   }
 });

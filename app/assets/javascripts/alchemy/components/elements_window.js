@@ -62,6 +62,16 @@ Vue.component('alchemy-elements-window', {
       e.preventDefault();
       this.toggle();
     });
+    // Blur selected elements
+    $('body').click(e => {
+      let element = $(e.target).parents('.element-editor')[0];
+      // Not passing an element id here actually unselects all elements
+      this.$store.commit('selectElement');
+      if (!element) {
+        let frameWindow = $('#alchemy_preview_window')[0].contentWindow;
+        frameWindow.postMessage('blurAlchemyElements', window.location.origin);
+      }
+    });
     this.show();
     this.load();
   },
@@ -84,6 +94,14 @@ Vue.component('alchemy-elements-window', {
       let spinner = new Alchemy.Spinner('medium');
       spinner.spin(this.$element_area[0]);
       $.getJSON(this.url, (responseData) => {
+        // Unselect all elements so that we can use this state in the Vuex store
+        function unselectElements(elements) {
+          for (let element of elements) {
+            element.selected = false;
+            unselectElements(element.nested_elements);
+          };
+        }
+        unselectElements(responseData.elements);
         this.$store.replaceState({elements: responseData.elements});
         // $('#cells').tabs().tabs('paging', {
         //   follow: true,

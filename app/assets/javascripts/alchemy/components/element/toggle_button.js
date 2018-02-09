@@ -11,7 +11,7 @@ Vue.component('alchemy-toggle-element-button', {
   template: `
     <a class="ajax-folder"
       :data-element-toggle="element.id"
-      @click.prevent.stop="toggle"
+      @click.prevent="toggle"
       :title="title">
       <i :class="iconClasses"></i>
     </a>
