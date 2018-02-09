@@ -8,6 +8,7 @@
 //= require alchemy/alchemy.tinymce
 //= require alchemy/alchemy.i18n
 //= require alchemy/alchemy.vue_filters
+//= require alchemy/components/element_editor
 
 Vue.component('alchemy-elements-window', {
   props: {
@@ -33,15 +34,27 @@ Vue.component('alchemy-elements-window', {
         <label>{{ 'Show trash' | translate }}</label>
       </div>
     </div>
-    <div id="element_area"></div>
+    <div id="element_area">
+      <div class="sortable_cell">
+        <alchemy-element-editor v-for="element in elements"
+          :key="element.id"
+          :element="element"
+        ></alchemy-element-editor>
+      </div>
+    </div>
   </div>`,
 
   data() {
     const alchemy = Alchemy.routes;
-    return {
+    let data = {
       newElementUrl: alchemy.new_admin_element_path(this.pageId),
-      clipboardUrl: alchemy.admin_clipboard_path('elements')
+      clipboardUrl: alchemy.admin_clipboard_path('elements'),
+      elements: []
     }
+    if (element) {
+      data.elements = [element]
+    }
+    return data;
   },
 
   created() {
@@ -59,7 +72,7 @@ Vue.component('alchemy-elements-window', {
       this.toggle();
     });
     this.show();
-    this.reload();
+    // this.reload();
   },
 
   methods: {
@@ -76,7 +89,7 @@ Vue.component('alchemy-elements-window', {
       $.get(this.url, (data) => {
         this.$element_area.html(data);
         Alchemy.GUI.init(this.$element_area);
-        Alchemy.ElementEditors.init();
+        // Alchemy.ElementEditors.init();
         Alchemy.ImageLoader(this.$element_area);
         Alchemy.ElementDirtyObserver(this.$element_area);
         Alchemy.Tinymce.init(this.richtextContentIds);

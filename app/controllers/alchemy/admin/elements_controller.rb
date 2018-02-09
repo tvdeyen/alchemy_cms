@@ -71,23 +71,23 @@ module Alchemy
       #
       def update
         if @element.update_contents(contents_params)
-          @page = @element.page
-          @element_validated = @element.update_attributes!(element_params)
+          @element.update!(element_params)
+          render json: {element: ElementSerializer.new(@element, scope: current_ability)}.to_json
         else
-          @element_validated = false
-          @notice = Alchemy.t('Validation failed')
-          @error_message = "<h2>#{@notice}</h2><p>#{Alchemy.t(:content_validations_headline)}</p>".html_safe
+          render json: {error: Alchemy.t('Validation failed')}.to_json, status: :unprocessable_entity
         end
       end
 
       def publish
         @element.update(public: !@element.public?)
+        render json: {public: @element.public?}
       end
 
       # Trashes the Element instead of deleting it.
       def trash
         @page = @element.page
         @element.trash!
+        head :ok
       end
 
       def order
@@ -109,9 +109,9 @@ module Alchemy
       end
 
       def fold
-        @page = @element.page
         @element.folded = !@element.folded
-        @element.save
+        @element.save!
+        render json: {folded: @element.folded}
       end
 
       private

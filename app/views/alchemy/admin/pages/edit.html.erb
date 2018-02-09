@@ -126,6 +126,26 @@
 <% end %>
 
 <script type="text/javascript" charset="utf-8">
+  <% element = @page.elements.first %>;
+  <% if element %>
+  element = {
+    id: <%= element.id %>,
+    name: '<%= element.name %>',
+    display_name: '<%= element.display_name %>',
+    visible: <%= element.public? %>,
+    folded: <%= element.folded? %>,
+    taggable: <%= element.taggable? %>,
+    draggable: true,
+    contents: [{
+      id: 1,
+      type: 'EssenceText',
+      name: 'Headline',
+      ingredient: 'Some nice headline'
+    }],
+    nestable_elements: [],
+    richtext_contents_ids: []
+  };
+  <% end %>
   Alchemy.eventBus = new Vue();
   Alchemy.vueInstance = new Vue({el: '#vue-app'});
 

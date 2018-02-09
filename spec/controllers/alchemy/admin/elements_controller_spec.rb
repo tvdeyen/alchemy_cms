@@ -441,18 +441,26 @@ module Alchemy
         put :update, params: {id: element.id}, xhr: true
       end
 
-      it "updates the element" do
+      it "updates the element and responses with json" do
         expect(controller).to receive(:element_params).and_return(element_parameters)
         expect(element).to receive(:update_contents).and_return(true)
-        expect(element).to receive(:update_attributes!).with(element_parameters).and_return(true)
+        expect(element).to receive(:update!).with(element_parameters).and_return(true)
         put :update, params: {id: element.id}, xhr: true
+        expect(response.content_type).to eq('application/json')
       end
 
       context "failed validations" do
-        it "displays validation failed notice" do
+        before do
           expect(element).to receive(:update_contents).and_return(false)
+        end
+
+        it "returns validation error as json" do
           put :update, params: {id: element.id}, xhr: true
-          expect(assigns(:element_validated)).to be_falsey
+          expect(response.content_type).to eq('application/json')
+          expect(response.status).to eq(422)
+          json = JSON.parse(response.body)
+          expect(json).to have_key('error')
+          expect(json['error']).to have_content('Validation failed')
         end
       end
     end
@@ -515,35 +523,34 @@ module Alchemy
 
       it "trashes the element instead of deleting it" do
         expect(element).to receive(:trash!).and_return(true)
-        subject
+        expect(subject.status).to be 200
       end
     end
 
     describe '#fold' do
       subject { post :fold, params: {id: element.id}, xhr: true }
 
-      let(:element) { build_stubbed(:alchemy_element) }
+      let(:response_data) { JSON.parse(subject.body) }
 
       before do
-        expect(element).to receive(:save).and_return true
-        expect(Element).to receive(:find).and_return element
+        expect(Element).to receive(:find) { element }
       end
 
       context 'if element is folded' do
-        before { expect(element).to receive(:folded).and_return true }
+        let(:element) { create(:alchemy_element, folded: true) }
 
-        it "sets folded to false." do
-          expect(element).to receive(:folded=).with(false).and_return(false)
-          subject
+        it 'sets folded to false and response with JSON' do
+          expect(response_data).to have_key('folded')
+          expect(response_data['folded']).to be false
         end
       end
 
       context 'if element is not folded' do
-        before { expect(element).to receive(:folded).and_return false }
+        let(:element) { create(:alchemy_element, folded: false) }
 
         it "sets folded to true." do
-          expect(element).to receive(:folded=).with(true).and_return(true)
-          subject
+          expect(response_data).to have_key('folded')
+          expect(response_data['folded']).to be true
         end
       end
     end
