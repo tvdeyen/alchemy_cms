@@ -108,16 +108,20 @@
 </div>
 <% end %>
 
+<% content_for :javascript_includes do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<alchemy-preview-window url="<%= admin_page_path(@page) %>"></alchemy-preview-window>
+
 <% content_for :javascripts do %>
 <% if Alchemy::Tinymce.custom_config_contents(@page).present? %>
   <%= render 'tinymce_custom_config' %>
 <% end %>
 
-<% content_for :javascript_includes do %>
-  <meta name="turbolinks-cache-control" content="no-cache">
-<% end %>
-
 <script type="text/javascript" charset="utf-8">
+  Alchemy.eventBus = new Vue();
+  Alchemy.vueInstance = new Vue({el: '#main_content'});
 
   $(function() {
     $('#unlock_page_form, #visit_page_form, #publish_page_form').on('submit', function(event) {
@@ -190,8 +194,6 @@
       }
     });
 
-    Alchemy.PreviewWindow.init('<%= admin_page_path(@page) %>');
-
     $('#preview_size').bind('open.selectBoxIt', function (e) {
       $('#top_menu').css('z-index', 5000);
     });
@@ -202,13 +204,12 @@
 
     $('select#preview_size').on('change', function() {
       var width = this.value;
-      if (width === 'auto') {
-        Alchemy.PreviewWindow.currentWindow.css('width', '');
+      if (this.value === 'auto') {
+        $('#alchemy_preview_window').css('width', '');
       } else {
-        Alchemy.PreviewWindow.resize(width);
+        Alchemy.resizePreview(width);
       }
     });
   });
-
 </script>
 <% end %>
