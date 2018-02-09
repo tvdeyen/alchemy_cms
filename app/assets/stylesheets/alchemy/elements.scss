@@ -2,16 +2,18 @@
   position: absolute;
   right: 0;
   top: $top-menu-height;
-  z-index: 20;
   width: $elements-window-width;
   height: calc(100vh - #{$top-menu-height});
+  z-index: 20;
   border-left: $default-border;
   background-color: $light-gray;
-  transition: $transition-duration ease-in-out;
-  transform: translate3d($elements-window-width - $default-border-width, 0, 0);
 
-  .elements-window-visible & {
-    transform: translate3d(0, 0, 0);
+  &.slide-enter-active, &.slide-leave-active {
+    transition: transform $transition-duration ease-in-out;
+  }
+
+  &.slide-enter, &.slide-leave-to {
+    transform: translate3d($elements-window-width - $default-border-width, 0, 0);
   }
 }
 
@@ -24,6 +26,14 @@
   height: calc(100vh - #{$top-menu-height + $toolbar-height});
   overflow-x: hidden;
   overflow-y: auto;
+
+  &.fade-enter-active, &.fade-leave-active {
+    transition: $transition-duration ease-in;
+  }
+
+  &.fade-enter, &.fade-leave-to {
+    opacity: 0;
+  }
 
   .sortable_cell {
     min-height: 100px;

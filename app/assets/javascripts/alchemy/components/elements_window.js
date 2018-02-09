@@ -15,41 +15,43 @@ Vue.component('alchemy-elements-window', {
   },
 
   template: `
-  <div id="alchemy_elements_window">
-    <div id="elements_toolbar">
-      <alchemy-dialog-button :url="newElementUrl"
-        :label="'New Element' | translate" :title="'New Element' | translate"
-        icon-class="plus" hotkey="alt+n" size="320x125" />
-      <alchemy-dialog-button :url="clipboardUrl"
-        :label="'Show clipboard' | translate" :title="'Clipboard' | translate"
-        icon-class="clipboard" hotkey="alt+v" id="clipboard_button" />
-      <div class="button_with_label" id="element_trash_button">
-        <a class="icon_button" @click.prevent="openTrashWindow">
-          <i class="icon fas fa-trash-alt fa-fw"></i>
-        </a>
-        <label>{{ 'Show trash' | translate }}</label>
+  <transition name="slide" v-on:enter="show">
+    <div id="alchemy_elements_window" v-show="visible">
+      <div id="elements_toolbar">
+        <alchemy-dialog-button :url="newElementUrl"
+          :label="'New Element' | translate" :title="'New Element' | translate"
+          icon-class="plus" hotkey="alt+n" size="320x125" />
+        <alchemy-dialog-button :url="clipboardUrl"
+          :label="'Show clipboard' | translate" :title="'Clipboard' | translate"
+          icon-class="clipboard" hotkey="alt+v" id="clipboard_button" />
+        <div class="button_with_label" id="element_trash_button">
+          <a class="icon_button" @click.prevent="openTrashWindow">
+            <i class="icon fas fa-trash-alt fa-fw"></i>
+          </a>
+          <label>{{ 'Show trash' | translate }}</label>
+        </div>
       </div>
+      <transition name="fade">
+        <div id="element_area" v-show="loaded">
+          <div class="sortable_cell">
+            <alchemy-element-editor v-for="element in elements"
+              :key="element.id"
+              :element="element"
+            ></alchemy-element-editor>
+          </div>
+        </div>
+      </transition>
     </div>
-    <div id="element_area">
-      <div class="sortable_cell">
-        <alchemy-element-editor v-for="element in elements"
-          :key="element.id"
-          :element="element"
-        ></alchemy-element-editor>
-      </div>
-    </div>
-  </div>`,
+  </transition>`,
 
   data() {
     const alchemy = Alchemy.routes;
     return {
       newElementUrl: alchemy.new_admin_element_path(this.pageId),
-      clipboardUrl: alchemy.admin_clipboard_path('elements')
+      clipboardUrl: alchemy.admin_clipboard_path('elements'),
+      visible: false,
+      loaded: false
     }
-  },
-
-  created() {
-    this.hidden = false;
   },
 
   mounted() {
@@ -110,35 +112,36 @@ Vue.component('alchemy-elements-window', {
         //   nextButton: '<i class="fas fa-angle-double-right"></i>'
         // });
         Alchemy.SortableElements(this.pageId);
+        this.loaded = true;
       }).fail((xhr, status, error) => {
         Alchemy.AjaxErrorHandler(this.$element_area, xhr.status, status, error);
       }).always(() => spinner.stop());
     },
 
     toggle() {
-      if (this.hidden) {
-        this.show();
-      } else {
+      if (this.visible) {
         this.hide();
+      } else {
+        this.show();
       }
       this.toggleButton();
     },
 
     hide() {
       this.$body.removeClass('elements-window-visible');
-      this.hidden = true;
+      this.visible = false;
     },
 
     show() {
       this.$body.addClass('elements-window-visible');
-      this.hidden = false;
+      this.visible = true;
     },
 
     toggleButton() {
-      if (this.hidden) {
-        this.$button.find('label').text('Show elements');
-      } else {
+      if (this.visible) {
         this.$button.find('label').text('Hide elements');
+      } else {
+        this.$button.find('label').text('Show elements');
       }
     },
 

@@ -4,7 +4,11 @@
 
 Vue.component('alchemy-preview-window', {
   props: ['url', 'top-menu-height', 'left-menu-width', 'elements-window-width'],
-  template: '<iframe :src="url" id="alchemy_preview_window"/>',
+  template: `
+    <transition name="fade">
+      <iframe :src="url" id="alchemy_preview_window" v-show="visible"/>
+    </transition>
+  `,
 
   created() {
     this.min_width = 240;
@@ -20,6 +24,13 @@ Vue.component('alchemy-preview-window', {
     this._bindReloadButton();
     this.$el.onload = this._onLoad;
     this._showSpinner();
+    this.visible = true;
+  },
+
+  data() {
+    return {
+      visible: false
+    }
   },
 
   methods: {
