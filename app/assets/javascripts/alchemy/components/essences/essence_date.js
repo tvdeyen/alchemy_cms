@@ -12,6 +12,7 @@ Vue.component('alchemy-essence-date', {
         :current="ingredient"
         :name="content.form_field_name"
         :id="content.form_field_id"></alchemy-datepicker>
+      <alchemy-content-error :content="content"></alchemy-content-error>
       <label :for="content.form_field_id" class="essence_date--label">
         <i class="icon far fa-calendar-alt fa-fw fa-lg"></i>
       </label>

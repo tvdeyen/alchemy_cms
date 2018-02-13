@@ -10,6 +10,7 @@ Vue.component('alchemy-essence-text', {
     <div class="essence_text">
       <alchemy-content-label :content="content"></alchemy-content-label>
       <input type="text" v-model="ingredient" :name="content.form_field_name" :id="content.form_field_id">
+      <alchemy-content-error :content="content"></alchemy-content-error>
       <span class="linkable_essence_tools" v-if="content.settings.linkable">
         <alchemy-add-essence-link
           :essence="essence"

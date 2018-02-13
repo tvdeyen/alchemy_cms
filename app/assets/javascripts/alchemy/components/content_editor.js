@@ -24,7 +24,12 @@ Vue.component('alchemy-content-editor', {
 
   computed: {
     cssClasses() {
-      return 'content_editor';
+      const classes = 'content_editor';
+      if (this.content.validation_errors.length) {
+        return classes + ' validation_failed';
+      } else {
+        return classes;
+      }
     }
   }
 });

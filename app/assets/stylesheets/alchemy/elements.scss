@@ -344,7 +344,7 @@
 .linkable_essence_tools {
   display: flex;
   position: absolute;
-  bottom: 2 * $default-margin;
+  top: 27px;
   right: 0;
 
   .icon_button {
@@ -612,11 +612,19 @@ select.long {
   }
 
   &.validation_failed {
+    input, textarea {
+      @extend %field-with-error;
+    }
 
-    label { color: $error_text_color }
-    input { @extend %field-with-error }
-    .tinymce_container {
-      outline: 1px solid $error_border_color;
+    label,
+    &.essence_select .select2-choice {
+      color: $error_text_color
+    }
+
+    .mce-tinymce,
+    &.essence_file .file,
+    &.essence_select .select2-choice {
+      border-color: $error_border_color;
     }
   }
 
@@ -641,42 +649,13 @@ select.long {
   }
 
   &.essence_select {
-
-    label { margin-bottom: 4px }
-
-    .select2-container {
-      width: 100%;
-    }
-
     &.display_inline .select2-container {
       width: 170px;
     }
-  }
 
-  select.essence_editor_select {
-    border-radius: $default-border-radius;
-    background: white;
-    border: 1px solid $button-border-color;
-    font-size: $default-font-size;
-    height: 21px;
-    line-height: 21px;
-    padding: 2px;
-
-    optgroup {
-      color: gray;
-      font-style: normal;
-      font-weight: bold;
-      text-indent: 8px;
-
-      option {
-        text-indent: 24px;
-      }
-    }
-
-    option {
-      padding-top: 2px;
-      padding-bottom: 2px;
-      color: black;
+    .select2-container {
+      width: 100%;
+      margin: $form-field-margin;
     }
   }
 
@@ -688,6 +667,17 @@ select.long {
     + .essence_picture {
       padding-left: $default-padding;
       padding-right: 1px; // Compensate the box shadow
+    }
+  }
+
+  &.essence_boolean {
+    label { display: inline }
+
+    .content-errors {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 }

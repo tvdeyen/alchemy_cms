@@ -13,6 +13,7 @@ Vue.component('alchemy-essence-select', {
           {{option.text}}
         </option>
       </select>
+      <alchemy-content-error :content="content"></alchemy-content-error>
     </div>
   `,
 

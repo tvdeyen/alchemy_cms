@@ -36,6 +36,7 @@ Vue.component('alchemy-essence-picture', {
           </a>
         </div>
       </div>
+      <alchemy-content-error :content="content"></alchemy-content-error>
     </div>
   `,
 

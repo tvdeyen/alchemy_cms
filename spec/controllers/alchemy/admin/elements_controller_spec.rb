@@ -459,8 +459,9 @@ module Alchemy
           expect(response.content_type).to eq('application/json')
           expect(response.status).to eq(422)
           json = JSON.parse(response.body)
-          expect(json).to have_key('error')
-          expect(json['error']).to have_content('Validation failed')
+          expect(json).to have_key('message')
+          expect(json['message']).to have_content('Validation failed')
+          expect(json).to have_key('element')
         end
       end
     end

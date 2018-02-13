@@ -15,6 +15,7 @@ Vue.component('alchemy-essence-richtext', {
           :id="domId"
           :name="content.form_field_name"></textarea>
       </div>
+      <alchemy-content-error :content="content"></alchemy-content-error>
     </div>
   `,
 

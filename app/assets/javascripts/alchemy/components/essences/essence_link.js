@@ -10,6 +10,7 @@ Vue.component('alchemy-essence-link', {
     <div class="essence_link">
       <alchemy-content-label :content="content"></alchemy-content-label>
       <input type="text" :value="essence.link" class="text_with_icon disabled" disabled>
+      <alchemy-content-error :content="content"></alchemy-content-error>
       <span class="linkable_essence_tools">
         <alchemy-add-essence-link
           :essence="essence"
