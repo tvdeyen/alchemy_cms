@@ -8,7 +8,7 @@ Vue.component('alchemy-essence-link', {
 
   template: `
     <div class="essence_link">
-      <label>{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <input type="text" :value="essence.link" class="text_with_icon disabled" disabled>
       <span class="linkable_essence_tools">
         <alchemy-add-essence-link

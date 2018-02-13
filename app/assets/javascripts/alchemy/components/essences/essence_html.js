@@ -5,7 +5,7 @@ Vue.component('alchemy-essence-html', {
 
   template: `
     <div class="essence_html">
-      <label :for="content.form_field_id">{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <textarea v-model="ingredient" :name="content.form_field_name" :id="content.form_field_id">{{content.ingredient}}</textarea>
     </div>
   `,

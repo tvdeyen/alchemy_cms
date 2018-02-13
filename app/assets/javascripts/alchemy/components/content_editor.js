@@ -1,3 +1,4 @@
+//= require alchemy/components/essences/content_label
 //= require alchemy/components/essences/essence_picture
 //= require alchemy/components/essences/essence_text
 //= require alchemy/components/essences/essence_html

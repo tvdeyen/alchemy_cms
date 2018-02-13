@@ -8,7 +8,7 @@ Vue.component('alchemy-essence-file', {
 
   template: `
     <div class="essence_file">
-      <label>{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <div class="file">
         <div class="file_icon" v-if="attachment">
           <i :class="iconClasses"></i>

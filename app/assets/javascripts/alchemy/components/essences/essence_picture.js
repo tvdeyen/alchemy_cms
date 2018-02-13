@@ -5,7 +5,7 @@ Vue.component('alchemy-essence-picture', {
 
   template: `
     <div class="essence_picture">
-      <label>{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <div class="picture_thumbnail">
         <span class="picture_tool delete" v-show="picture_id">
           <a @click="removePicture">

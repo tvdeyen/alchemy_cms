@@ -8,7 +8,7 @@ Vue.component('alchemy-essence-text', {
 
   template: `
     <div class="essence_text">
-      <label :for="content.form_field_id">{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <input type="text" v-model="ingredient" :name="content.form_field_name" :id="content.form_field_id">
       <span class="linkable_essence_tools" v-if="content.settings.linkable">
         <alchemy-add-essence-link

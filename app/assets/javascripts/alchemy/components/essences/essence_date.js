@@ -7,7 +7,7 @@ Vue.component('alchemy-essence-date', {
 
   template: `
     <div class="essence_date">
-      <label>{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <alchemy-datepicker
         :current="ingredient"
         :name="content.form_field_name"

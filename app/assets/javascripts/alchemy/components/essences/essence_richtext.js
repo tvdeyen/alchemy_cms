@@ -7,7 +7,7 @@ Vue.component('alchemy-essence-richtext', {
 
   template: `
     <div class="essence_richtext">
-      <label :for="domId">{{content.label}}</label>
+      <alchemy-content-label :content="content"></alchemy-content-label>
       <div class="tinymce_container">
         <textarea
           v-model="ingredient"
