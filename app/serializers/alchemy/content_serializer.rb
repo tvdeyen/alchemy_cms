@@ -15,7 +15,9 @@ module Alchemy
       :label,
       :component_name,
       :form_field_id,
-      :form_field_name
+      :form_field_name,
+      :validations,
+      :validation_errors
 
     has_one :essence, polymorphic: true
 
@@ -23,7 +25,7 @@ module Alchemy
       if scope.can?(:manage, object)
         keys
       else
-        keys - [:label, :component_name, :form_field_id, :form_field_name]
+        keys - [:label, :component_name, :form_field_id, :form_field_name, :validations, :validation_errors]
       end
     end
 
@@ -37,6 +39,14 @@ module Alchemy
 
     def label
       object.name_for_label
+    end
+
+    def validations
+      object.definition['validate'] || []
+    end
+
+    def validation_errors
+      object.essence.errors.full_messages
     end
   end
 end
