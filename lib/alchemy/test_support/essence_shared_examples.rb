@@ -4,6 +4,7 @@ shared_examples_for "an essence" do
   let(:element) { Alchemy::Element.new }
   let(:content) { Alchemy::Content.new(name: 'foo') }
   let(:content_definition) { {'name' => 'foo'} }
+  let(:ingredient_setter_value) { ingredient_value }
 
   it "touches the content after update" do
     element = create(:alchemy_element)
@@ -65,7 +66,7 @@ shared_examples_for "an essence" do
 
   describe '#ingredient=' do
     it 'should set the value to ingredient column' do
-      essence.ingredient = ingredient_value
+      essence.ingredient = ingredient_setter_value
       expect(essence.ingredient).to eq ingredient_value
     end
   end

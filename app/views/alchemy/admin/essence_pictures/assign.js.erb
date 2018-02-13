@@ -1,11 +1,8 @@
 $('#picture_to_assign_<%= @picture.id %> a').attr('href', '#').off('click');
-$('#<%= @content.dom_id -%>').replaceWith('<%= j(
-  render(
-    "alchemy/essences/essence_picture_editor",
-    content: @content,
-    options: options_from_params
-  )
-) %>');
+$('[data-content-id="<%= @content.id -%>"] .picture_image img').attr(
+  'src', '<%= j(@content.essence.thumbnail_url) %>'
+);
+$('#<%= @content.form_field_id -%>').val(<%= @picture.id %>).change();
 
 <% if @content.siblings.essence_pictures.count > 1 %>
 
@@ -14,4 +11,3 @@ Alchemy.SortableContents('#<%= @content.element.id -%>_contents', '<%= form_auth
 <% end %>
 
 Alchemy.closeCurrentDialog();
-Alchemy.setElementDirty('#element_<%= @content.element.id %>');

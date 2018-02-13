@@ -5,8 +5,10 @@ require 'spec_helper'
 module Alchemy
   describe EssencePicture do
     it_behaves_like "an essence" do
+      let(:picture)          { create(:alchemy_picture) }
       let(:essence)          { EssencePicture.new }
-      let(:ingredient_value) { Picture.new }
+      let(:ingredient_value) { picture }
+      let(:ingredient_setter_value) { picture.id }
     end
 
     it_behaves_like "has image transformations" do

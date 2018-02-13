@@ -123,12 +123,12 @@ module Alchemy
       end
 
       def in_overlay?
-        params[:element_id].present?
+        params[:content_id] || params[:element_id]
       end
 
       def archive_overlay
-        @content = Content.select('id').find_by(id: params[:content_id])
-        @element = Element.select('id').find_by(id: params[:element_id])
+        @content = Content.find_by(id: params[:content_id])
+        @element = Element.find_by(id: params[:element_id])
 
         respond_to do |format|
           format.html { render partial: 'archive_overlay' }

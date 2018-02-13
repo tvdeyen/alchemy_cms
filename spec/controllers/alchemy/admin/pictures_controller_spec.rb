@@ -85,15 +85,10 @@ module Alchemy
         end
       end
 
-      context "when params[:element_id]" do
+      context "when params[:content_id] or params[:element_id]" do
         context "is set" do
-          before do
-            allow(Element).to \
-              receive(:find).with('1', {select: 'id'}).and_return(mock_model(Element))
-          end
-
           it "for html requests it renders the archive_overlay partial" do
-            get :index, params: {element_id: 1}
+            get :index, params: {content_id: 1}
             expect(response).to render_template(partial: '_archive_overlay')
           end
 

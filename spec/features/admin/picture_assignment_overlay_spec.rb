@@ -18,7 +18,7 @@ RSpec.feature "Picture assignment overlay" do
       visit alchemy.edit_admin_page_path(a_page)
 
       within "#element_area div[data-element-name='article']" do
-        click_on "Insert image"
+        find('.picture_thumbnail a .fa-file-image').click
       end
 
       within ".alchemy-dialog.modal" do
