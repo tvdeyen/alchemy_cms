@@ -403,10 +403,16 @@
   width: 100%;
   padding: $default-padding $default-padding/2;
 
-  a {
+  > a, > span {
     margin: 0 $default-padding/2;
-    padding: $default-padding/2;
+  }
+
+  // Fix needed because the link is nested inside a span
+  > span a { display: block }
+
+  a {
     cursor: pointer;
+    padding: $default-padding/2;
 
     &.linked {
       border-radius: $default-border-radius;

@@ -43,8 +43,11 @@ $.extend Alchemy.Tinymce,
   #
   # @param id [Number]
   #   - Editor id that should be initialized.
+  # @param customConfig [Object]
+  #   - Configuration that should be used instead of the default one.
   #
-  initEditor: (id) ->
+  initEditor: (id, customConfig) ->
+    config = @getDefaultConfig(id)
     editor_id = "tinymce_#{id}"
     textarea = $("##{editor_id}")
     editor = tinymce.get(editor_id)
@@ -53,13 +56,11 @@ $.extend Alchemy.Tinymce,
     if textarea.length == 0
       Alchemy.log_error "Could not initialize TinyMCE for textarea#tinymce_#{id}!"
       return
-    config = @getConfig(id, textarea[0].classList[1])
-    if config
-      spinner = new Alchemy.Spinner('small')
-      textarea.closest('.tinymce_container').prepend spinner.spin().el
-      tinymce.init(config)
-    else
-      Alchemy.debug('No tinymce configuration found for', id)
+    if customConfig
+      config = $.extend({}, config, customConfig)
+    spinner = new Alchemy.Spinner('small')
+    textarea.closest('.tinymce_container').prepend spinner.spin().el
+    tinymce.init(config)
 
   # Gets called after an editor instance gets intialized
   #
