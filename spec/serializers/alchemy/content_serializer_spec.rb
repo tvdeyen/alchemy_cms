@@ -32,12 +32,12 @@ RSpec.describe Alchemy::ContentSerializer do
     context 'with essence validation errors' do
       before do
         expect(content.essence).to receive(:errors) do
-          double(full_messages: ['something bad'])
+          double(details: {body: [{error: :invalid}]})
         end
       end
 
       it 'lists validations errors' do
-        expect(subject['validation_errors']).to eq(['something bad'])
+        expect(subject['validation_errors']).to eq(['has wrong format'])
       end
     end
   end
