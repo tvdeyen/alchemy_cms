@@ -5,7 +5,8 @@ namespace :alchemy do
   desc "Upgrades your app to AlchemyCMS v#{Alchemy::VERSION}."
   task upgrade: [
     'alchemy:upgrade:prepare',
-    'alchemy:upgrade:4.1:run', 'alchemy:upgrade:4.1:todo'
+    'alchemy:upgrade:4.1:run', 'alchemy:upgrade:4.1:todo',
+    'alchemy:upgrade:4.2:run', 'alchemy:upgrade:4.2:todo'
   ] do
     Alchemy::Upgrader.display_todos
   end
@@ -54,6 +55,36 @@ namespace :alchemy do
 
       task :todo do
         Alchemy::Upgrader::FourPointOne.alchemy_4_1_todos
+      end
+    end
+
+    desc 'Upgrade Alchemy to v4.2'
+    task '4.2' => [
+      'alchemy:upgrade:prepare',
+      'alchemy:upgrade:4.2:run',
+      'alchemy:upgrade:4.2:todo'
+    ] do
+      Alchemy::Upgrader.display_todos
+    end
+
+    namespace '4.2' do
+      task run: [
+        'alchemy:upgrade:4.2:convert_cells',
+        'alchemy:upgrade:4.2:migrate_cells'
+      ]
+
+      desc 'Convert cells config to fixed nestable elements.'
+      task convert_cells: [:environment] do
+        Alchemy::Upgrader::FourPointTwo.convert_cells
+      end
+
+      desc 'Migrate existing cells to fixed nestable elements.'
+      task migrate_cells: ['alchemy:install:migrations', 'db:migrate'] do
+        Alchemy::Upgrader::FourPointTwo.migrate_cells
+      end
+
+      task :todo do
+        Alchemy::Upgrader::FourPointTwo.alchemy_4_2_todos
       end
     end
   end

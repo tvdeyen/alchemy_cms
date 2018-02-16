@@ -126,3 +126,13 @@
 
 - name: gallery
   picture_gallery: true
+
+- name: right_column
+  fixed: true
+  unique: true
+  nestable_elements: [search, text]
+
+- name: <%= 'erb_' + 'cell' %>
+  fixed: true
+  unique: true
+  nestable_elements: [text]
