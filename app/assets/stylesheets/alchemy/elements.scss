@@ -20,9 +20,8 @@
   overflow-x: hidden;
   overflow-y: auto;
 
-  .sortable_cell {
+  .sortable-elements {
     min-height: 100px;
-    padding: 2*$default-padding $default-padding 2px;
   }
 
   textarea {
@@ -33,6 +32,10 @@
       height: 140px !important;
     }
   }
+}
+
+#main-content-elements, .element-editor.is-fixed {
+  padding: 2*$default-padding $default-padding 2px;
 }
 
 .element-title {
@@ -139,6 +142,10 @@
   background-color: $light-gray;
   margin-bottom: 2*$default-margin;
   transition: box-shadow $transition-duration;
+
+  &.is-fixed {
+    border-width: 0;
+  }
 
   &.not-draggable {
     opacity: 0.5;
@@ -322,7 +329,7 @@
   }
 }
 
-#cells {
+#fixed-elements {
   min-height: 100px;
 }
 
@@ -730,7 +737,7 @@ textarea.has_tinymce {
   top: -1px;
 }
 
-.nestable-elements {
+.not-fixed .nestable-elements {
   box-shadow: inset 0 4px 8px -2px darken($medium-gray, 15%);
   background-color: $medium-gray;
 
@@ -739,7 +746,7 @@ textarea.has_tinymce {
   }
 }
 
-.nested-elements {
+.not-fixed .nested-elements {
 
   .element-header {
     background-color: transparent;

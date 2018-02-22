@@ -303,21 +303,20 @@ module Alchemy
     #   locals: Hash                 # Hash of variables that will be available in the partial. Example: {user: var1, product: var2}
     #
     def render_cell(name, options = {})
-      default_options = {
+      options = {
         from_page: @page,
         locals: {}
-      }
-      options = default_options.merge(options)
-      cell = options[:from_page].cells.find_by_name(name)
-      return "" if cell.blank?
+      }.merge(options)
+      cell = options[:from_page].elements.cells.find_by(name: name)
+      return if cell.nil?
       render partial: "alchemy/cells/#{name}", locals: {cell: cell}.merge(options[:locals])
     end
 
     # Returns true or false if no elements are in the cell found by name.
     def cell_empty?(name)
-      cell = @page.cells.find_by_name(name)
-      return true if cell.blank?
-      cell.elements.not_trashed.empty?
+      cell = @page.elements.available.cells.find_by(name: name)
+      return true if cell.nil?
+      cell.nested_elements.available.empty?
     end
   end
 end

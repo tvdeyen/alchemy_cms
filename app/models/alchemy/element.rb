@@ -96,7 +96,7 @@ module Alchemy
     scope :named,             ->(names) { where(name: names) }
     scope :excluded,          ->(names) { where(arel_table[:name].not_in(names)) }
     scope :fixed,             -> { where(fixed: true) }
-    scope :no_fixed,          -> { where(fixed: false) }
+    scope :not_fixed,         -> { where(fixed: false) }
     scope :from_current_site, -> { where(Language.table_name => {site_id: Site.current || Site.default}).joins(page: 'language') }
     scope :folded,            -> { where(folded: true) }
     scope :expanded,          -> { where(folded: false) }
@@ -187,11 +187,10 @@ module Alchemy
       private
 
       def new_element_from_definition_by(attributes)
-        element_attributes = attributes.to_h.merge(name: attributes[:name].split('#').first)
-        element_definition = Element.definition_by_name(element_attributes[:name])
+        element_definition = Element.definition_by_name(attributes[:name])
         return if element_definition.nil?
 
-        new(element_definition.merge(element_attributes).except(*FORBIDDEN_DEFINITION_ATTRIBUTES))
+        new(element_definition.merge(attributes).except(*FORBIDDEN_DEFINITION_ATTRIBUTES))
       end
     end
 
