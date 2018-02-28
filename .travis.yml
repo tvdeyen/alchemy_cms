@@ -4,7 +4,7 @@ sudo: false
 addons:
   apt:
     packages:
-      - chromium-chromedriver
+    - chromium-chromedriver
 cache:
   bundler: true
 rvm:
@@ -12,10 +12,12 @@ rvm:
 - 2.4.2
 - 2.5.0
 before_install:
-  - gem install bundler
+- openssl aes-256-cbc -K $encrypted_6662e8fa5891_key -iv $encrypted_6662e8fa5891_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
+- gem install bundler
 before_script:
-  - bundle exec rake alchemy:spec:prepare
-  - export PATH=$PATH:/usr/lib/chromium-browser/
+- bundle exec rake alchemy:spec:prepare
+- export PATH=$PATH:/usr/lib/chromium-browser/
 script: bundle exec rspec
 after_success: bundle exec codeclimate-test-reporter
 env:
