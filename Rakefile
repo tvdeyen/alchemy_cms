@@ -49,3 +49,7 @@ BASH
     end
   end
 end
+
+namespace :assets do
+  task precompile: 'app:assets:precompile'
+end
