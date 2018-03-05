@@ -5,6 +5,8 @@ gemspec
 # Profiling
 gem 'rack-mini-profiler', group: :development, require: false
 
+gem 'gutentag', github: 'pat/gutentag', branch: 'master'
+
 gem 'sqlite3' if ENV['DB'].nil? || ENV['DB'] == 'sqlite'
 gem 'mysql2', '~> 0.4.10' if ENV['DB'] == 'mysql'
 gem 'pg',     '~> 1.0'   if ENV['DB'] == 'postgresql'
