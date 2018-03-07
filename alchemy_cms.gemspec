@@ -40,9 +40,10 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'simple_form',                      ['3.5.1']
   gem.add_runtime_dependency 'turbolinks',                       ['>= 2.5']
 
-  gem.post_install_message = <<-MSG
+  if ENV['RAILS_ENV'] == 'development'
+    gem.post_install_message = <<-MSG
 -------------------------------------------------------------
-            Thank you for installing Alchemy CMS
+            Thank you for installing AlchemyCMS
 -------------------------------------------------------------
 
 - Complete the installation in an existing Rails application:
@@ -57,10 +58,11 @@ and follow the onscreen instructions.
 
 Need help? Try:
 
-* http://stackoverflow.com/questions/tagged/alchemy-cms
-* http://groups.google.com/group/alchemy-cms
-* irc://irc.freenode.net#alchemy_cms
+* https://alchemy-cms.slack.com
+* https://groups.google.com/group/alchemy-cms
+* https://stackoverflow.com/questions/tagged/alchemy-cms
 -------------------------------------------------------------
 
 MSG
+  end
 end
