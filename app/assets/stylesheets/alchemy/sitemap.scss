@@ -78,12 +78,10 @@
 }
 
 .sitemap_page {
-  height: $sitemap-line-height;
   margin: 3*$default-margin 0;
   position: relative;
-  transition: background-color $transition-duration;
 
-  &.highlight {
+  &.highlight > .sitemap_sitename {
     background-color: $sitemap-highlight-color;
   }
 
@@ -91,7 +89,7 @@
     color: $medium-gray;
   }
 
-  &:hover {
+  &:hover > .sitemap_sitename {
     background-color: $sitemap-page-hover-color;
     border-radius: $default-border-radius;
   }
@@ -102,6 +100,7 @@
   line-height: $sitemap-line-height - 4;
   overflow: hidden;
   background-color: $sitemap-page-background-color;
+  transition: background-color $transition-duration;
 
   &.without-status {
     @include border-right-radius($default-border-radius);

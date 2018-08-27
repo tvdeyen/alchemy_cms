@@ -62,7 +62,7 @@
 <% if @page_root %>
   <h1 id="page_filter_result"></h1>
 
-  <%= render 'sitemap', page_partial: 'page', full: !!@sorting %>
+  <%= render 'vue-sitemap' %>
 
 <% elsif can?(:create, Alchemy::Page) %>
 
