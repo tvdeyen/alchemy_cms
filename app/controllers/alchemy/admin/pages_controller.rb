@@ -393,9 +393,12 @@ module Alchemy
       end
 
       def serialized_page_tree
-        PageTreeSerializer.new(@page, ability: current_ability,
-                                      user: current_alchemy_user,
-                                      full: params[:full] == 'true')
+        Rails.cache.fetch "alchemy/admin/pages/#{@page.id}" do
+          PageTreeSerializer.new(@page,
+            ability: current_ability,
+            user: current_alchemy_user,
+            full: params[:full] == 'true').to_json
+        end
       end
     end
   end
