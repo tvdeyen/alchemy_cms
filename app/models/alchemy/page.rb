@@ -82,6 +82,13 @@ module Alchemy
       :layoutpage
     ]
 
+    ATTRIBUTES_TO_TOUCH_PARENTS_FOR = %w(
+      name
+      public
+      visible
+      restricted
+    )
+
     acts_as_nested_set(dependent: :destroy)
 
     stampable stamper_class_name: Alchemy.user_class_name
@@ -124,6 +131,9 @@ module Alchemy
     after_update :create_legacy_url,
       if: :should_create_legacy_url?,
       unless: :redirects_to_external?
+
+    after_update :touch_parents,
+      if: :should_touch_parents?
 
     # Concerns
     include Alchemy::Page::PageScopes
@@ -339,13 +349,15 @@ module Alchemy
     #
     def lock_to!(user)
       update_columns(locked_at: Time.current, locked_by: user.id)
+      touch_parents
     end
 
-    # Unlocks the page without updating the timestamps
+    # Unlocks the page
     #
     def unlock!
       if update_columns(locked_at: nil, locked_by: nil)
         Page.current_preview = nil
+        touch_parents
       end
     end
 
@@ -353,6 +365,7 @@ module Alchemy
       folded_page = folded_pages.find_or_create_by(user_id: user_id)
       folded_page.folded = status
       folded_page.save!
+      touch_self_and_parents
     end
 
     def set_restrictions_to_child_pages
@@ -502,6 +515,22 @@ module Alchemy
 
     def set_published_at
       self.published_at = Time.current
+    end
+
+    def need_to_touch_parents?
+      attributes = ATTRIBUTES_TO_TOUCH_PARENTS_FOR
+      attributes.push('urlname') if redirects_to_external?
+      changed.any? do |changed_attribute|
+        attributes.include?(changed_attribute)
+      end
+    end
+
+    def touch_self_and_parents
+      self_and_ancestors.update_all(updated_at: Time.current)
+    end
+
+    def touch_parents
+      ancestors.update_all(updated_at: Time.current)
     end
   end
 end
