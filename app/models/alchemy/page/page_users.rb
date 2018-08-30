@@ -7,19 +7,19 @@ module Alchemy
     # Returns the creator of this page.
     #
     def creator
-      get_page_user(creator_id)
+      super if Alchemy.user_class.respond_to?(:primary_key)
     end
 
     # Returns the last updater of this page.
     #
     def updater
-      get_page_user(updater_id)
+      super if Alchemy.user_class.respond_to?(:primary_key)
     end
 
     # Returns the user currently editing this page.
     #
     def locker
-      get_page_user(locked_by)
+      super if Alchemy.user_class.respond_to?(:primary_key)
     end
 
     # Returns the name of the creator of this page.
@@ -47,14 +47,6 @@ module Alchemy
     #
     def locker_name
       (locker && locker.try(:name)) || Alchemy.t('unknown')
-    end
-
-    private
-
-    def get_page_user(id)
-      if Alchemy.user_class.respond_to? :primary_key
-        Alchemy.user_class.try(:find_by, {Alchemy.user_class.primary_key => id})
-      end
     end
   end
 end

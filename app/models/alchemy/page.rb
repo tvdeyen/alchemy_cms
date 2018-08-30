@@ -95,6 +95,10 @@ module Alchemy
 
     belongs_to :language, optional: true
 
+    belongs_to :creator, class_name: Alchemy.user_class_name, foreign_key: :creator_id, optional: true
+    belongs_to :updater, class_name: Alchemy.user_class_name, foreign_key: :updater_id, optional: true
+    belongs_to :locker, class_name: Alchemy.user_class_name, foreign_key: :locked_by, optional: true
+
     has_one :site, through: :language
     has_many :site_languages, through: :site, source: :languages
     has_many :folded_pages
