@@ -393,7 +393,7 @@ module Alchemy
       end
 
       def serialized_page_tree
-        Panko::ArraySerializer.new([@page] + @page.children.includes(:children).to_a,
+        Panko::ArraySerializer.new([@page] + @page.children.includes(:children, :locker).to_a,
           each_serializer: Alchemy::PageTreeNodeSerializer,
           scope: {
             ability: current_ability,
