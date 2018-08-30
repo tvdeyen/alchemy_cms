@@ -1,6 +1,7 @@
 //= require vue-2.5.13/vue.js
 //= require alchemy/components/page_tree/page_link
 //= require alchemy/components/page_tree/page_status
+//= require alchemy/components/page_tree/page_external_url
 //= require alchemy/components/page_tree/toggle
 
 Vue.component('alchemy-page-node', {
@@ -8,9 +9,12 @@ Vue.component('alchemy-page-node', {
     page: { type: Object, required: true }
   },
   data() {
+    const page = this.page
     const pageClasses = ['sitemap_page']
-    if (this.page.locked) pageClasses.push('locked')
-    return { pageClasses }
+    const leftPadding = (page.level - 1) * 32;
+    const pageStyle = { paddingLeft: `${leftPadding}px` }
+    if (page.locked) pageClasses.push('locked')
+    return { pageClasses, pageStyle }
   },
   render(h) {
     const page = this.page;
@@ -28,26 +32,14 @@ Vue.component('alchemy-page-node', {
       ])
     ]
     const leftImages = [h('alchemy-page-icon', { props: { page } })];
-    if (page.children.length && page.level !== 1) {
+    if (page.has_children && !page.root) {
       leftImages.unshift(h('alchemy-page-toggle', { props: { page } }))
     }
     nodes.push(h('div', { attrs: { class: 'sitemap_left_images' } }, leftImages))
     if (page.redirects_to_external) {
-      nodes.push(h('div', {
-        attrs: { class: 'redirect_url' },
-        title: page.urlname
-      }, [
-        `» Redirects to: ${page.external_urlname}`
-      ]))
+      nodes.push(h('alchemy-page-external-url', { props: { page } }))
     }
     nodes.push(h('alchemy-page-link', { props: { page } }))
-    if (page.children.length) {
-      nodes.push(h('ul', this.page.children.map((child) => {
-        return h('alchemy-page-node', {
-          props: { page: child, key: child.id }
-        })
-      })))
-    }
-    return h('li', { class: this.pageClasses }, nodes)
+    return h('li', { class: this.pageClasses, style: this.pageStyle }, nodes)
   }
 });

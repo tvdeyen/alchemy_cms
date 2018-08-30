@@ -6,8 +6,7 @@
   var spinner = new Alchemy.Spinner('medium');
 
   spinner.spin(sitemap);
-  $.getJSON(url, { id: <%= @page_root.id %> }, (data) => {
-    var pages = data.pages;
+  $.getJSON(url, { id: <%= @page_root.id %> }, (pages) => {
     new Vue({
       el: '#sitemap-wrapper',
       render(h) {
