@@ -33,7 +33,7 @@ Vue.component('alchemy-page-node', {
     ]
     const leftImages = [h('alchemy-page-icon', { props: { page } })];
     if (page.has_children && !page.root) {
-      leftImages.unshift(h('alchemy-page-toggle', { props: { page } }))
+      leftImages.unshift(h('alchemy-page-toggle'))
     }
     nodes.push(h('div', { attrs: { class: 'sitemap_left_images' } }, leftImages))
     if (page.redirects_to_external) {

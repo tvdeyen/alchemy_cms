@@ -1,11 +1,22 @@
 Vue.component('alchemy-page-toggle', {
-  props: { page: Object },
   data() {
-    const page = this.page;
-    const iconClasses = ['far', 'fa-fw']
-    const title = page.folded ? 'Show childpages' : 'Hide childpages';
-    iconClasses.push(page.folded ? 'fa-plus-square' : 'fa-minus-square')
-    return { iconClasses, title }
+    return { folded: true }
+  },
+  computed: {
+    iconClasses() {
+      const iconClasses = ['far', 'fa-fw']
+      iconClasses.push(this.folded ? 'fa-plus-square' : 'fa-minus-square')
+      return iconClasses
+    },
+    title() {
+      return this.folded ? 'Show childpages' : 'Hide childpages';
+    }
+  },
+  methods: {
+    toggle() {
+      this.folded = !this.folded;
+      this.$emit('toggle', { folded: this.folded});
+    }
   },
   render(h) {
     return h('a', {
@@ -13,10 +24,8 @@ Vue.component('alchemy-page-toggle', {
       title: this.title,
       on: {
         click: (event) => {
-          $.getJSON('/admin/pages/tree', { id: this.page.id }, (data) => {
-            console.log(data)
-          });
           event.preventDefault();
+          this.toggle();
         }
       }
     }, [ h('i', { class: this.iconClasses }) ])
