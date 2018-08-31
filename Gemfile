@@ -18,6 +18,7 @@ group :development, :test do
     gem 'codeclimate-test-reporter', '~> 1.0', require: false
   end
   unless ENV['CI']
+    gem 'puma'
     gem 'launchy'
     gem 'annotate'
     gem 'bumpy'
