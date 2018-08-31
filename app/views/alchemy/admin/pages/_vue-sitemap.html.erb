@@ -12,9 +12,8 @@
       render(h) {
         return h(
           'ul', { attrs: { class: 'list', id: 'sitemap' } }, pages.map((page) => {
-            return h('alchemy-page-node', {
-              props: { page, key: page.id }
-            });
+            Vue.set(page, 'children', [])
+            return h('alchemy-page-node', { props: { page } });
           })
         );
       }
