@@ -9,12 +9,9 @@ Vue.component('alchemy-page-node', {
     page: { type: Object, required: true }
   },
   data() {
-    const page = this.page
-    const pageClasses = ['sitemap_page']
-    const leftPadding = (page.level - 1) * 32;
+    const leftPadding = (this.page.level - 1) * 32;
     const pageStyle = { paddingLeft: `${leftPadding}px` }
-    if (page.locked) pageClasses.push('locked')
-    return { pageClasses, pageStyle }
+    return { pageStyle }
   },
   render(h) {
     const page = this.page;
@@ -40,6 +37,6 @@ Vue.component('alchemy-page-node', {
       nodes.push(h('alchemy-page-external-url', { props: { page } }))
     }
     nodes.push(h('alchemy-page-link', { props: { page } }))
-    return h('li', { class: this.pageClasses, style: this.pageStyle }, nodes)
+    return h('li', { attrs: { class: 'sitemap_page' }, style: this.pageStyle }, nodes)
   }
 });
