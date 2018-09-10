@@ -7,14 +7,15 @@
 
   spinner.spin(sitemap);
   $.getJSON(url, { id: <%= @page_root.id %> }, (pages) => {
+    const root = pages.shift();
+    Object.assign(root, { children: pages });
     new Vue({
       el: '#sitemap-wrapper',
       render(h) {
         return h(
-          'ul', { attrs: { class: 'list', id: 'sitemap' } }, pages.map((page) => {
-            Vue.set(page, 'children', [])
-            return h('alchemy-page-node', { props: { page } });
-          })
+          'ul', { attrs: { class: 'list', id: 'sitemap' } }, [
+            h('alchemy-page-node', { props: { page: root } })
+          ]
         );
       }
     });
