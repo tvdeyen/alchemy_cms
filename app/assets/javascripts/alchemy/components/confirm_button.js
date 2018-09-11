@@ -25,8 +25,7 @@ Vue.component('alchemy-confirm-button', {
     confirm() {
       $.ajax(this.url, { method: this.urlMethod })
     },
-    openDialog(e) {
-      e.preventDefault()
+    openDialog() {
       Alchemy.openConfirmDialog(this.message, {
         title: this.title,
         ok_label: Alchemy.t('ok'),
@@ -37,14 +36,18 @@ Vue.component('alchemy-confirm-button', {
   },
 
   render(h) {
-    return h('div', { attrs: { class: this.buttonClasses } }, [
-      h('a', {
-        attrs: { class: 'icon_button' },
-        on: { click: this.openDialog }
-      }, [
-        h('i', { class: this.iconClasses })
-      ]),
-      h('label', { attrs: { class: this.labelClasses } }, [this.label] )
-    ])
+    return h('alchemy-button', {
+      props: {
+        icon: this.icon,
+        label: this.label,
+        hotkey: this.hotkey,
+        labelClass: this.labelClass,
+        buttonClass: this.buttonClasses,
+        buttonId: this.buttonId
+      },
+      on: {
+        click: this.openDialog
+      }
+    })
   }
 });
