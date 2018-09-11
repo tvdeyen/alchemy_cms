@@ -1,4 +1,9 @@
+//= require alchemy/components/spinner
+
 Vue.component('alchemy-page-toggle', {
+  props: {
+    showSpinner: { type: Boolean, default: false }
+  },
   data() {
     return { folded: true }
   },
@@ -19,6 +24,8 @@ Vue.component('alchemy-page-toggle', {
     }
   },
   render(h) {
+    const icon = h('i', { class: this.iconClasses })
+    const spinner = h('alchemy-spinner', { props: { size: 'small' } })
     return h('a', {
       attrs: { class: 'page_folder' },
       title: this.title,
@@ -28,6 +35,6 @@ Vue.component('alchemy-page-toggle', {
           this.toggle();
         }
       }
-    }, [ h('i', { class: this.iconClasses }) ])
+    }, [ this.showSpinner ? spinner : icon ])
   }
 });

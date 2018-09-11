@@ -158,8 +158,11 @@
 
   .page_folder {
     position: absolute;
+    top: 8px;
     left: -23px;
-    top: 0;
+    width: 16px;
+    height: 16px;
+    line-height: 1.4;
     cursor: pointer;
   }
 

@@ -12,7 +12,8 @@ Vue.component('alchemy-page-node', {
   data() {
     return {
       children: this.page.children,
-      showChildren: this.page.children.length > 0
+      showChildren: this.page.children.length > 0,
+      loading: false
     }
   },
   methods: {
@@ -22,8 +23,10 @@ Vue.component('alchemy-page-node', {
       } else {
         this.showChildren = true
         if (this.children.length === 0) {
+          this.loading = true
           $.getJSON('/admin/pages/tree', { id: this.page.id }, (data) => {
             this.children = data
+            this.loading = false
           })
         }
       }
@@ -113,7 +116,10 @@ Vue.component('alchemy-page-node', {
 
     const leftImages = [h('alchemy-page-icon', { props: { page } })];
     if (page.has_children && !page.root) {
-      leftImages.unshift(h('alchemy-page-toggle', { on: { toggle: this.toggle } }))
+      leftImages.unshift(h('alchemy-page-toggle', {
+        props: { showSpinner: this.loading },
+        on: { toggle: this.toggle }
+      }))
     }
     nodes.push(h('div', { attrs: { class: 'sitemap_left_images' } }, leftImages))
 
