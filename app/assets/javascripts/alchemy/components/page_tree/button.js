@@ -1,5 +1,6 @@
 //= require alchemy/components/dialog_button
 //= require alchemy/components/confirm_button
+//= require alchemy/components/button
 
 Vue.component('alchemy-sitemap-button', {
   props: {
@@ -51,5 +52,18 @@ Vue.component('alchemy-sitemap-button', {
         }
       })
     }
+    return h('alchemy-button', {
+      props: {
+        icon: this.icon,
+        label: this.label,
+        buttonClass: 'sitemap_tool',
+        labelClass: 'center'
+      },
+      on: {
+        click: () => {
+          $.ajax(this.url, { method: this.urlMethod })
+        }
+      }
+    })
   }
 });
