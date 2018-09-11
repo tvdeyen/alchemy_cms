@@ -11,17 +11,21 @@ Vue.component('alchemy-page-node', {
   },
   data() {
     return {
-      children: this.page.children
+      children: this.page.children,
+      showChildren: this.page.children.length > 0
     }
   },
   methods: {
     toggle(data) {
       if (data.folded) {
-        this.children = []
+        this.showChildren = false
       } else {
-        $.getJSON('/admin/pages/tree', { id: this.page.id }, (data) => {
-          this.children = data
-        })
+        this.showChildren = true
+        if (this.children.length === 0) {
+          $.getJSON('/admin/pages/tree', { id: this.page.id }, (data) => {
+            this.children = data
+          })
+        }
       }
     }
   },
@@ -119,7 +123,7 @@ Vue.component('alchemy-page-node', {
 
     nodes.push(h('alchemy-page-link', { props: { page } }))
 
-    if (this.children.length) {
+    if (this.showChildren) {
       nodes.push(h('ul', this.children.map((child) => {
         Object.assign(child, { children: [] })
         return h('alchemy-page-node', { props: { page: child } })
