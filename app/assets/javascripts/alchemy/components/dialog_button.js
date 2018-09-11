@@ -23,8 +23,7 @@ Vue.component('alchemy-dialog-button', {
   },
 
   methods: {
-    openDialog(e) {
-      e.preventDefault()
+    openDialog() {
       new Alchemy.Dialog(this.url, {
         title: this.title,
         size: this.size
@@ -33,12 +32,18 @@ Vue.component('alchemy-dialog-button', {
   },
 
   render(h) {
-    const icon = h('i', { class: this.iconClasses });
-    const label = h('label', { attrs: { class: this.labelClass } }, [this.label])
-    const link = h('a', { attrs: {
-      class: 'icon_button', 'data-alchemy-hotkey': this.hotkey },
-      on: { click: this.openDialog }
-    }, [icon]);
-    return h('div', { attrs: { class: this.buttonClasses, id: this.buttonId } }, [link, label] )
+    return h('alchemy-button', {
+      props: {
+        icon: this.iconClass,
+        label: this.label,
+        hotkey: this.hotkey,
+        labelClass: this.labelClass,
+        buttonClass: this.buttonClasses,
+        buttonId: this.buttonId
+      },
+      on: {
+        click: this.openDialog
+      }
+    })
   }
 });
