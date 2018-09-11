@@ -78,7 +78,12 @@
     order_admin_contents_path: '<%= alchemy.order_admin_contents_path %>',
     order_admin_elements_path: '<%= alchemy.order_admin_elements_path %>',
     order_admin_pages_path: '<%= alchemy.order_admin_pages_path %>',
-    link_admin_pages_path: '<%= alchemy.link_admin_pages_path %>'
+    link_admin_pages_path: '<%= alchemy.link_admin_pages_path %>',
 
+    copy_admin_page_path(id) {
+      return '<%== alchemy.insert_admin_clipboard_path(
+        remarkable_type: 'pages',
+        remarkable_id: 'pid') %>'.replace(/pid/, id);
+    }
   };
 </script>
