@@ -7,7 +7,8 @@
 
 Vue.component('alchemy-page-node', {
   props: {
-    page: { type: Object, required: true }
+    page: { type: Object, required: true },
+    linking: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -36,7 +37,21 @@ Vue.component('alchemy-page-node', {
     const page = this.page;
 
     const nodes = [
-      h('div', { attrs: { class: 'sitemap_right_tools' } }, [
+      h('div', { attrs: { class: 'page_infos' } }, [
+        h('alchemy-page-status', {
+          props: { hint: page.status_titles.public, icon: 'compass', disabled: !page.public }
+        }),
+        h('alchemy-page-status', {
+          props: { hint: page.status_titles.visible, icon: 'eye', disabled: !page.visible }
+        }),
+        h('alchemy-page-status', {
+          props: { hint: page.status_titles.restricted, icon: 'lock', disabled: !page.restricted }
+        })
+      ])
+    ]
+
+    if (!this.linking) {
+      const sitemapTools = [
         h('alchemy-sitemap-button', {
           props: {
             icon: 'info-circle',
@@ -99,20 +114,9 @@ Vue.component('alchemy-page-node', {
             disabledNotice: 'Your user role does not allow you to create a new subpage'
           }
         })
-      ]),
-
-      h('div', { attrs: { class: 'page_infos' } }, [
-        h('alchemy-page-status', {
-          props: { hint: page.status_titles.public, icon: 'compass', disabled: !page.public }
-        }),
-        h('alchemy-page-status', {
-          props: { hint: page.status_titles.visible, icon: 'eye', disabled: !page.visible }
-        }),
-        h('alchemy-page-status', {
-          props: { hint: page.status_titles.restricted, icon: 'lock', disabled: !page.restricted }
-        })
-      ])
-    ]
+      ]
+      nodes.unshift(h('div', { attrs: { class: 'sitemap_right_tools' } }, sitemapTools))
+    }
 
     const leftImages = [h('alchemy-page-icon', { props: { page } })];
     if (page.has_children && !page.root) {
@@ -127,12 +131,12 @@ Vue.component('alchemy-page-node', {
       nodes.push(h('alchemy-page-external-url', { props: { page } }))
     }
 
-    nodes.push(h('alchemy-page-link', { props: { page } }))
+    nodes.push(h('alchemy-page-link', { props: { page, disabled: this.linking } }))
 
     if (this.showChildren) {
       nodes.push(h('ul', this.children.map((child) => {
         Object.assign(child, { children: [] })
-        return h('alchemy-page-node', { props: { page: child } })
+        return h('alchemy-page-node', { props: { page: child, linking: this.linking } })
       })))
     }
 

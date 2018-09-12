@@ -14,7 +14,7 @@
       render(h) {
         return h(
           'ul', { attrs: { class: 'list', id: 'sitemap' } }, [
-            h('alchemy-page-node', { props: { page: root } })
+            h('alchemy-page-node', { props: { page: root, linking: <%= local_assigns[:linking] || false %> } })
           ]
         );
       }

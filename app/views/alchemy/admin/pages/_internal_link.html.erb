@@ -6,7 +6,7 @@
   <% end %>
   <div id="page_selector_container">
     <% if @page_root %>
-      <%= render 'sitemap', page_partial: 'page_for_links', full: true %>
+      <%= render 'vue-sitemap', linking: true %>
     <% end %>
   </div>
   <div class="input select">

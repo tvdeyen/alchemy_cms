@@ -1,9 +1,18 @@
 Vue.component('alchemy-page-link', {
-  props: { page: Object },
+  props: {
+    page: Object,
+    disabled: { type: Boolean, default: false }
+  },
+  data() {
+    const page = this.page;
+    return {
+      active: page.permissions.edit_content && !page.redirects_to_external && !this.disabled
+    }
+  },
   render(h) {
     const page = this.page;
     let children = [];
-    if (page.permissions.edit_content && !page.redirects_to_external) {
+    if (this.active) {
       children = [
         h('a', {
           attrs: {
