@@ -136,6 +136,6 @@ Vue.component('alchemy-page-node', {
       })))
     }
 
-    return h('li', { attrs: { class: 'sitemap_page' } }, nodes)
+    return h('li', { attrs: { class: 'sitemap_page', name: page.name } }, nodes)
   }
 });
