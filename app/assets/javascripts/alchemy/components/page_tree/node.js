@@ -50,8 +50,24 @@ Vue.component('alchemy-page-node', {
       ])
     ]
 
-    if (!this.linking) {
-      const sitemapTools = [
+    let sitemapTools = []
+    if (this.linking) {
+      sitemapTools = [
+        h('alchemy-sitemap-button', {
+          props: {
+            icon: 'th-list',
+            url: Alchemy.routes.list_admin_elements_path(page.id),
+            label: 'Show all elements from this page',
+            labelClass: 'left',
+            dialog: {
+              title: 'Elements from page',
+              size: '400x165'
+            }
+          }
+        })
+      ]
+    } else {
+      sitemapTools = [
         h('alchemy-sitemap-button', {
           props: {
             icon: 'info-circle',
@@ -115,8 +131,8 @@ Vue.component('alchemy-page-node', {
           }
         })
       ]
-      nodes.unshift(h('div', { attrs: { class: 'sitemap_right_tools' } }, sitemapTools))
     }
+    nodes.unshift(h('div', { attrs: { class: 'sitemap_right_tools' } }, sitemapTools))
 
     const leftImages = [h('alchemy-page-icon', { props: { page } })];
     if (page.has_children && !page.root) {
