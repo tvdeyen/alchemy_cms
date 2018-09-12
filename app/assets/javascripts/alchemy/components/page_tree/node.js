@@ -40,7 +40,7 @@ Vue.component('alchemy-page-node', {
         h('alchemy-sitemap-button', {
           props: {
             icon: 'info-circle',
-            url: `/admin/pages/${page.id}/info`,
+            url: Alchemy.routes.info_admin_page_path(page.id),
             label: 'Page info',
             dialog: {
               title: 'Page info',
@@ -53,7 +53,7 @@ Vue.component('alchemy-page-node', {
         h('alchemy-sitemap-button', {
           props: {
             icon: 'cog',
-            url: `/admin/pages/${page.id}/configure`,
+            url: Alchemy.routes.configure_admin_page_path(page.id),
             label: 'Edit page properties',
             dialog: {
               title: 'Edit page properties',
@@ -76,7 +76,7 @@ Vue.component('alchemy-page-node', {
         h('alchemy-sitemap-button', {
           props: {
             icon: 'minus',
-            url: `/admin/pages/${page.id}`,
+            url: Alchemy.routes.admin_page_path(page.id),
             urlMethod: 'DELETE',
             label: 'Delete this page',
             confirm: {
@@ -89,7 +89,7 @@ Vue.component('alchemy-page-node', {
         h('alchemy-sitemap-button', {
           props: {
             icon: 'plus',
-            url: `/admin/pages/new?parent_id=${page.id}`,
+            url: Alchemy.routes.new_admin_page_path(page.id),
             label: 'Create a new subpage',
             dialog: {
               title: 'Create a new subpage',

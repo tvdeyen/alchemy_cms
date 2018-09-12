@@ -86,8 +86,24 @@
         remarkable_id: 'pid') %>'.replace(/pid/, id);
     },
 
+    new_admin_page_path: function(id) {
+      return '<%= alchemy.new_admin_page_path(parent_id: 'pid') %>'.replace(/pid/, id);
+    },
+
     edit_admin_page_path: function(id) {
       return '<%= alchemy.edit_admin_page_path(id: 'pid') %>'.replace(/pid/, id);
+    },
+
+    configure_admin_page_path: function(id) {
+      return '<%= alchemy.configure_admin_page_path(id: 'pid') %>'.replace(/pid/, id);
+    },
+
+    info_admin_page_path: function(id) {
+      return '<%= alchemy.info_admin_page_path(id: 'pid') %>'.replace(/pid/, id);
+    },
+
+    admin_page_path: function(id) {
+      return '<%= alchemy.admin_page_path(id: 'pid') %>'.replace(/pid/, id);
     }
   };
 </script>

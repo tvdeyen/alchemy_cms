@@ -7,7 +7,7 @@ Vue.component('alchemy-page-link', {
       children = [
         h('a', {
           attrs: {
-            href: `/admin/pages/${page.id}/edit`,
+            href: Alchemy.routes.edit_admin_page_path(page.id),
             class: 'sitemap_pagename_link'
           }
         }, page.name)
