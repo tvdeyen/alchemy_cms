@@ -8,6 +8,7 @@ Vue.component('alchemy-sitemap-button', {
     urlMethod: String,
     icon: String,
     label: String,
+    labelClass: { type: String, default: 'center' },
     disabled: { type: Boolean, default: false },
     disabledNotice: String,
     dialog: Object,
@@ -35,7 +36,7 @@ Vue.component('alchemy-sitemap-button', {
           title: this.dialog.title,
           size: this.dialog.size,
           buttonClass: 'sitemap_tool',
-          labelClass: 'center'
+          labelClass: this.labelClass
         }
       })
     }
@@ -48,7 +49,7 @@ Vue.component('alchemy-sitemap-button', {
           label: this.label,
           message: this.confirm.message,
           buttonClass: 'sitemap_tool',
-          labelClass: 'center'
+          labelClass: this.labelClass
         }
       })
     }
@@ -57,7 +58,7 @@ Vue.component('alchemy-sitemap-button', {
         icon: this.icon,
         label: this.label,
         buttonClass: 'sitemap_tool',
-        labelClass: 'center'
+        labelClass: this.labelClass
       },
       on: {
         click: () => {
