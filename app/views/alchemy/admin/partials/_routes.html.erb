@@ -84,6 +84,10 @@
       return '<%== alchemy.insert_admin_clipboard_path(
         remarkable_type: 'pages',
         remarkable_id: 'pid') %>'.replace(/pid/, id);
+    },
+
+    edit_admin_page_path: function(id) {
+      return '<%= alchemy.edit_admin_page_path(id: 'pid') %>'.replace(/pid/, id);
     }
   };
 </script>
