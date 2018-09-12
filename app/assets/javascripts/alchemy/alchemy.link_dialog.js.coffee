@@ -33,6 +33,11 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
 
   # Attaches click events to several buttons in the link dialog.
   attachEvents: ->
+    # Event emitted by the Vue sitemap
+    @dialog_body.on 'page_selected', (e, data) =>
+      @selectPage(data.page_id)
+      @$internal_urlname.val('/' + data.url)
+      return
     # The ok buttons
     $('.create-link.button', @dialog_body).click (e) =>
       @link_type = $(e.target).data('link-type')
