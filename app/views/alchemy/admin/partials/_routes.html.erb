@@ -74,7 +74,14 @@
       return '<%= alchemy.admin_element_path(id: 'eid') %>'.replace(/eid/, id);
     },
 
-    list_admin_elements_path: '<%= alchemy.list_admin_elements_path %>',
+    list_admin_elements_path: function(page_id) {
+      if (page_id) {
+        return '<%= alchemy.list_admin_elements_path(page_id: 'pid') %>'.replace(/pid/, page_id);
+      } else {
+        return '<%= alchemy.list_admin_elements_path %>';
+      }
+    },
+
     order_admin_contents_path: '<%= alchemy.order_admin_contents_path %>',
     order_admin_elements_path: '<%= alchemy.order_admin_elements_path %>',
     order_admin_pages_path: '<%= alchemy.order_admin_pages_path %>',
