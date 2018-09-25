@@ -20,29 +20,22 @@ module Alchemy
         expect(Page).to receive(:find).and_return alchemy_page
       end
 
-      context 'with cells' do
-        let(:cell) { build_stubbed(:alchemy_cell, page: alchemy_page) }
+      context 'with fixed elements' do
+        let(:fixed_element) { build_stubbed(:alchemy_element, :fixed, page: alchemy_page) }
 
         before do
-          expect(alchemy_page).to receive(:cells).and_return [cell]
+          expect(alchemy_page).to receive(:fixed_elements).and_return [fixed_element]
         end
 
-        it "groups elements by cell" do
-          expect(alchemy_page).to receive(:elements_grouped_by_cells)
+        it "assigns fixed elements" do
           get :index, params: {page_id: alchemy_page.id}
-          expect(assigns(:cells)).to eq([cell])
+          expect(assigns(:fixed_elements)).to eq([fixed_element])
         end
       end
 
-      context 'without cells' do
-        before do
-          expect(alchemy_page).to receive(:cells).and_return []
-        end
-
-        it "assigns page elements" do
-          expect(alchemy_page).to receive(:elements).and_return(double(not_trashed: []))
-          get :index, params: {page_id: alchemy_page.id}
-        end
+      it "assigns page elements" do
+        expect(alchemy_page).to receive(:elements).and_return(double(not_trashed: []))
+        get :index, params: {page_id: alchemy_page.id}
       end
     end
 
@@ -148,7 +141,7 @@ module Alchemy
         end
 
         context "with cell_id present" do
-          let(:cell) { create(:alchemy_cell) }
+          let(:cell) { create(:alchemy_element, :fixed) }
 
           it "should assign the (new) cell_id to the element" do
             post :order, params: {
@@ -229,7 +222,7 @@ module Alchemy
                 'elements' => ['article'],
                 'cells' => ['header']
               })
-              expect(Cell).to receive(:definition_for).and_return({
+              expect(Element).to receive(:definition_for).and_return({
                 'name' => 'header',
                 'elements' => ['article']
               })
@@ -262,7 +255,7 @@ module Alchemy
 
             context "and cell name in element name" do
               before do
-                expect(Cell).to receive(:definition_for).at_least(:once).and_return({
+                expect(Element).to receive(:definition_for).at_least(:once).and_return({
                   'name' => 'header',
                   'elements' => ['article']
                 })
@@ -296,7 +289,7 @@ module Alchemy
           context "on a page with a setting for insert_elements_at of top" do
             let!(:alchemy_page)         { create(:alchemy_page, :public, name: 'News') }
             let!(:element_in_clipboard) { create(:alchemy_element, page: alchemy_page, name: 'news') }
-            let!(:cell)                 { create(:alchemy_cell, name: 'news', page: alchemy_page) }
+            let!(:cell)                 { create(:alchemy_element, :fixed, name: 'news', page: alchemy_page) }
             let!(:element)              { create(:alchemy_element, name: 'news', page: alchemy_page, cell: cell) }
 
             before do
@@ -306,7 +299,7 @@ module Alchemy
                 'insert_elements_at' => 'top',
                 'cells' => ['news']
               })
-              expect(Cell).to receive(:definition_for).and_return({
+              expect(Element).to receive(:definition_for).and_return({
                 'name' => 'news',
                 'elements' => ['news']
               })
@@ -375,7 +368,7 @@ module Alchemy
 
       context "with element name and cell name in the params" do
         before do
-          expect(Cell).to receive(:definition_for).and_return({
+          expect(Element).to receive(:definition_for).and_return({
             'name' => 'header',
             'elements' => ['header']
           })
@@ -392,13 +385,13 @@ module Alchemy
 
         context "with the cell already present" do
           before do
-            create(:alchemy_cell, page: alchemy_page, name: 'header')
+            create(:alchemy_element, :fixed, page: alchemy_page, name: 'header')
           end
 
           it "should load the cell" do
             expect {
               controller.send(:find_or_create_cell)
-            }.to_not change(alchemy_page.cells, :count)
+            }.to_not change(alchemy_page.fixed_elements, :count)
           end
         end
       end
@@ -416,7 +409,7 @@ module Alchemy
       context 'with cell definition not found' do
         before do
           expect(controller).to receive(:params).and_return({element: {name: 'header#header'}})
-          expect(Cell).to receive(:definition_for).and_return nil
+          expect(Element).to receive(:definition_for).and_return nil
         end
 
         it "raises error" do

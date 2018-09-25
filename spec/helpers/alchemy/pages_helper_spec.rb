@@ -381,7 +381,7 @@ module Alchemy
     end
 
     describe "#cell_empty" do
-      let(:cell)    { create(:alchemy_cell, name: 'test_cell', page: public_page) }
+      let(:cell)    { create(:alchemy_element, :fixed, name: 'test_cell', page: public_page) }
       let(:element) { create(:alchemy_element) }
 
       before { @page = public_page }

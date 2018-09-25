@@ -592,7 +592,7 @@ module Alchemy
       end
 
       context "page with cells" do
-        before { page.cells << create(:alchemy_cell) }
+        before { page.cells << create(:alchemy_element, :fixed) }
 
         it "the copy should have source cells" do
           expect(subject.cells).not_to be_empty
@@ -1293,7 +1293,7 @@ module Alchemy
         end
 
         context "given as cell object" do
-          let(:cell) { build_stubbed(:alchemy_cell, page: public_page) }
+          let(:cell) { build_stubbed(:alchemy_element, :fixed, page: public_page) }
 
           it "returns only the elements from given cell" do
             expect(cell)

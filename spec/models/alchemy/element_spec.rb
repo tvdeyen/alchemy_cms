@@ -98,7 +98,7 @@ module Alchemy
         end
 
         context 'copy to new cell' do
-          let(:new_cell) { create(:alchemy_cell) }
+          let(:new_cell) { create(:alchemy_element, :fixed) }
 
           subject(:new_element) do
             Element.copy(element, {cell_id: new_cell.id})
@@ -207,7 +207,7 @@ module Alchemy
     describe '.not_in_cell' do
       before do
         Element.delete_all
-        create(:alchemy_element, cell: create(:alchemy_cell))
+        create(:alchemy_element, cell: create(:alchemy_element, :fixed))
         create(:alchemy_element)
       end
 
@@ -339,9 +339,9 @@ module Alchemy
         end
 
         it "should return a list of all cells from given page this element could be placed in" do
-          create(:alchemy_cell, name: 'header', page: page)
-          create(:alchemy_cell, name: 'footer', page: page)
-          create(:alchemy_cell, name: 'sidebar', page: page)
+          create(:alchemy_element, :fixed, name: 'header', page: page)
+          create(:alchemy_element, :fixed, name: 'footer', page: page)
+          create(:alchemy_element, :fixed, name: 'sidebar', page: page)
           expect(element.available_page_cell_names(page)).to include('header')
           expect(element.available_page_cell_names(page)).to include('footer')
         end
@@ -363,9 +363,9 @@ module Alchemy
         end
 
         it "should return the 'nil cell'" do
-          create(:alchemy_cell, name: 'header', page: page)
-          create(:alchemy_cell, name: 'footer', page: page)
-          create(:alchemy_cell, name: 'sidebar', page: page)
+          create(:alchemy_element, :fixed, name: 'header', page: page)
+          create(:alchemy_element, :fixed, name: 'footer', page: page)
+          create(:alchemy_element, :fixed, name: 'sidebar', page: page)
           expect(element.available_page_cell_names(page)).to eq(['for_other_elements'])
         end
       end
@@ -688,7 +688,7 @@ module Alchemy
         let(:element) { create(:alchemy_element, page: page, cell: cell) }
 
         let(:cell) do
-          create(:alchemy_cell).tap do |cell|
+          create(:alchemy_element, :fixed).tap do |cell|
             cell.update_column(:updated_at, 3.hours.ago)
           end
         end
