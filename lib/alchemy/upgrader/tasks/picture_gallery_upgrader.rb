@@ -57,7 +57,8 @@ module Alchemy::Upgrader::Tasks
 
       elements_with_picture_gallery.inject(all_other_elements) do |elements, old_element|
         elements << modify_old_element(old_element.dup)
-        elements << build_new_element(old_element)
+        elements << add_picture_gallery_for(old_element["name"])
+        elements << build_new_picture_element_for(old_element["name"])
       end
 
       puts 'done.'
@@ -133,21 +134,44 @@ HAMLSLIM
     end
 
     def modify_old_element(element)
-      nestable_element = "#{element['name']}_picture"
+      nestable_element = "#{element['name']}_picture_gallery"
       element.delete('picture_gallery')
       element['nestable_elements'] ||= []
       element['nestable_elements'] << nestable_element
       element
     end
 
-    def build_new_element(element)
+    def add_picture_gallery_for(element_name)
       {
-        'name' => "#{element['name']}_picture",
+        "name" => "#{element_name}_picture_gallery",
+        "nestable_elements" => ["#{element_name}_picture_gallery_picture"]
+      }
+    end
+
+    def build_new_picture_element_for(element_name)
+      image_options = parse_image_options_from_editor_view(element_name)
+      settings = {}
+      if image_options[0]
+        settings["crop"] = image_options[0] == 'true'
+      end
+      settings["size"] = image_options[1] if image_options[1]
+      element = {
+        'name' => "#{element_name}_picture_gallery_picture",
         'contents' => [{
           'name' => 'picture',
-          'type' => 'EssencePicture'
+          'type' => 'EssencePicture',
         }]
       }
+      element['contents'][0]['settings'] = settings if settings.present?
+      element
+    end
+
+    def parse_image_options_from_editor_view(element_name)
+      partial_path = Dir.glob(Rails.root.join('app', 'views', 'alchemy', 'elements', "_#{element_name}_editor.html.*")).first
+      partial = File.read(partial_path)
+      crop_option = partial.match(/.*render_picture_gallery_editor.*crop(\:|\s?=>)\s?(true|false).*/).try(:[], 2)
+      size_option = partial.match(/.*render_picture_gallery_editor.*size(\:|\s?=>)\s?["'](\d*x\d*)["'].*/).try(:[], 2)
+      [crop_option, size_option]
     end
 
     def erb_element_partials(kind)
