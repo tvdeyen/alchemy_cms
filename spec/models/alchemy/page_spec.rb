@@ -303,7 +303,7 @@ module Alchemy
 
             it "should have the elements in the nil cell" do
               page.save!
-              expect(page.cells.collect(&:elements).flatten).to be_empty
+              expect(page.cells.collect(&:elements).flatten!).to be_empty
             end
           end
         end

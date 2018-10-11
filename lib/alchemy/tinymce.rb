@@ -48,7 +48,7 @@ module Alchemy
           end
           next if contents.blank?
           contents.map { |c| c.merge('element' => el['name']) }
-        end.flatten.compact
+        end.flatten!.compact!
       end
     end
   end

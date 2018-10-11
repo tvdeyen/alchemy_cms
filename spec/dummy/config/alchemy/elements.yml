@@ -86,6 +86,9 @@
     - name: essence_richtext
       type: EssenceRichtext
       hint: true
+      settings:
+        tinymce:
+          toolbar: ['bold italic underline']
     - name: essence_select
       type: EssenceSelect
       hint: true

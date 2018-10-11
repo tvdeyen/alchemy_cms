@@ -51,8 +51,18 @@ Style/MixinUsage:
   Exclude:
     - spec/**/*
 
+Performance/ChainArrayAllocation:
+  Enabled: true
+
 Performance/Count:
   Enabled: false
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Layout/EmptyLinesAroundAccessModifier:
+  Exclude:
+    - lib/alchemy/test_support/factories/**/*
 
 Layout/AlignHash:
   Enabled: false
@@ -281,7 +291,7 @@ Naming/AccessorMethodName:
   Enabled: false
 
 Naming/HeredocDelimiterNaming:
-    Enabled: false
+  Enabled: false
 
 # This cop is great but has no config option to support the style `@_method_name` we are using.
 Naming/MemoizedInstanceVariableName:
