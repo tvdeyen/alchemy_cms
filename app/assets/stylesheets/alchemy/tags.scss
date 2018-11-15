@@ -3,23 +3,18 @@
   padding-bottom: 138px;
 
   &.filtered {
-    padding-bottom: 164px;
+    padding-bottom: 182px;
   }
 
   &.with_filter_bar {
     padding-bottom: 218px;
 
     &.filtered {
-      padding-bottom: 244px;
+      padding-bottom: 258px;
     }
   }
 
   .js_filter_field_box {
-    position: absolute;
-    right: auto;
-    top: auto;
-    width: 200px;
-    z-index: 1100;
     transition: background-color $transition-duration;
 
     input {
@@ -36,16 +31,16 @@
   ul {
     list-style-type: none;
     padding: 0;
-    margin: 44px 0 4px 0;
+    margin: 0;
     height: 100%;
-    width: 200px;
+    width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 
     li {
       display: block;
-
-      &:first-child { margin-top: 0 }
+      margin: 0;
 
       a {
         @include tag-base;
@@ -119,6 +114,7 @@
     overflow: auto;
     text-align: left;
     list-style-type: none;
+    -webkit-overflow-scrolling: touch;
 
     li {
       background-color: $medium-gray;
