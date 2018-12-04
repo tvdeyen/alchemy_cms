@@ -16,6 +16,7 @@
 
 module Alchemy
   class EssenceRichtext < BaseRecord
+    include Alchemy::ActsAsEssence
     acts_as_essence preview_text_column: 'stripped_body'
 
     before_save :strip_content

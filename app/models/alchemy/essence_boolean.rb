@@ -16,6 +16,7 @@
 # Provides a checkbox in the editor views.
 module Alchemy
   class EssenceBoolean < BaseRecord
+    include Alchemy::ActsAsEssence
     acts_as_essence ingredient_column: 'value'
   end
 end

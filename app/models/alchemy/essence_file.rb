@@ -17,6 +17,7 @@
 
 module Alchemy
   class EssenceFile < BaseRecord
+    include Alchemy::ActsAsEssence
     belongs_to :attachment, optional: true
     acts_as_essence ingredient_column: 'attachment'
 

@@ -19,6 +19,7 @@
 
 module Alchemy
   class EssenceText < BaseRecord
+    include Alchemy::ActsAsEssence
     acts_as_essence
   end
 end

@@ -3,7 +3,7 @@
 require 'active_record'
 
 module Alchemy #:nodoc:
-  module Essence #:nodoc:
+  module ActsAsEssence #:nodoc:
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -33,7 +33,7 @@ module Alchemy #:nodoc:
 
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           attr_writer :validation_errors
-          include Alchemy::Essence::InstanceMethods
+          include Alchemy::ActsAsEssence::InstanceMethods
           stampable stamper_class_name: Alchemy.user_class_name
           validate :validate_ingredient, on: :update, if: -> { validations.any? }
 
@@ -231,4 +231,3 @@ module Alchemy #:nodoc:
     end
   end
 end
-ActiveRecord::Base.class_eval { include Alchemy::Essence } if defined?(Alchemy::Essence)

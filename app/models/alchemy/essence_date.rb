@@ -14,6 +14,7 @@
 
 module Alchemy
   class EssenceDate < BaseRecord
+    include Alchemy::ActsAsEssence
     acts_as_essence ingredient_column: 'date'
 
     # Returns self.date for the Element#preview_text method.
