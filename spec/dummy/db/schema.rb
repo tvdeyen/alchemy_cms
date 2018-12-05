@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_09_171801) do
+ActiveRecord::Schema.define(version: 2018_12_05_221449) do
 
   create_table "alchemy_attachments", force: :cascade do |t|
     t.string "name"
@@ -116,6 +116,14 @@ ActiveRecord::Schema.define(version: 2018_04_09_171801) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "creator_id"
     t.integer "updater_id"
+  end
+
+  create_table "alchemy_essence_picture_assignments", force: :cascade do |t|
+    t.integer "essence_picture_id", null: false
+    t.integer "picture_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["essence_picture_id", "picture_id"], name: "idx_essence_picture_assignments", unique: true
   end
 
   create_table "alchemy_essence_pictures", force: :cascade do |t|
