@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_09_171801) do
+ActiveRecord::Schema.define(version: 2018_12_04_214547) do
 
   create_table "alchemy_attachments", force: :cascade do |t|
     t.string "name"
@@ -168,6 +168,14 @@ ActiveRecord::Schema.define(version: 2018_04_09_171801) do
     t.integer "updater_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "alchemy_essences", force: :cascade do |t|
+    t.integer "element_id", null: false
+    t.string "type", null: false
+    t.json "ingredients"
+    t.index ["element_id"], name: "index_alchemy_essences_on_element_id"
+    t.index ["id", "type"], name: "index_alchemy_essences_on_id_and_type"
   end
 
   create_table "alchemy_folded_pages", force: :cascade do |t|

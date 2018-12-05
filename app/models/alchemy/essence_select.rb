@@ -14,8 +14,7 @@
 
 # Provides a select box that stores string values.
 module Alchemy
-  class EssenceSelect < BaseRecord
-    include Alchemy::ActsAsEssence
+  class EssenceSelect < Essence
     acts_as_essence ingredient_column: 'value'
   end
 end

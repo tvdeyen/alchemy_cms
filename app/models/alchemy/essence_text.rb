@@ -18,8 +18,14 @@
 #
 
 module Alchemy
-  class EssenceText < BaseRecord
-    include Alchemy::ActsAsEssence
+  class EssenceText < Essence
     acts_as_essence
+
+    store_accessor :ingredients,
+      :body,
+      :link,
+      :link_title,
+      :link_class_name,
+      :link_target
   end
 end

@@ -13,8 +13,7 @@
 #
 
 module Alchemy
-  class EssenceHtml < BaseRecord
-    include Alchemy::ActsAsEssence
+  class EssenceHtml < Essence
     acts_as_essence ingredient_column: 'source'
 
     # Returns the first x (default = 30) (HTML escaped) characters from self.source for the Element#preview_text method.

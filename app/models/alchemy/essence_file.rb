@@ -16,10 +16,13 @@
 #
 
 module Alchemy
-  class EssenceFile < BaseRecord
-    include Alchemy::ActsAsEssence
+  class EssenceFile < Essence
     belongs_to :attachment, optional: true
     acts_as_essence ingredient_column: 'attachment'
+
+    store_accessor :ingredients,
+      :css_class,
+      :title
 
     def attachment_url
       return if attachment.nil?

@@ -13,31 +13,51 @@ module Alchemy
       let(:picture) { build_stubbed(:alchemy_essence_picture) }
     end
 
-    it "should not store negative values for crop values" do
-      essence = EssencePicture.new(crop_from: '-1x100', crop_size: '-20x30')
-      essence.save!
-      expect(essence.crop_from).to eq("0x100")
-      expect(essence.crop_size).to eq("0x30")
+    describe 'crop values' do
+      let(:element) { create(:alchemy_element) }
+      let(:essence) { EssencePicture.create!(attributes.merge(element: element)) }
+
+      context 'with negative crop values' do
+        let(:attributes) do
+          {crop_from: '-1x100', crop_size: '-20x30'}
+        end
+
+        it "should not store negative crop values" do
+          expect(essence.crop_from).to eq("0x100")
+          expect(essence.crop_size).to eq("0x30")
+        end
+      end
+
+      context 'with float crop values' do
+        let(:attributes) do
+          {crop_from: '0.05x104.5', crop_size: '99.5x203.4'}
+        end
+
+        it "should not store float crop values" do
+          expect(essence.crop_from).to eq("0x105")
+          expect(essence.crop_size).to eq("100x203")
+        end
+      end
+
+      context 'with nil crop values' do
+        let(:attributes) do
+          {crop_from: nil, crop_size: nil}
+        end
+
+        it "should not store empty string" do
+          expect(essence.crop_from).to eq(nil)
+          expect(essence.crop_size).to eq(nil)
+        end
+      end
     end
 
-    it "should not store float values for crop values" do
-      essence = EssencePicture.new(crop_from: '0.05x104.5', crop_size: '99.5x203.4')
-      essence.save!
-      expect(essence.crop_from).to eq("0x105")
-      expect(essence.crop_size).to eq("100x203")
-    end
+    describe '#caption' do
+      let(:element) { create(:alchemy_element) }
+      let(:essence) { EssencePicture.create!(element: element, caption: "hello\nkitty") }
 
-    it "should not store empty strings for nil crop values" do
-      essence = EssencePicture.new(crop_from: nil, crop_size: nil)
-      essence.save!
-      expect(essence.crop_from).to eq(nil)
-      expect(essence.crop_size).to eq(nil)
-    end
-
-    it "should convert newlines in caption into <br/>s" do
-      essence = EssencePicture.new(caption: "hello\nkitty")
-      essence.save!
-      expect(essence.caption).to eq("hello<br/>kitty")
+      it "should convert newlines in caption into <br/>s" do
+        expect(essence.caption).to eq("hello<br/>kitty")
+      end
     end
 
     describe '#picture_url' do
@@ -45,7 +65,8 @@ module Alchemy
 
       let(:options) { {} }
       let(:picture) { create(:alchemy_picture) }
-      let(:essence) { create(:alchemy_essence_picture, picture: picture) }
+      let(:element) { create(:alchemy_element) }
+      let(:essence) { create(:alchemy_essence_picture, picture: picture, element: element) }
 
       context 'with no format in the options' do
         it "includes the image's default render format." do
@@ -305,8 +326,8 @@ module Alchemy
     end
 
     describe "#allow_image_cropping?" do
-      let(:essence_picture) { stub_model(Alchemy::EssencePicture) }
-      let(:content) { stub_model(Alchemy::Content) }
+      let(:essence_picture) { stub_model(Alchemy::EssencePicture, element: element) }
+      let(:element) { stub_model(Alchemy::Element) }
       let(:picture) { stub_model(Alchemy::Picture) }
 
       subject { essence_picture.allow_image_cropping? }

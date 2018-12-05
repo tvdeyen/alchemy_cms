@@ -24,9 +24,21 @@
 #
 
 module Alchemy
-  class EssencePicture < BaseRecord
-    include Alchemy::ActsAsEssence
+  class EssencePicture < Essence
     acts_as_essence ingredient_column: 'picture'
+
+    store_accessor :ingredients,
+      :caption,
+      :title,
+      :alt_tag,
+      :link,
+      :link_class_name,
+      :link_target,
+      :link_title,
+      :css_class,
+      :crop_from,
+      :crop_size,
+      :render_size
 
     belongs_to :picture, optional: true
     delegate :image_file_width, :image_file_height, :image_file, to: :picture
@@ -150,14 +162,14 @@ module Alchemy
 
     def fix_crop_values
       %i(crop_from crop_size).each do |crop_value|
-        if self[crop_value].is_a?(String)
-          write_attribute crop_value, normalize_crop_value(crop_value)
+        if read_store_attribute(:ingredients, crop_value).is_a?(String)
+          write_store_attribute(:ingredients, crop_value, normalize_crop_value(crop_value))
         end
       end
     end
 
     def normalize_crop_value(crop_value)
-      self[crop_value].split('x').map { |n| normalize_number(n) }.join('x')
+      read_store_attribute(:ingredients, crop_value).split('x').map { |n| normalize_number(n) }.join('x')
     end
 
     def normalize_number(number)
@@ -166,8 +178,9 @@ module Alchemy
     end
 
     def replace_newlines
+      caption = read_store_attribute(:ingredients, :caption)
       return nil if caption.nil?
-      caption.gsub!(/(\r\n|\r|\n)/, "<br/>")
+      write_store_attribute(:ingredients, :caption, caption.gsub(/(\r\n|\r|\n)/, "<br/>"))
     end
   end
 end

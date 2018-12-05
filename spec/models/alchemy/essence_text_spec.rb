@@ -7,10 +7,7 @@ module Alchemy
     let(:essence) { EssenceText.new }
     let(:ingredient_value) { 'Lorem ipsum' }
 
-    it_behaves_like "an essence" do
-      let(:essence)          { EssenceText.new }
-      let(:ingredient_value) { 'Lorem ipsum' }
-    end
+    it_behaves_like "an essence"
 
     describe '#preview_text' do
       before do
@@ -77,7 +74,10 @@ module Alchemy
           end
 
           context 'when ingredient string matches the given regex' do
-            before { essence.update(essence.ingredient_column.to_sym => 'https://alchemy-cms.com') }
+            before do
+              essence.element = create(:alchemy_element)
+              essence.update(essence.ingredient_column.to_sym => 'https://alchemy-cms.com')
+            end
 
             it 'should be valid' do
               expect(essence).to be_valid
@@ -91,7 +91,10 @@ module Alchemy
           end
 
           context 'when ingredient string does not match the given format matcher' do
-            before { essence.update(essence.ingredient_column.to_sym => ingredient_value) }
+            before do
+              essence.element = create(:alchemy_element)
+              essence.update(essence.ingredient_column.to_sym => ingredient_value)
+            end
 
             it 'should not be valid' do
               expect(essence).to_not be_valid
@@ -99,7 +102,10 @@ module Alchemy
           end
 
           context 'when ingredient string matches the given format matcher' do
-            before { essence.update(essence.ingredient_column.to_sym => 'email@email.com') }
+            before do
+              essence.element = create(:alchemy_element)
+              essence.update(essence.ingredient_column.to_sym => 'email@email.com')
+            end
 
             it 'should be valid' do
               expect(essence).to be_valid

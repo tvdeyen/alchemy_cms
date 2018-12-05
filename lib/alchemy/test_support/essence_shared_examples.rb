@@ -5,15 +5,13 @@ shared_examples_for "an essence" do
   let(:content) { Alchemy::Content.new(name: 'foo') }
   let(:content_definition) { {'name' => 'foo'} }
 
-  it "touches the content after update" do
+  it "touches the element after update" do
     element = create(:alchemy_element)
-    content = create(:alchemy_content, element: element, essence: essence, essence_type: essence.class.name)
+    essence.element = element
+    element.update_column(:updated_at, 3.days.ago)
+    essence.update(essence.ingredient_column.to_sym => ingredient_value)
 
-    content.update_column(:updated_at, 3.days.ago)
-    content.essence.update_attributes(essence.ingredient_column.to_sym => ingredient_value)
-
-    content.reload
-    expect(content.updated_at).to be_within(3.seconds).of(Time.current)
+    expect(element.updated_at).to be_within(3.seconds).of(Time.current)
   end
 
   it "should have correct partial path" do
@@ -103,6 +101,7 @@ shared_examples_for "an essence" do
 
         context 'when the ingredient column is not nil' do
           before do
+            essence.element = create(:alchemy_element)
             essence.update(essence.ingredient_column.to_sym => ingredient_value)
           end
 
@@ -120,6 +119,7 @@ shared_examples_for "an essence" do
 
           context 'when the ingredient column is empty' do
             before do
+              essence.element = create(:alchemy_element)
               essence.update(essence.ingredient_column.to_sym => nil)
             end
 
@@ -130,6 +130,7 @@ shared_examples_for "an essence" do
 
           context 'when the ingredient column is not nil' do
             before do
+              essence.element = create(:alchemy_element)
               essence.update(essence.ingredient_column.to_sym => ingredient_value)
             end
 
@@ -141,6 +142,7 @@ shared_examples_for "an essence" do
 
         context 'where the value is false' do
           before do
+            essence.element = create(:alchemy_element)
             allow(essence).to receive(:definition).and_return({'validate' => [{'presence' => false}]})
           end
 
@@ -153,7 +155,7 @@ shared_examples_for "an essence" do
 
     describe 'uniqueness' do
       before do
-        allow(essence).to receive(:element).and_return(build_stubbed(:alchemy_element))
+        essence.element = create(:alchemy_element)
         essence.update(essence.ingredient_column.to_sym => ingredient_value)
       end
 

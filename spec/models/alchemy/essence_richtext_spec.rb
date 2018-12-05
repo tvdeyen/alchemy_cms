@@ -14,6 +14,7 @@ module Alchemy
     end
 
     it "should save a HTML tag free version of body column" do
+      essence.element = create(:alchemy_element)
       essence.save
       expect(essence.stripped_body).to eq("Hello!Welcome to Peters Petshop.")
     end

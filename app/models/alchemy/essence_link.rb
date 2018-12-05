@@ -16,8 +16,13 @@
 #
 
 module Alchemy
-  class EssenceLink < BaseRecord
-    include Alchemy::ActsAsEssence
+  class EssenceLink < Essence
     acts_as_essence ingredient_column: 'link'
+
+    store_accessor :ingredients,
+      :link,
+      :link_target,
+      :link_title,
+      :link_class_name
   end
 end
