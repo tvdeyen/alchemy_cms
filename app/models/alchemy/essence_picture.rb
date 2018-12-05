@@ -5,7 +5,6 @@
 # Table name: alchemy_essence_pictures
 #
 #  id              :integer          not null, primary key
-#  picture_id      :integer
 #  caption         :string
 #  title           :string
 #  alt_tag         :string
@@ -27,7 +26,8 @@ module Alchemy
   class EssencePicture < BaseRecord
     acts_as_essence ingredient_column: 'picture'
 
-    belongs_to :picture, optional: true
+    has_one :picture_assignment
+    has_one :picture, through: :picture_assignment
     delegate :image_file_width, :image_file_height, :image_file, to: :picture
     before_save :fix_crop_values
     before_save :replace_newlines
