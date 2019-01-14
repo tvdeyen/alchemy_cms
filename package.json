@@ -10,6 +10,7 @@
     "handlebars": "4.0.5",
     "handlebars-loader": "^1.7.1",
     "jquery": "2.2.4",
+    "jquery-datetimepicker": "^2.5.20",
     "jquery-ujs": "1.2.2",
     "select2": "3.5.2-browserify",
     "tinymce": "4.8.3",
