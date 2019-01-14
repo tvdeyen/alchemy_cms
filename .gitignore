@@ -21,3 +21,5 @@ spec/dummy/public/assets
 .ruby-gemset
 .ruby-version
 .env
+node_modules
+yarn.lock
