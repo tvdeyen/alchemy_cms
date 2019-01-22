@@ -12,7 +12,6 @@
 //= require flatpickr/flatpickr.min
 //= require clipboard.min
 //= require keymaster
-//= require requestAnimationFrame
 //= require select2
 //= require handlebars
 //= require alchemy/templates
