@@ -5,12 +5,11 @@
 //= require turbolinks
 //= require jquery-ui/effects/effect-fade
 //= require jquery-ui/widgets/draggable
-//= require jquery-ui/widgets/sortable
 //= require jquery-ui/widgets/tabs
 //= require tinymce/tinymce.min
 //= require jquery_plugins/jquery.Jcrop.min
 //= require jquery_plugins/jquery.scrollTo.min
-//= require jquery_plugins/jquery.ui.nestedSortable
+//  require jquery_plugins/jquery.ui.nestedSortable
 //= require jquery_plugins/jquery.ui.tabspaging
 //= require flatpickr/flatpickr.min
 //= require clipboard.min

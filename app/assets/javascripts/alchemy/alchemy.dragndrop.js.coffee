@@ -1,82 +1,61 @@
 #= require jquery-ui/widgets/draggable
-#= require jquery-ui/widgets/sortable
+#= require Sortable.min
 #
 window.Alchemy = {} if typeof (window.Alchemy) is "undefined"
 
 $.extend Alchemy,
 
   SortableElements: (page_id, form_token, selector = '#element_area .sortable-elements') ->
-    Alchemy.initializedSortableElements = false
     $sortable_area = $(selector)
 
-    getTinymceIDs = (ui) ->
-      ids = []
-      $textareas = ui.item.find('textarea.has_tinymce')
-      $($textareas).each ->
+    getTinymceIDs = ($item) ->
+      $textareas = $item.find('textarea.has_tinymce')
+      $textareas.map(->
         id = this.id.replace(/tinymce_/, '')
-        ids.push parseInt(id, 10)
-      return ids
+        parseInt(id, 10)
+      ).get()
 
     sortable_options =
-      items: "> .element-editor"
-      handle: "> .element-header .element-handle"
-      placeholder: "droppable_element_placeholder"
-      dropOnEmpty: true
-      opacity: 0.5
-      cursor: "move"
-      containment: $('#element_area')
-      tolerance: "pointer"
-      update: (event, ui) ->
-        # This callback is called twice for both elements, the source and the receiving
-        # but, we only want to call ajax callback once on the receiving element.
-        return if Alchemy.initializedSortableElements
-        $this = ui.item.parent().closest('.ui-sortable')
-        params = {}
-        Alchemy.initializedSortableElements = true
-        element_ids = $.map $this.children(), (child) ->
-          $(child).attr("data-element-id")
-        parent_element_id = ui.item.parent().closest("[data-element-id]").data('element-id')
+      handle: '.element-handle'
+      ghostClass: 'droppable_element_placeholder'
+      animation: 150
+      direction: 'vertical'
+      onEnd: (event) ->
+        $item = $(event.item)
+        $parent = $item.parent()
+        ids = getTinymceIDs($item)
+        Alchemy.Tinymce.init(ids)
+        element_ids = $parent.children().map(->
+          $(this).data('element-id')
+        ).get()
+        parent_element_id = $parent.closest('[data-element-id]').data('element-id')
         params =
           page_id: page_id
           authenticity_token: encodeURIComponent(form_token)
           element_ids: element_ids
         if parent_element_id?
           params['parent_element_id'] = parent_element_id
-        $(event.target).css("cursor", "progress")
         $.ajax
           url: Alchemy.routes.order_admin_elements_path
-          type: "POST"
+          type: 'POST'
           data: params
           complete: ->
-            Alchemy.initializedSortableElements = false
-            $(event.target).css("cursor", "")
             Alchemy.TrashWindow.refresh(page_id)
             return
-      start: (event, ui) ->
-        $this = $(this)
-        name = ui.item.data('element-name')
-        $dropzone = $("[data-droppable-elements~='#{name}']")
-        ids = getTinymceIDs(ui)
-        $this.sortable('option', 'connectWith', $dropzone)
-        $this.sortable('refresh')
-        $dropzone.css('minHeight', 36)
-        ui.item.addClass('dragged')
-        if ui.item.hasClass('compact')
-          ui.placeholder.addClass('compact').css
-            height: ui.item.outerHeight()
+        return
+      onStart: (event) ->
+        $item = $(event.item)
+        ids = getTinymceIDs($item)
         Alchemy.Tinymce.remove(ids)
         return
-      stop: (event, ui) ->
-        ids = getTinymceIDs(ui)
-        name = ui.item.data('element-name')
-        $dropzone = $("[data-droppable-elements~='#{name}']")
-        $dropzone.css('minHeight', '')
-        ui.item.removeClass('dragged')
-        Alchemy.Tinymce.init(ids)
-        return
 
-    $sortable_area.sortable(sortable_options)
-    $sortable_area.find('.nested-elements').sortable(sortable_options)
+    new Sortable($sortable_area[0], sortable_options)
+    $sortable_area.find('.nested-elements').each ->
+      options = sortable_options
+      parentElementName = $(this).closest('.element-editor').data('element-name')
+      options.group = parentElementName
+      options.direction = undefined
+      new Sortable(this, options)
     return
 
   DraggableTrashItems: ->

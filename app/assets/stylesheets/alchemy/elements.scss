@@ -84,16 +84,13 @@
   position: relative;
   width: 18px;
   height: 18px;
+  cursor: move;
 
   .element.icon {
     position: absolute;
     top: 3px;
     left: 1px;
   }
-}
-
-.draggable .element-handle {
-  cursor: move;
 }
 
 .ajax-folder {
@@ -147,16 +144,6 @@
 
     .nested-elements {
       display: none;
-    }
-  }
-
-  &.dragged {
-    border-style: dotted;
-    overflow: hidden;
-
-    &:not(.compact) {
-      height: 36px !important;
-      transition: height 0.2s;
     }
   }
 
@@ -353,11 +340,18 @@
 }
 
 .droppable_element_placeholder {
-  height: 36px;
-  border: 1px dotted $button-border-color;
-  background-color: $medium-gray;
+  overflow: hidden;
+  border-color: $orange;
   margin-bottom: 2*$default-margin;
   border-radius: $default-border-radius;
+
+  &:not(.compact) {
+    height: 36px;
+  }
+
+  .element-header {
+    background-color: $orange !important;
+  }
 }
 
 .edit_images_bottom {
