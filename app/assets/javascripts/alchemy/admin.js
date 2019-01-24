@@ -8,7 +8,10 @@
 //= require jquery-ui/widgets/sortable
 //= require jquery-ui/widgets/tabs
 //= require tinymce/tinymce.min
-//= require_tree ../../../../vendor/assets/javascripts/jquery_plugins/
+//= require jquery_plugins/jquery.Jcrop.min
+//= require jquery_plugins/jquery.scrollTo.min
+//= require jquery_plugins/jquery.ui.nestedSortable
+//= require jquery_plugins/jquery.ui.tabspaging
 //= require flatpickr/flatpickr.min
 //= require clipboard.min
 //= require keymaster
