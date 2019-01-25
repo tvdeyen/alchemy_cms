@@ -16,6 +16,7 @@ $.extend Alchemy,
       ).get()
 
     sortable_options =
+      group: 'elements'
       handle: '.element-handle'
       ghostClass: 'droppable_element_placeholder'
       animation: 150
@@ -51,9 +52,12 @@ $.extend Alchemy,
 
     new Sortable($sortable_area[0], sortable_options)
     $sortable_area.find('.nested-elements').each ->
+      $el = $(this)
       options = sortable_options
-      parentElementName = $(this).closest('.element-editor').data('element-name')
-      options.group = parentElementName
+      options.group =
+        name: $el.closest('.element-editor').data('element-name')
+        put: $el.data('droppable-elements').split(' ')
+        pull: true
       options.direction = undefined
       new Sortable(this, options)
     return
@@ -66,7 +70,7 @@ $.extend Alchemy,
         name = $(event.item).data('element-name')
         $dropzone = $("[data-droppable-elements~='#{name}']")
         group =
-          name: "trash_items"
+          name: "elements"
           put: $.unique($dropzone.map(->
             $(this).closest('.element-editor').data('element-name')
           )).get()
