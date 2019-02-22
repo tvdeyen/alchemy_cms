@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'alchemy/logger'
-
 module Alchemy
   # Loads elements from given page
   #
