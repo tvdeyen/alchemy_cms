@@ -7,6 +7,7 @@
     "clipboard": "1.5.12",
     "coffee-loader": "^0.9.0",
     "coffeescript": "1.12.7",
+    "flatpickr": "^4.5.4",
     "handlebars": "4.0.5",
     "handlebars-loader": "^1.7.1",
     "jquery": "2.2.4",
