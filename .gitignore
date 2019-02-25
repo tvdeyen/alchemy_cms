@@ -24,3 +24,4 @@ spec/dummy/public/assets
 node_modules
 yarn.lock
 /public
+/spec/dummy/public/packs
