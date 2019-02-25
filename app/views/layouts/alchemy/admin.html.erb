@@ -35,7 +35,7 @@
       };
     </script>
     <%= render 'alchemy/admin/partials/routes' %>
-    <%= javascript_pack_tag('alchemy/admin', 'data-turbolinks-track' => true) %>
+    <%= javascript_pack_tag('admin') %>
     <%= yield :javascript_includes %>
   </head>
   <%= content_tag :body, id: 'alchemy', class: alchemy_body_class do %>
