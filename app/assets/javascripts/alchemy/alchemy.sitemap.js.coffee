@@ -9,18 +9,14 @@ Alchemy.Sitemap =
     @filter_field_clear = $('.search_field_clear')
     @display = $('#page_filter_result')
     @sitemap_wrapper = $('#sitemap-wrapper p.loading')
-    @template = Handlebars.compile($('#sitemap-template').html())
-    list_template_regexp = new RegExp '\/' + options.page_root_id, 'g'
-    list_template_html = $('#sitemap-list').html().replace(list_template_regexp, '/{{id}}')
-    @list_template = Handlebars.compile(list_template_html)
+    template_regexp = new RegExp '\/' + options.page_root_id, 'g'
+    template_html = $('#sitemap-template').html().replace(template_regexp, '/{{id}}')
+    @template = Handlebars.compile(template_html)
     @items = null
     @options = options
     @watchPagePublicationState()
-    true
-
-    Handlebars.registerPartial('list', list_template_html)
-
     @fetch()
+    true
 
   # Fetches the sitemap from JSON
   fetch: (foldingId) ->
@@ -30,13 +26,11 @@ Alchemy.Sitemap =
       spinner = new Alchemy.Spinner('small')
       spinTarget = $('#fold_button_' + foldingId)
       renderTarget = $('#page_' + foldingId)
-      renderTemplate = @list_template
       pageId = foldingId
     else
       spinner = @options.spinner || new Alchemy.Spinner('medium')
       spinTarget = @sitemap_wrapper
       renderTarget = @sitemap_wrapper
-      renderTemplate = @template
       pageId = @options.page_root_id
 
     spinner.spin(spinTarget[0])
@@ -47,7 +41,7 @@ Alchemy.Sitemap =
 
     request.done (data) ->
       # This will also remove the spinner
-      renderTarget.replaceWith(renderTemplate({children: data.pages}))
+      renderTarget.replaceWith(@template(data.page))
       self.items = $(".sitemap_page", '#sitemap')
       self._observe()
 

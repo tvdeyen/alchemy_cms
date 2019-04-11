@@ -3,52 +3,16 @@
 module Alchemy
   class PageTreeSerializer < BaseSerializer
     def attributes
-      {'pages' => nil}
+      {'page' => nil}
     end
 
-    def pages
-      tree = []
-      path = [{id: object.parent_id, children: tree}]
-      page_list = object.self_and_descendants
-      base_level = object.level - 1
-      # Load folded pages in advance
-      folded_user_pages = FoldedPage.folded_for_user(opts[:user]).pluck(:page_id)
-      folded_depth = Float::INFINITY
-
-      page_list.each_with_index do |page, i|
-        has_children = page_list[i + 1] && page_list[i + 1].parent_id == page.id
-        folded = has_children && folded_user_pages.include?(page.id)
-
-        if page.depth > folded_depth
-          next
-        else
-          folded_depth = Float::INFINITY
-        end
-
-        # If this page is folded, skip all pages that are on a higher level (further down the tree).
-        if folded && !opts[:full]
-          folded_depth = page.depth
-        end
-
-        if page.parent_id != path.last[:id]
-          if path.map { |o| o[:id] }.include?(page.parent_id) # Lower level
-            path.pop while path.last[:id] != page.parent_id
-          else # One level up
-            path << path.last[:children].last
-          end
-        end
-
-        level = path.count + base_level
-
-        path.last[:children] << page_hash(page, has_children, level, folded)
-      end
-
-      tree
+    def page
+      page_hash(object, object.children.map { |c| page_hash(c) })
     end
 
     protected
 
-    def page_hash(page, has_children, level, folded)
+    def page_hash(page, children = [])
       p_hash = {
         id: page.id,
         name: page.name,
@@ -60,10 +24,10 @@ module Alchemy
         redirects_to_external: page.redirects_to_external?,
         urlname: page.urlname,
         external_urlname: page.redirects_to_external? ? page.external_urlname : nil,
-        level: level,
-        root: level == 1,
-        root_or_leaf: level == 1 || !has_children,
-        children: []
+        level: page.level,
+        root: page.root?,
+        root_or_leaf: page.root? || page.leaf?,
+        children: children
       }
 
       if opts[:elements]
@@ -73,7 +37,7 @@ module Alchemy
       if opts[:ability].can?(:index, :alchemy_admin_pages)
         p_hash.merge({
           definition_missing: page.definition.blank?,
-          folded: folded,
+          folded: children.empty?,
           locked: page.locked?,
           locked_notice: page.locked? ? Alchemy.t('This page is locked', name: page.locker_name) : nil,
           permissions: page_permissions(page, opts[:ability]),
