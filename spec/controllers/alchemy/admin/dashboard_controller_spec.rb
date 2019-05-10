@@ -46,10 +46,21 @@ module Alchemy
         end
 
         context 'without other users online' do
+          before do
+            expect(Alchemy.user_class).to receive(:logged_in) { [] }
+          end
+
           it "does not assign @online_users" do
             get :index
             expect(assigns(:online_users)).to eq([])
           end
+        end
+      end
+
+      context 'with user class not having logged_in scope' do
+        it "does not assign @online_users" do
+          get :index
+          expect(assigns(:online_users)).to be_nil
         end
       end
 
