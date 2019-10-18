@@ -8,7 +8,9 @@ describe 'alchemy/essences/_essence_text_editor' do
   let(:settings) { {} }
 
   subject do
-    render partial: "alchemy/essences/essence_text_editor", locals: { content: content }
+    render partial: "alchemy/essences/essence_text_editor", locals: {
+      essence_text_editor: Alchemy::ContentEditor.new(content)
+    }
   end
 
   before do

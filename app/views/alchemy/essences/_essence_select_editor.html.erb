@@ -1,14 +1,14 @@
-<% select_values = content.settings[:select_values] %>
-<% inline = content.settings[:display_inline] %>
+<% select_values = essence_select_editor.settings[:select_values] %>
+<% inline = essence_select_editor.settings[:display_inline] %>
 
 <%= content_tag :div,
-  id: content.dom_id,
+  id: essence_select_editor.dom_id,
   class: [
     "content_editor",
     "essence_select",
     inline ? 'display_inline' : nil
-  ].compact, data: {content_id: content.id} do %>
-  <%= content_label(content) %>
+  ].compact, data: {content_id: essence_select_editor.id} do %>
+  <%= content_label(essence_select_editor) %>
 
   <% if select_values.nil? %>
     <%= warning(':select_values is nil',
@@ -19,11 +19,11 @@
   <% else %>
     <%
     if select_values.is_a?(Hash)
-      options_tags = grouped_options_for_select(select_values, content.ingredient)
+      options_tags = grouped_options_for_select(select_values, essence_select_editor.ingredient)
     else
-      options_tags = options_for_select(select_values, content.ingredient)
+      options_tags = options_for_select(select_values, essence_select_editor.ingredient)
     end %>
-    <%= select_tag content.form_field_name, options_tags, {
+    <%= select_tag essence_select_editor.form_field_name, options_tags, {
       class: ["alchemy_selectbox", "essence_editor_select"]
     } %>
   <% end %>

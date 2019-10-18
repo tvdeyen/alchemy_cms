@@ -3,18 +3,18 @@
     render_icon(:link),
     '#',
     onclick: 'new Alchemy.LinkDialog(this).open(); return false;',
-    class: "icon_button#{content.linked? ? ' linked' : ''} link-essence",
-    'data-content-id' => content.id,
+    class: "icon_button#{content_editor.linked? ? ' linked' : ''} link-essence",
+    'data-content-id' => content_editor.id,
     title: Alchemy.t(:place_link),
-    id: "edit_link_#{content.id}"
+    id: "edit_link_#{content_editor.id}"
   ) %>
   <%= link_to(
     render_icon(:unlink),
     '#',
-    onclick: "return Alchemy.LinkDialog.removeLink(this, #{content.id})",
-    class: "icon_button unlink-essence #{content.linked? ? 'linked' : 'disabled'}",
-    tabindex: content.linked? ? nil : '-1',
-    'data-content-id' => content.id,
+    onclick: "return Alchemy.LinkDialog.removeLink(this, #{content_editor.id})",
+    class: "icon_button unlink-essence #{content_editor.linked? ? 'linked' : 'disabled'}",
+    tabindex: content_editor.linked? ? nil : '-1',
+    'data-content-id' => content_editor.id,
     title: Alchemy.t(:unlink)
   ) %>
 </span>

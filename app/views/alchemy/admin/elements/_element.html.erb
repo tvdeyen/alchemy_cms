@@ -22,11 +22,7 @@
         <% element.definition[:warning].tap do |warning| %>
           <%= render_message(:warning, sanitize(warning)) if warning %>
         <% end %>
-        <%= element_editor_for(element) do %>
-          <% element.contents.each do |content| %>
-            <%= render_essence(content, :editor) %>
-          <% end %>
-        <% end %>
+        <%= render element.contents.map { |content| Alchemy::ContentEditor.new(content) } %>
       </div>
 
       <% if element.taggable? %>
