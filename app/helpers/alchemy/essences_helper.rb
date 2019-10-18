@@ -44,36 +44,7 @@ module Alchemy
         return ""
       end
       content = element.content_by_name(name)
-      render_essence_view(content, options, html_options)
-    end
-
-    # Renders the +Esssence+ partial for given +Content+.
-    #
-    # The helper renders the view partial as default.
-    #
-    # Pass +:editor+ as second argument to render the editor partial
-    #
-    # == Options:
-    #
-    # You can pass a options Hash to each type of essence partial as third argument.
-    #
-    # This Hash is available as +options+ local variable.
-    #
-    #   for_view: {}
-    #   for_editor: {}
-    #
-    def render_essence(content, part = :view, options = {}, html_options = {})
-      options = {for_view: {}, for_editor: {}}.update(options)
-      if content.nil?
-        return part == :view ? "" : warning('Content is nil', Alchemy.t(:content_not_found))
-      elsif content.essence.nil?
-        return part == :view ? "" : warning('Essence is nil', Alchemy.t(:content_essence_not_found))
-      end
-      render partial: "alchemy/essences/#{content.essence_partial_name}_#{part}", locals: {
-        content: content,
-        options: options["for_#{part}".to_sym],
-        html_options: html_options
-      }
+      render_essence(content, options, html_options)
     end
 
     # Renders the +Esssence+ view partial for given +Content+.
@@ -85,8 +56,22 @@ module Alchemy
     #   :show_caption => false                         # Pass Boolean to show/hide the caption of an EssencePicture. [Default true]
     #   :disable_link => true                          # You can surpress the link of an EssencePicture. Default false
     #
-    def render_essence_view(content, options = {}, html_options = {})
-      render_essence(content, :view, {for_view: options}, html_options)
+    # @param options
+    # @param html_options
+    #
+    def render_essence(content, options = {}, html_options = {})
+      if content.nil?
+        return warning('Content is nil', Alchemy.t(:content_not_found))
+      elsif content.essence.nil?
+        return warning('Essence is nil', Alchemy.t(:content_essence_not_found))
+      end
+      render content, { content: content, options: options, html_options: html_options }
     end
+
+    # @deprecated
+    def render_essence_view(content, options = {}, html_options = {})
+      render_essence(content, options, html_options)
+    end
+    deprecate render_essence_view: :render_essence, deprecator: Alchemy::Deprecation
   end
 end

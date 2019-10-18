@@ -19,20 +19,6 @@ describe Alchemy::EssencesHelper do
       is_expected.to have_content 'hello!'
     end
 
-    context 'with editor given as view part' do
-      subject { helper.render_essence(content, :editor) }
-
-      before do
-        allow(helper).to receive(:content_label)
-        allow(content).to receive(:settings).and_return({})
-      end
-
-      it "renders an essence editor partial" do
-        expect(content).to receive(:form_field_name)
-        is_expected.to have_selector 'input[type="text"]'
-      end
-    end
-
     context 'if content is nil' do
       let(:content) { nil }
 
