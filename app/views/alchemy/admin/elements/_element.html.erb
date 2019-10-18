@@ -22,13 +22,9 @@
         <% element.definition[:warning].tap do |warning| %>
           <%= render_message(:warning, sanitize(warning)) if warning %>
         <% end %>
-        <% if lookup_context.exists?("#{element.name}_editor", ["alchemy/elements"], true) %>
-          <%= render_editor(element) %>
-        <% else %>
-          <%= element_editor_for(element) do %>
-            <% element.contents.each do |content| %>
-              <%= render_essence(content, :editor) %>
-            <% end %>
+        <%= element_editor_for(element) do %>
+          <% element.contents.each do |content| %>
+            <%= render_essence(content, :editor) %>
           <% end %>
         <% end %>
       </div>

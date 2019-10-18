@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 describe Alchemy::Admin::EssencesHelper do
-  include Alchemy::Admin::ElementsHelper
-
   let(:element) do
     create(:alchemy_element, :with_contents, name: 'article')
   end
