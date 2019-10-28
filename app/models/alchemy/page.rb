@@ -108,7 +108,6 @@ module Alchemy
 
     has_one :site, through: :language
     has_many :site_languages, through: :site, source: :languages
-    has_many :folded_pages
     has_many :legacy_urls, class_name: 'Alchemy::LegacyPageUrl'
 
     validates_presence_of :language, on: :create, unless: :root

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_16_073858) do
+ActiveRecord::Schema.define(version: 2019_10_24_195922) do
 
   create_table "alchemy_attachments", force: :cascade do |t|
     t.string "name"
@@ -167,13 +167,6 @@ ActiveRecord::Schema.define(version: 2019_10_16_073858) do
     t.integer "updater_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "alchemy_folded_pages", force: :cascade do |t|
-    t.integer "page_id", null: false
-    t.integer "user_id", null: false
-    t.boolean "folded", default: false
-    t.index ["page_id", "user_id"], name: "index_alchemy_folded_pages_on_page_id_and_user_id", unique: true
   end
 
   create_table "alchemy_languages", force: :cascade do |t|
