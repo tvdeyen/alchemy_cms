@@ -1194,47 +1194,6 @@ module Alchemy
       end
     end
 
-    context 'folding' do
-      let(:user) { create(:alchemy_dummy_user) }
-
-      describe '#fold!' do
-        context "with folded status set to true" do
-          it "should create a folded page for user" do
-            public_page.fold!(user.id, true)
-            expect(public_page.folded_pages.first.user_id).to eq(user.id)
-          end
-        end
-      end
-
-      describe '#folded?' do
-        let(:page) { Page.new }
-
-        context 'with user is a active record model' do
-          before do
-            allow(Alchemy.user_class).to receive(:'<').and_return(true)
-          end
-
-          context 'if page is folded' do
-            before do
-              expect(page)
-                .to receive(:folded_pages)
-                .and_return double(where: double(any?: true))
-            end
-
-            it "should return true" do
-              expect(page.folded?(user.id)).to eq(true)
-            end
-          end
-
-          context 'if page is not folded' do
-            it "should return false" do
-              expect(page.folded?(101_093)).to eq(false)
-            end
-          end
-        end
-      end
-    end
-
     describe '#get_language_root' do
       before { language_root }
       subject { public_page.get_language_root }

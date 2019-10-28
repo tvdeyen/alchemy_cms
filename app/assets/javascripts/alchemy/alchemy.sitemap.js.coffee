@@ -16,11 +16,9 @@ Alchemy.Sitemap =
     @items = null
     @options = options
     @watchPagePublicationState()
-    true
-
     Handlebars.registerPartial('list', list_template_html)
-
     @fetch()
+    true
 
   # Fetches the sitemap from JSON
   fetch: (foldingId) ->
@@ -50,9 +48,10 @@ Alchemy.Sitemap =
       renderTarget.replaceWith(renderTemplate({children: data.pages}))
       self.items = $(".sitemap_page", '#sitemap')
       self._observe()
-
+      $('#sitemap').off('click').on('click', '.page_folder', self.toggleFold)
       if self.options.ready
         self.options.ready()
+      true
 
     request.fail (jqXHR, status) ->
       Alchemy.debug("Request failed: " + status)
@@ -102,7 +101,6 @@ Alchemy.Sitemap =
       $public_on_field = $('#page_public_on', $dialog)
       $public_until_field = $('#page_public_until', $dialog)
       $publication_date_fields = $('.page-publication-date-fields', $dialog)
-
       $('#page_public', $dialog).click ->
         $checkbox = $(this)
         format = $checkbox.data('date-format')
@@ -115,5 +113,18 @@ Alchemy.Sitemap =
           $public_on_field.val('')
         $public_until_field.val('')
         true
-
     return
+
+  toggleFold: (event) ->
+    $toggler = $(event.currentTarget)
+    pageId = $toggler.data('page-id')
+    $children = $("#page_#{pageId}_children")
+    if $children.length
+      $children.remove()
+      $toggler.find('> i').
+        removeClass('fa-minus-square').
+        addClass('fa-plus-square')
+    else
+      $toggler.find('> i').removeClass('fa-plus-square')
+      Alchemy.Sitemap.fetch(pageId)
+    false

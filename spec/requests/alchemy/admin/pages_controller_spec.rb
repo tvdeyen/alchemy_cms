@@ -100,10 +100,10 @@ module Alchemy
         let!(:pages) { [page_1, page_2, page_3] }
 
         subject :get_tree do
-          get tree_admin_pages_path(id: page_1.id, full: 'true')
+          get tree_admin_pages_path(id: page_1.id)
         end
 
-        it 'returns a tree as JSON' do
+        it 'returns the first level of pages as JSON tree' do
           get_tree
 
           expect(response.status).to eq(200)
@@ -130,32 +130,51 @@ module Alchemy
           expect(page).to have_key('name')
           expect(page['name']).to eq(page_2.name)
           expect(page).to have_key('children')
-          expect(page['children'].count).to eq(1)
-
-          page = page['children'].first
-
-          expect(page).to have_key('id')
-          expect(page['id']).to eq(page_3.id)
-          expect(page).to have_key('name')
-          expect(page['name']).to eq(page_3.name)
-          expect(page).to have_key('children')
           expect(page['children'].count).to eq(0)
+          expect(page['folded']).to eq(true)
         end
 
-        context "when branch is folded" do
-          before do
-            page_2.fold!(user.id, true)
+        context 'with full=true' do
+          subject :get_tree do
+            get tree_admin_pages_path(id: page_1.id, full: 'true')
           end
 
-          it 'does not return a branch that is folded' do
-            get tree_admin_pages_path(id: page_1.id, full: 'false')
+          it 'returns a full tree as JSON' do
+            get_tree
 
             expect(response.status).to eq(200)
             expect(response.media_type).to eq('application/json')
 
             result = JSON.parse(response.body)
-            page = result['pages'].first['children'].first
 
+            expect(result).to have_key('pages')
+            expect(result['pages'].count).to eq(1)
+
+            page = result['pages'].first
+
+            expect(page).to have_key('id')
+            expect(page['id']).to eq(page_1.id)
+            expect(page).to have_key('name')
+            expect(page['name']).to eq(page_1.name)
+            expect(page).to have_key('children')
+            expect(page['children'].count).to eq(1)
+
+            page = page['children'].first
+
+            expect(page).to have_key('id')
+            expect(page['id']).to eq(page_2.id)
+            expect(page).to have_key('name')
+            expect(page['name']).to eq(page_2.name)
+            expect(page).to have_key('children')
+            expect(page['children'].count).to eq(1)
+
+            page = page['children'].first
+
+            expect(page).to have_key('id')
+            expect(page['id']).to eq(page_3.id)
+            expect(page).to have_key('name')
+            expect(page['name']).to eq(page_3.name)
+            expect(page).to have_key('children')
             expect(page['children'].count).to eq(0)
           end
         end
@@ -707,33 +726,6 @@ module Alchemy
 
           it "should redirect to the page path on that host" do
             is_expected.to redirect_to("http://reallygoodsite.com/home")
-          end
-        end
-      end
-
-      describe '#fold' do
-        let(:page) { mock_model(Alchemy::Page) }
-
-        before do
-          allow(Page).to receive(:find).and_return(page)
-          allow(page).to receive(:editable_by?).with(user).and_return(true)
-        end
-
-        context "if page is currently not folded" do
-          before { allow(page).to receive(:folded?).and_return(false) }
-
-          it "should fold the page" do
-            expect(page).to receive(:fold!).with(user.id, true).and_return(true)
-            post fold_admin_page_path(page), xhr: true
-          end
-        end
-
-        context "if page is already folded" do
-          before { allow(page).to receive(:folded?).and_return(true) }
-
-          it "should unfold the page" do
-            expect(page).to receive(:fold!).with(user.id, false).and_return(true)
-            post fold_admin_page_path(page), xhr: true
           end
         end
       end

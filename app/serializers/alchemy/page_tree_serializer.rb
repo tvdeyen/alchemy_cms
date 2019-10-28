@@ -9,20 +9,18 @@ module Alchemy
     def pages
       tree = []
       path = [{id: object.parent_id, children: tree}]
-      page_list = object.self_and_descendants
-      base_level = object.level - 1
-      # Load folded pages in advance
-      folded_user_pages = FoldedPage.folded_for_user(opts[:user]).pluck(:page_id)
-      folded_depth = Float::INFINITY
+      page_list = object.self_and_descendants.includes(:locker)
+      max_depth = object.depth + 1
+      folded_depth = max_depth
 
       page_list.each_with_index do |page, i|
         has_children = page_list[i + 1] && page_list[i + 1].parent_id == page.id
-        folded = has_children && folded_user_pages.include?(page.id)
+        folded = has_children && page.depth >= max_depth
 
-        if page.depth > folded_depth
+        if !opts[:full] && page.depth > folded_depth
           next
         else
-          folded_depth = Float::INFINITY
+          folded_depth = max_depth
         end
 
         # If this page is folded, skip all pages that are on a higher level (further down the tree).
@@ -38,9 +36,7 @@ module Alchemy
           end
         end
 
-        level = path.count + base_level
-
-        path.last[:children] << page_hash(page, has_children, level, folded)
+        path.last[:children] << page_hash(page, folded)
       end
 
       tree
@@ -48,7 +44,7 @@ module Alchemy
 
     protected
 
-    def page_hash(page, has_children, level, folded)
+    def page_hash(page, folded)
       p_hash = {
         id: page.id,
         name: page.name,
@@ -60,9 +56,9 @@ module Alchemy
         redirects_to_external: page.redirects_to_external?,
         urlname: page.urlname,
         external_urlname: page.redirects_to_external? ? page.external_urlname : nil,
-        level: level,
-        root: level == 1,
-        root_or_leaf: level == 1 || !has_children,
+        level: page.depth,
+        root: page.root?,
+        root_or_leaf: page.root? || page.leaf?,
         children: []
       }
 
@@ -75,13 +71,18 @@ module Alchemy
           definition_missing: page.definition.blank?,
           folded: folded,
           locked: page.locked?,
-          locked_notice: page.locked? ? Alchemy.t('This page is locked', name: page.locker_name) : nil,
+          locked_notice: locked_notice(page),
           permissions: page_permissions(page, opts[:ability]),
           status_titles: page_status_titles(page)
         })
       else
         p_hash
       end
+    end
+
+    def locked_notice(page)
+      return if opts[:full]
+      page.locked? ? Alchemy.t('This page is locked', name: page.locker_name) : nil
     end
 
     def page_elements(page)
