@@ -1,5 +1,5 @@
 <%- if @clipboard_items.blank? -%>
-  <%= render 'new_page_form' %>
+  <%= render 'new_page_form', page: @page %>
 <%- else -%>
 <div id="overlay_tabs">
   <ul>
@@ -7,7 +7,7 @@
     <li><a href="#paste_page_tab"><%= Alchemy.t('Paste from clipboard') %></a></li>
   </ul>
   <div id="create_page_tab">
-    <%= render 'new_page_form' %>
+    <%= render 'new_page_form', page: @page %>
   </div>
   <div id="paste_page_tab">
     <%= alchemy_form_for [:admin, @page] do |f| %>
