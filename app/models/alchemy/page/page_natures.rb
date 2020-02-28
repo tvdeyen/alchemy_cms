@@ -21,11 +21,6 @@ module Alchemy
       !new_record? && parent_id.blank?
     end
 
-    def systempage?
-      return true if Page.count.zero?
-      rootpage? || (parent_id == Page.root.id && !language_root?)
-    end
-
     def folded?(user_id)
       return unless Alchemy.user_class < ActiveRecord::Base
       folded_pages.where(user_id: user_id, folded: true).any?

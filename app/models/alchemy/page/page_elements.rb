@@ -33,7 +33,7 @@ module Alchemy
         join_table: ElementToPage.table_name
 
       after_create :generate_elements,
-        unless: -> { systempage? || autogenerate_elements == false }
+        unless: -> { autogenerate_elements == false }
 
       after_update :trash_not_allowed_elements!,
         if: :has_page_layout_changed?

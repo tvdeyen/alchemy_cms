@@ -38,14 +38,6 @@ FactoryBot.define do
       public_on { Time.current }
     end
 
-    trait :system do
-      name { "Systempage" }
-      parent_id { Alchemy::Page.root.id }
-      language_root { false }
-      page_layout { nil }
-      language { nil }
-    end
-
     trait :layoutpage do
       name { "Footer" }
       parent_id { Alchemy::Page.find_or_create_layout_root_for(Alchemy::Language.current.id).id }

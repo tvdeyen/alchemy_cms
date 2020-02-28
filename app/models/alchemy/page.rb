@@ -114,32 +114,27 @@ module Alchemy
     has_many :nodes, class_name: 'Alchemy::Node', inverse_of: :page
 
     validates_presence_of :language, on: :create, unless: :root
-    validates_presence_of :page_layout, unless: :systempage?
-    validates_format_of :page_layout, with: /\A[a-z0-9_-]+\z/, unless: -> { systempage? || page_layout.blank? }
+    validates_presence_of :page_layout
+    validates_format_of :page_layout, with: /\A[a-z0-9_-]+\z/, unless: -> { page_layout.blank? }
     validates_presence_of :parent_id, if: proc { Page.count > 1 }
 
     before_save :set_language_code,
-      if: -> { language.present? },
-      unless: :systempage?
+      if: -> { language.present? }
 
     before_save :set_restrictions_to_child_pages,
-      if: :restricted_changed?,
-      unless: :systempage?
+      if: :restricted_changed?
 
     before_save :inherit_restricted_status,
-      if: -> { parent && parent.restricted? },
-      unless: :systempage?
+      if: -> { parent&.restricted? }
 
     before_save :set_published_at,
-      if: -> { public_on.present? && published_at.nil? },
-      unless: :systempage?
+      if: -> { public_on.present? && published_at.nil? }
 
     before_save :set_fixed_attributes,
       if: -> { fixed_attributes.any? }
 
     before_create :set_language_from_parent_or_default,
-      if: -> { language_id.blank? },
-      unless: :systempage?
+      if: -> { language_id.blank? }
 
     after_update :create_legacy_url,
       if: :should_create_legacy_url?
