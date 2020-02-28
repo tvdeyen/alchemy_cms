@@ -11,7 +11,7 @@ RSpec.describe 'Requests for PagesController#sitemap' do
     xml_doc = Nokogiri::XML(response.body)
     expect(xml_doc.namespaces).to have_key('xmlns')
     expect(xml_doc.namespaces['xmlns']).to eq('http://www.sitemaps.org/schemas/sitemap/0.9')
-    expect(xml_doc.css('urlset url loc').length).to eq(2)
+    expect(xml_doc.css('urlset url loc').length).to eq(1)
   end
 
   it 'lastmod dates are ISO 8601 timestamps' do
@@ -24,8 +24,8 @@ RSpec.describe 'Requests for PagesController#sitemap' do
   end
 
   context 'in multi language mode' do
-    let!(:root) { page.parent }
-    let!(:pages) { [root, page] }
+    let!(:page2) { create(:alchemy_page, parent: page) }
+    let!(:pages) { [page, page2] }
 
     before do
       allow_any_instance_of(Alchemy::BaseController).to receive('prefix_locale?') { true }

@@ -2,12 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Language tree feature', type: :system, js: true do
+RSpec.describe 'Admin pages index feature', type: :system do
   let(:klingon) { create(:alchemy_language, :klingon) }
   let(:user) { build(:alchemy_dummy_user, :as_admin) }
 
   before do
-    create(:alchemy_page, :language_root)
     authorize_user(user)
   end
 
@@ -46,18 +45,23 @@ RSpec.describe 'Language tree feature', type: :system, js: true do
     end
   end
 
-  context "with no language root page" do
-    before { klingon }
-
-    it "displays a form for creating language root with preselected page layout and front page name" do
+  context "with no pages" do
+    it "displays a form for creating a page" do
       visit('/admin/pages')
-      select2 'Klingon', from: 'Language tree'
-      expect(page).to have_content('This language tree does not exist')
 
-      within('form#create_language_tree') do
+      expect(page).to \
+        have_content(Alchemy.t(:no_resource_found) % { resource: Alchemy::Page.model_name.human })
+      within('.no-resource-found form') do
         expect(page).to \
-          have_selector('input[type="text"][value="' + klingon.frontpage_name + '"]')
-        expect(page).to have_selector('option[selected="selected"][value="' + klingon.page_layout + '"]')
+          have_selector('input[type="hidden"][name="page[language_id]"]')
+        expect(page).to \
+          have_selector('input[type="hidden"][name="page[layoutpage]"]')
+        expect(page).to \
+          have_selector('input[type="number"][name="page[parent_id]"]')
+        expect(page).to \
+          have_selector('select[name="page[page_layout]"]')
+        expect(page).to \
+          have_selector('input[type="text"][name="page[name]"]')
       end
     end
   end

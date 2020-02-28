@@ -39,10 +39,9 @@
 //= require alchemy/alchemy.link_dialog
 //= require alchemy/alchemy.list_filter
 //= require alchemy/alchemy.initializer
-//= require alchemy/alchemy.page_sorter
 //= require alchemy/alchemy.uploader
+//= require alchemy/alchemy.pages
 //= require alchemy/alchemy.preview_window
-//= require alchemy/alchemy.sitemap
 //= require alchemy/alchemy.spinner
 //= require alchemy/alchemy.tinymce
 //= require alchemy/alchemy.tooltips

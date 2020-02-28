@@ -7,6 +7,7 @@ module Alchemy
     routes { Alchemy::Engine.routes }
 
     describe '#index' do
+      let!(:unpublic_page) { create(:alchemy_page) }
       let!(:page) { create(:alchemy_page, :public) }
       let(:result) { JSON.parse(response.body) }
 
@@ -21,7 +22,7 @@ module Alchemy
       it "returns all public pages" do
         get :index, params: {format: :json}
 
-        expect(result['pages'].size).to eq(2)
+        expect(result['pages'].size).to eq(1)
       end
 
       context 'as author' do
@@ -39,14 +40,13 @@ module Alchemy
       it 'includes meta data' do
         get :index, params: { format: :json }
 
-        expect(result['pages'].size).to eq(2)
         expect(result['meta']['page']).to be_nil
-        expect(result['meta']['per_page']).to eq(2)
-        expect(result['meta']['total_count']).to eq(2)
+        expect(result['meta']['per_page']).to eq(1)
+        expect(result['meta']['total_count']).to eq(1)
       end
 
       context 'with page param given' do
-        let!(:page1) { create(:alchemy_page) }
+        let!(:page1) { create(:alchemy_page, :public) }
         let!(:page2) { create(:alchemy_page) }
 
         before do
@@ -73,10 +73,11 @@ module Alchemy
     end
 
     describe '#nested' do
-      let!(:page) { create(:alchemy_page, :public, page_layout: 'contact') }
+      let!(:parent) { create(:alchemy_page, :public) }
+      let!(:page) { create(:alchemy_page, :public, page_layout: 'contact', parent: parent) }
 
       it "returns all pages as nested json tree without admin related infos", :aggregate_failures do
-        get :nested, params: {format: :json}
+        get :nested, params: { page_id: parent.id, format: :json }
 
         expect(response.status).to eq(200)
         expect(response.media_type).to eq('application/json')
@@ -104,7 +105,7 @@ module Alchemy
         end
 
         it "returns all pages as nested json tree with admin related infos", :aggregate_failures do
-          get :nested, params: {format: :json}
+          get :nested, params: { page_id: parent.id, format: :json }
 
           expect(response.status).to eq(200)
           expect(response.media_type).to eq('application/json')
@@ -129,7 +130,7 @@ module Alchemy
 
       context "when a page_id is passed" do
         it 'returns all pages as nested json from this page only' do
-          get :nested, params: {page_id: page.id, format: :json}
+          get :nested, params: { page_id: page.id, format: :json }
 
           expect(response.status).to eq(200)
           expect(response.media_type).to eq('application/json')
@@ -143,7 +144,7 @@ module Alchemy
 
       context "when `elements=true` is passed" do
         it 'returns all pages as nested json tree with elements included' do
-          get :nested, params: {elements: 'true', format: :json}
+          get :nested, params: { page_id: parent.id, elements: 'true', format: :json }
 
           expect(response.status).to eq(200)
           expect(response.media_type).to eq('application/json')
@@ -160,7 +161,7 @@ module Alchemy
           end
 
           it 'returns all pages as nested json tree with only these elements included' do
-            get :nested, params: {elements: 'headline,text', format: :json}
+            get :nested, params: { page_id: parent.id, elements: 'headline,text', format: :json }
 
             result = JSON.parse(response.body)
 

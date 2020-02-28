@@ -6,7 +6,7 @@ require 'rails_helper'
 module Alchemy
   describe Admin::PagesController do
     context 'a guest' do
-      it 'can not access page tree' do
+      it 'cannot access pages index page' do
         get admin_pages_path
         expect(request).to redirect_to(Alchemy.login_path)
       end
@@ -15,7 +15,7 @@ module Alchemy
     context 'a member' do
       before { authorize_user(build(:alchemy_dummy_user)) }
 
-      it 'can not access page tree' do
+      it 'cannot access pages index page' do
         get admin_pages_path
         expect(request).to redirect_to(root_path)
       end
@@ -29,140 +29,26 @@ module Alchemy
       describe '#index' do
         let!(:language) { create(:alchemy_language) }
 
-        context 'with existing language root page' do
-          let!(:language_root) { create(:alchemy_page, :language_root) }
+        it "it assigns current language" do
+          get admin_pages_path
+          expect(assigns(:language)).to eq(language)
+        end
 
-          it "assigns @page_root variable" do
+        context 'with multiple pages of different languages' do
+          let!(:page) { create(:alchemy_page, language: language) }
+          let!(:page2) { create(:alchemy_page, language: create(:alchemy_language, :klingon)) }
+
+          it 'assigns pages of current language only' do
             get admin_pages_path
-            expect(assigns(:page_root)).to eq(language_root)
+            expect(assigns(:pages)).to eq([page])
           end
         end
 
-        context 'without language root page' do
-          before do
-            expect(Language).to receive(:current_root_page).and_return(nil)
-            allow(Language).to receive(:current).and_return(language)
-          end
-
-          it "it assigns current language" do
+        context 'without any pages' do
+          it "assigns a new page" do
             get admin_pages_path
-            expect(assigns(:language)).to eq(language)
-          end
-
-          context "with multiple sites" do
-            let!(:site_1_language_2) do
-              create(:alchemy_language, code: 'fr')
-            end
-
-            let!(:site_2) do
-              create(:alchemy_site, host: 'another-one.com')
-            end
-
-            let(:site_2_language) do
-              site_2.default_language
-            end
-
-            before do
-              create(:alchemy_page, :language_root, language: site_2_language)
-              create(:alchemy_page, :language_root, language: site_1_language_2)
-            end
-
-            it "loads languages with pages from current site only" do
-              get admin_pages_path
-              expect(assigns(:languages_with_page_tree)).to include(site_1_language_2)
-              expect(assigns(:languages_with_page_tree)).to_not include(site_2_language)
-            end
-          end
-        end
-      end
-
-      describe '#tree' do
-        let(:user)   { create(:alchemy_dummy_user, :as_editor) }
-        let(:page_1) { create(:alchemy_page, visible: true, name: 'one') }
-        let(:page_2) { create(:alchemy_page, visible: true, name: 'two', parent_id: page_1.id) }
-        let(:page_3) { create(:alchemy_page, visible: true, name: 'three', parent_id: page_2.id) }
-        let!(:pages) { [page_1, page_2, page_3] }
-
-        subject :get_tree do
-          get tree_admin_pages_path(id: page_1.id, full: 'true')
-        end
-
-        it 'returns a tree as JSON' do
-          get_tree
-
-          expect(response.status).to eq(200)
-          expect(response.media_type).to eq('application/json')
-
-          result = JSON.parse(response.body)
-
-          expect(result).to have_key('pages')
-          expect(result['pages'].count).to eq(1)
-
-          page = result['pages'].first
-
-          expect(page).to have_key('id')
-          expect(page['id']).to eq(page_1.id)
-          expect(page).to have_key('name')
-          expect(page['name']).to eq(page_1.name)
-          expect(page).to have_key('children')
-          expect(page['children'].count).to eq(1)
-
-          page = page['children'].first
-
-          expect(page).to have_key('id')
-          expect(page['id']).to eq(page_2.id)
-          expect(page).to have_key('name')
-          expect(page['name']).to eq(page_2.name)
-          expect(page).to have_key('children')
-          expect(page['children'].count).to eq(1)
-
-          page = page['children'].first
-
-          expect(page).to have_key('id')
-          expect(page['id']).to eq(page_3.id)
-          expect(page).to have_key('name')
-          expect(page['name']).to eq(page_3.name)
-          expect(page).to have_key('children')
-          expect(page['children'].count).to eq(0)
-        end
-
-        context "when branch is folded" do
-          before do
-            page_2.fold!(user.id, true)
-          end
-
-          it 'does not return a branch that is folded' do
-            get tree_admin_pages_path(id: page_1.id, full: 'false')
-
-            expect(response.status).to eq(200)
-            expect(response.media_type).to eq('application/json')
-
-            result = JSON.parse(response.body)
-            page = result['pages'].first['children'].first
-
-            expect(page['children'].count).to eq(0)
-          end
-        end
-
-        context "when page is locked" do
-          before do
-            page_1.lock_to!(user)
-          end
-
-          it 'includes locked_notice if page is locked' do
-            get_tree
-
-            expect(response.status).to eq(200)
-            expect(response.media_type).to eq('application/json')
-
-            result = JSON.parse(response.body)
-
-            expect(result).to have_key('pages')
-            expect(result['pages'].count).to eq(1)
-
-            page = result['pages'].first
-            expect(page).to have_key('locked_notice')
-            expect(page['locked_notice']).to match(/#{user.name}/)
+            expect(assigns(:page)).to be_an_instance_of(Alchemy::Page)
+            expect(assigns(:page).language).to eq(language)
           end
         end
       end
@@ -288,102 +174,6 @@ module Alchemy
         end
       end
 
-      describe '#order' do
-        let(:page_1)       { create(:alchemy_page, visible: true) }
-        let(:page_2)       { create(:alchemy_page, visible: true) }
-        let(:page_3)       { create(:alchemy_page, visible: true) }
-        let(:page_item_1)  { {id: page_1.id, slug: page_1.slug, restricted: false, visible: page_1.visible?, children: [page_item_2]} }
-        let(:page_item_2)  { {id: page_2.id, slug: page_2.slug, restricted: false, visible: page_2.visible?, children: [page_item_3]} }
-        let(:page_item_3)  { {id: page_3.id, slug: page_3.slug, restricted: false, visible: page_3.visible? } }
-        let(:set_of_pages) { [page_item_1] }
-
-        it "stores the new order" do
-          post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-          page_1.reload
-          expect(page_1.descendants).to eq([page_2, page_3])
-        end
-
-        context 'with url nesting enabled' do
-          before do
-            stub_alchemy_config(:url_nesting, true)
-          end
-
-          it "updates the pages urlnames" do
-            post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-            [page_1, page_2, page_3].map(&:reload)
-            expect(page_1.urlname).to eq(page_1.slug.to_s)
-            expect(page_2.urlname).to eq("#{page_1.slug}/#{page_2.slug}")
-            expect(page_3.urlname).to eq("#{page_1.slug}/#{page_2.slug}/#{page_3.slug}")
-          end
-
-          context 'with invisible page in tree' do
-            let(:page_item_2) do
-              {
-                id: page_2.id,
-                slug: page_2.slug,
-                children: [page_item_3],
-                visible: false
-              }
-            end
-
-            it "does not use this pages slug in urlnames of descendants" do
-              post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-              [page_1, page_2, page_3].map(&:reload)
-              expect(page_1.urlname).to eq(page_1.slug.to_s)
-              expect(page_2.urlname).to eq("#{page_1.slug}/#{page_2.slug}")
-              expect(page_3.urlname).to eq("#{page_1.slug}/#{page_3.slug}")
-            end
-          end
-
-          context 'with restricted page in tree' do
-            let(:page_2) { create(:alchemy_page, restricted: true) }
-            let(:page_item_2) do
-              {
-                id: page_2.id,
-                slug: page_2.slug,
-                children: [page_item_3],
-                restricted: true
-              }
-            end
-
-            it "updates restricted status of descendants" do
-              post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-              page_3.reload
-              expect(page_3.restricted).to be_truthy
-            end
-          end
-
-          context 'with page having number as slug' do
-            let(:page_item_2) do
-              {
-                id: page_2.id,
-                slug: 42,
-                children: [page_item_3]
-              }
-            end
-
-            it "does not raise error" do
-              expect {
-                post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-              }.not_to raise_error
-            end
-
-            it "still generates the correct urlname on page_3" do
-              post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-              [page_1, page_2, page_3].map(&:reload)
-              expect(page_3.urlname).to eq("#{page_1.slug}/#{page_2.slug}/#{page_3.slug}")
-            end
-          end
-
-          it "creates legacy urls" do
-            post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
-            [page_2, page_3].map(&:reload)
-            expect(page_2.legacy_urls.size).to eq(1)
-            expect(page_3.legacy_urls.size).to eq(1)
-          end
-        end
-      end
-
       describe "#configure" do
         context "with page having nested urlname" do
           let(:page) { create(:alchemy_page, name: 'Foobar', urlname: 'foobar') }
@@ -479,48 +269,6 @@ module Alchemy
               paste_from_clipboard: page_in_clipboard.id
             ), xhr: true
           end
-        end
-      end
-
-      describe '#copy_language_tree' do
-        let(:params)                     { {languages: {new_lang_id: '2', old_lang_id: '1'}} }
-        let(:language_root_to_copy_from) { build_stubbed(:alchemy_page, :language_root) }
-        let(:copy_of_language_root)      { build_stubbed(:alchemy_page, :language_root) }
-        let(:root_page)                  { mock_model('Page') }
-
-        before do
-          allow(Page).to receive(:copy).and_return(copy_of_language_root)
-          allow(Page).to receive(:root).and_return(root_page)
-          allow(Page).to receive(:language_root_for).and_return(language_root_to_copy_from)
-          allow_any_instance_of(Page).to receive(:move_to_child_of)
-          allow_any_instance_of(Page).to receive(:copy_children_to)
-          allow(Language).to receive(:current).and_return(mock_model('Language', locale: 'de', code: 'de'))
-        end
-
-        it "should copy the language root page over to the other language" do
-          expect(Page).to receive(:copy).with(language_root_to_copy_from, {language_id: '2', language_code: 'de'})
-          post copy_language_tree_admin_pages_path(params)
-        end
-
-        it "should move the newly created language-root-page below the absolute root page" do
-          expect(copy_of_language_root).to receive(:move_to_child_of).with(root_page)
-          post copy_language_tree_admin_pages_path(params)
-        end
-
-        it "should copy all childs of the original page over to the new created one" do
-          expect_any_instance_of(described_class).
-            to receive(:language_root_to_copy_from) { language_root_to_copy_from }
-          expect_any_instance_of(described_class).
-            to receive(:copy_of_language_root) { copy_of_language_root }
-          expect(language_root_to_copy_from).to receive(:copy_children_to).with(copy_of_language_root)
-          post copy_language_tree_admin_pages_path(params)
-        end
-
-        it "should redirect to admin_pages_path" do
-          allow_any_instance_of(described_class).to receive(:copy_of_language_root)
-          allow_any_instance_of(described_class).to receive(:language_root_to_copy_from).and_return(double(copy_children_to: nil))
-          post copy_language_tree_admin_pages_path(params)
-          expect(response).to redirect_to(admin_pages_path)
         end
       end
 
@@ -660,33 +408,6 @@ module Alchemy
 
           it "should redirect to the page path on that host" do
             is_expected.to redirect_to("http://reallygoodsite.com/home")
-          end
-        end
-      end
-
-      describe '#fold' do
-        let(:page) { mock_model(Alchemy::Page) }
-
-        before do
-          allow(Page).to receive(:find).and_return(page)
-          allow(page).to receive(:editable_by?).with(user).and_return(true)
-        end
-
-        context "if page is currently not folded" do
-          before { allow(page).to receive(:folded?).and_return(false) }
-
-          it "should fold the page" do
-            expect(page).to receive(:fold!).with(user.id, true).and_return(true)
-            post fold_admin_page_path(page), xhr: true
-          end
-        end
-
-        context "if page is already folded" do
-          before { allow(page).to receive(:folded?).and_return(true) }
-
-          it "should unfold the page" do
-            expect(page).to receive(:fold!).with(user.id, false).and_return(true)
-            post fold_admin_page_path(page), xhr: true
           end
         end
       end

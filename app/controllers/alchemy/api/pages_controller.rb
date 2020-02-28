@@ -30,7 +30,7 @@ module Alchemy
     # Pass elements=true param to include elements for pages
     #
     def nested
-      @page = Page.find_by(id: params[:page_id]) || Language.current_root_page
+      @page = Page.find_by!(id: params[:page_id])
 
       render json: PageTreeSerializer.new(@page,
         ability: current_ability,

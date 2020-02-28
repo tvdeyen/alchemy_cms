@@ -150,14 +150,14 @@ RSpec.describe 'Page editing feature', type: :system do
     context "when updating the name" do
       it "saves the name" do
         visit alchemy.admin_pages_path
-        find(".sitemap_page[name='#{a_page.name}'] .icon.fa-cog").click
+        find("#page_#{a_page.id} .icon.fa-cog").click
         expect(page).to have_selector(".alchemy-dialog-overlay.open")
         within(".alchemy-dialog.modal") do
           find("input#page_name").set("name with some %!x^)'([@!{}]|/?\:# characters")
           find(".submit button").click
         end
         expect(page).to_not have_selector(".alchemy-dialog-overlay.open")
-        expect(page).to have_selector("#sitemap a.sitemap_pagename_link", text: "name with some %!x^)'([@!{}]|/?\:# characters")
+        expect(page).to have_selector("#page_#{a_page.id} td", text: "name with some %!x^)'([@!{}]|/?\:# characters")
       end
     end
   end

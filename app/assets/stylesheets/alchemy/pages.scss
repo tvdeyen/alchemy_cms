@@ -1,0 +1,17 @@
+.page_status {
+  display: inline-block;
+}
+
+.page_status_and_name .page_status {
+  margin-left: $default-margin;
+}
+
+.page-ancestor {
+  color: $muted-text-color
+}
+
+.status {
+  .page_status {
+    padding: 0 $default-padding;
+  }
+}

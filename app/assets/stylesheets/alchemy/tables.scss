@@ -5,18 +5,36 @@ table {
   font-size: inherit;
   width: 100%;
 
-  &.list .tools {
-    button, a {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      padding: 0;
-      margin: 0 $default-margin;
-      line-height: inherit;
-      text-align: center;
+  &.list {
+    .status {
+      width: 94px;
+    }
 
-      > .icon {
-        margin: 0;
+    .tools {
+      width: 40px;
+      white-space: nowrap;
+      background-color: transparent;
+
+      &.long {
+        width: 60px;
+      }
+
+      button, a {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        margin: 0 $default-margin;
+        line-height: inherit;
+        text-align: center;
+
+        > .icon {
+          margin: 0;
+        }
+      }
+
+      .button_with_label {
+        margin: 0 2px;
       }
     }
   }
@@ -40,6 +58,7 @@ table {
   &.icon {
     width: 16px;
     text-align: center;
+    background-color: transparent;
   }
 }
 
@@ -65,16 +84,6 @@ tr.even td {
 
 tr.odd td {
   background-color: $table-row-odd-background-color;
-}
-
-.list tr .tools {
-  width: 40px;
-  white-space: nowrap;
-  @extend .disable-user-select;
-
-  &.long {
-    width: 60px;
-  }
 }
 
 td.heading {

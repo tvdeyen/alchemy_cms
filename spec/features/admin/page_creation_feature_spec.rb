@@ -24,11 +24,9 @@ RSpec.describe "Page creation", type: :system do
       end
 
       context "", js: true do
-        let(:root_page) { Alchemy::Page.last }
-
         before do
           visit admin_pages_path
-          page.find("a[href='#{new_admin_page_path(parent_id: root_page.id)}']").click
+          page.find("a[href='#{new_admin_page_path}']").click
         end
 
         it "the create page tab is visible by default" do

@@ -1,4 +1,8 @@
 <%= alchemy_form_for [:admin, @page], class: 'edit_page' do |f| %>
+  <%= f.input :parent_id,
+    label: Alchemy::Page.human_attribute_name(:parent_id),
+    input_html: { class: 'alchemy_selectbox' } %>
+
   <%= f.input :page_layout,
     collection: @page_layouts,
     label: page_layout_label(@page),
@@ -46,3 +50,16 @@
 
   <%= f.submit Alchemy.t(:save) %>
 <% end %>
+
+<script>
+  $('#page_parent_id').alchemyPageSelect({
+    placeholder: "<%= Alchemy.t(:none) %>",
+    url: "<%= alchemy.api_pages_path %>",
+    <% if @page.parent %>
+    initialSelection: {
+      id: <%= @page.parent_id %>,
+      text: "<%= @page.parent.name %>"
+    }
+    <% end %>
+  })
+</script>

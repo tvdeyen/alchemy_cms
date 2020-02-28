@@ -51,10 +51,8 @@ module Alchemy
       def seed_layoutpages
         desc "Seeding Alchemy layout pages from #{page_seeds_file}"
         language = Alchemy::Language.default
-        layout_root = Alchemy::Page.find_or_create_layout_root_for(language.id)
         layoutpages.each do |page|
           create_page(page, {
-            parent: layout_root,
             language: language
           })
         end

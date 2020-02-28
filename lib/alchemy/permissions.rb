@@ -108,7 +108,6 @@ module Alchemy
         can :manage,                :alchemy_admin_clipboard
         can :index,                 :trash
         can :edit,                  :alchemy_admin_layoutpages
-        can :tree,                  :alchemy_admin_pages
 
         # Resources
         can [:read, :download],     Alchemy::Attachment
@@ -146,10 +145,7 @@ module Alchemy
         # Resources
         can [
           :copy,
-          :copy_language_tree,
           :flush,
-          :order,
-          :sort,
           :switch_language
         ], Alchemy::Page
 
@@ -212,7 +208,6 @@ module Alchemy
 
     def set_action_aliases
       alias_action :configure,
-        :fold,
         :info,
         :link,
         :read,

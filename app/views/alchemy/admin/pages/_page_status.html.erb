@@ -1,24 +1,12 @@
-<% if page.definition.blank? %>
-  <%= page_layout_missing_warning %>
-<% end %>
-<span class="page_name" title="<%= page.name %>">
-  <% if local_assigns[:truncate] %>
-    <%= truncate page.name, length: 15 %>
-  <% else %>
-    <%= page.name %>
-  <% end %>
+<span class="page_status with-hint">
+  <%= render_icon(:compass, transform: 'shrink-2', class: page.public? ? nil : 'disabled') %>
+  <span class="hint-bubble"><%= page.status_title(:public) %></span>
 </span>
-<%- if multi_site? -%>
-  <span class="page_site" title="<%= page.site_name %>">
-    <% if local_assigns[:truncate] %>
-      <%= truncate page.site_name, length: 15 %>
-    <% else %>
-      <%= page.site_name %>
-    <% end %>
-  </span>
-<%- end -%>
-<%- if page.site_languages.many? -%>
-  <span class="page_language" title="<%= page.language.name %>">
-    <%= page.language_code %>
-  </span>
-<%- end -%>
+<span class="page_status with-hint">
+  <%= render_icon(:eye, transform: 'shrink-2', class: page.visible? ? nil : 'disabled') %>
+  <span class="hint-bubble"><%= page.status_title(:visible) %></span>
+</span>
+<span class="page_status with-hint">
+  <%= render_icon(:lock, transform: 'shrink-2', class: page.restricted? ? nil : 'disabled') %>
+  <span class="hint-bubble"><%= page.status_title(:restricted) %></span>
+</span>

@@ -98,7 +98,7 @@ RSpec.describe 'Requesting a page' do
 
       it "redirects to public child" do
         visit "/not-public"
-        expect(page.current_path).to eq("/public-child")
+        expect(page.current_path).to eq("/not-public/public-child")
       end
 
       context "with only unpublished pages in page tree" do
@@ -117,7 +117,7 @@ RSpec.describe 'Requesting a page' do
         it "redirects to public child with prefixed locale" do
           allow(::I18n).to receive(:default_locale).and_return(:de)
           visit "/not-public"
-          expect(page.current_path).to eq("/en/public-child")
+          expect(page.current_path).to eq("/en/not-public/public-child")
         end
       end
     end
@@ -147,7 +147,7 @@ RSpec.describe 'Requesting a page' do
           context "and index page locale is default locale" do
             it 'redirects to public child without prefixed locale' do
               visit '/'
-              expect(page.current_path).to eq('/public-child')
+              expect(page.current_path).to eq('/home/public-child')
             end
           end
 
@@ -158,7 +158,7 @@ RSpec.describe 'Requesting a page' do
 
             it 'redirects to public child with prefixed locale' do
               visit '/'
-              expect(page.current_path).to eq('/en/public-child')
+              expect(page.current_path).to eq('/en/home/public-child')
             end
           end
         end
@@ -255,12 +255,12 @@ RSpec.describe 'Requesting a page' do
 
       it "if requested page is unpublished" do
         visit '/not-public'
-        expect(page.current_path).to eq('/public-child')
+        expect(page.current_path).to eq('/not-public/public-child')
       end
 
       it "with normal url, if requested url has nested language code and is not public" do
         visit '/en/not-public'
-        expect(page.current_path).to eq('/public-child')
+        expect(page.current_path).to eq('/not-public/public-child')
       end
     end
 

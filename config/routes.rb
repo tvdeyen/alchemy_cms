@@ -26,18 +26,12 @@ Alchemy::Engine.routes.draw do
     resources :pages do
       resources :elements
       collection do
-        post :order
         post :flush
-        post :copy_language_tree
-        get :create_language
         get :link
-        get :sort
-        get :tree
       end
       member do
         post :unlock
         post :publish
-        post :fold
         post :visit
         get :configure
         get :preview

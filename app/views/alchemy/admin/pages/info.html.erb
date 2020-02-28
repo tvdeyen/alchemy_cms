@@ -13,27 +13,29 @@
     </label>
     <p><%= @page.layout_display_name %></p>
   </div>
-  <div class="value">
-    <label><%= Alchemy::LegacyPageUrl.human_attribute_name(:urlname) %></label>
-    <p><%= "/#{@page.urlname}" %></p>
-  </div>
-  <div class="value">
-    <label><%= Alchemy.t(:page_status) %></label>
-    <p>
-      <span class="page_status">
-        <%= render_icon(:compass, transform: 'shrink-2', class: @page.public? ? nil : 'disabled') %>
-        <%= @page.status_title(:public) %>
-      </span>
-      <span class="page_status">
-        <%= render_icon(:eye, transform: 'shrink-2', class: @page.visible? ? nil : 'disabled') %>
-        <%= @page.status_title(:visible) %>
-      </span>
-      <span class="page_status">
-        <%= render_icon(:lock, transform: 'shrink-2', class: @page.restricted? ? nil : 'disabled') %>
-        <%= @page.status_title(:restricted) %>
-      </span>
-    </p>
-  </div>
+  <% unless @page.layoutpage? %>
+    <div class="value">
+      <label><%= Alchemy::LegacyPageUrl.human_attribute_name(:urlname) %></label>
+      <p><%= "/#{@page.urlname}" %></p>
+    </div>
+    <div class="value">
+      <label><%= Alchemy.t(:page_status) %></label>
+      <p>
+        <span class="page_status">
+          <%= render_icon(:compass, transform: 'shrink-2', class: @page.public? ? nil : 'disabled') %>
+          <%= @page.status_title(:public) %>
+        </span>
+        <span class="page_status">
+          <%= render_icon(:eye, transform: 'shrink-2', class: @page.visible? ? nil : 'disabled') %>
+          <%= @page.status_title(:visible) %>
+        </span>
+        <span class="page_status">
+          <%= render_icon(:lock, transform: 'shrink-2', class: @page.restricted? ? nil : 'disabled') %>
+          <%= @page.status_title(:restricted) %>
+        </span>
+      </p>
+    </div>
+  <% end %>
   <div class="value">
     <label><%= Alchemy.t(:page_was_created) %></label>
     <p><%= Alchemy.t(:from_at) % {by: @page.creator_name, at: l(@page.created_at, format: :'alchemy.page_status')} %></p>

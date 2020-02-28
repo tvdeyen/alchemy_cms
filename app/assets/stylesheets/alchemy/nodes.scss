@@ -88,10 +88,6 @@
     background-color: $sitemap-highlight-color;
   }
 
-  &.no-match .sitemap_pagename_link {
-    color: $medium-gray;
-  }
-
   &:hover {
     background-color: $sitemap-page-hover-color;
     border-radius: $default-border-radius;

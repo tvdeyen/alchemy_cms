@@ -1,26 +1,17 @@
-(function() {
-  var $page;
-
-<% if @old_page_layout != @page.page_layout -%>
+<% if @old_page_layout != @page.page_layout %>
   Alchemy.ElementsWindow.reload();
   Alchemy.growl('<%= j Alchemy.t(:page_layout_changed_notice) %>');
-<% end -%>
+<% end %>
 
-<% if @while_page_edit -%>
-
+<% if @while_page_edit %>
   Alchemy.reloadPreview();
   $('#page_<%= @page.id %>_status').replaceWith('<%= j render("current_page", current_page: @page) %>');
+<% else %>
+  $('#page_<%= @page.id %>').replaceWith("<%= j render('page', page: @page) %>");
+  <% @page.children.each do |child| %>
+    $('#page_<%= child.id %>').replaceWith("<%= j render('page', page: child) %>");
+  <% end %>
+<% end %>
 
-<% else -%>
-
-  var page_html = "<%= j render('page', page: @page) %>";
-  var compiler = Handlebars.compile(page_html);
-  var tree = <%== @tree.to_json %>;
-  var html = compiler(tree.pages[0]);
-  $('#page_<%= @page.id %>').replaceWith(html);
-
-<% end -%>
-
-  Alchemy.growl("<%= j @notice %>");
-  Alchemy.closeCurrentDialog();
-})()
+Alchemy.growl("<%= j @notice %>");
+Alchemy.closeCurrentDialog();

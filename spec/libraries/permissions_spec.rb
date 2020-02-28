@@ -124,7 +124,6 @@ describe Alchemy::Permissions do
       is_expected.to be_able_to(:info, Alchemy::Page)
       is_expected.to be_able_to(:configure, Alchemy::Page)
       is_expected.to be_able_to(:update, Alchemy::Page)
-      is_expected.to be_able_to(:fold, Alchemy::Page)
       is_expected.to be_able_to(:link, Alchemy::Page)
       is_expected.to be_able_to(:visit, Alchemy::Page)
       is_expected.to be_able_to(:unlock, Alchemy::Page)
@@ -179,12 +178,9 @@ describe Alchemy::Permissions do
 
     it "can manage pages" do
       is_expected.to be_able_to(:copy, Alchemy::Page)
-      is_expected.to be_able_to(:copy_language_tree, Alchemy::Page)
       is_expected.to be_able_to(:create, Alchemy::Page)
       is_expected.to be_able_to(:destroy, Alchemy::Page)
       is_expected.to be_able_to(:flush, Alchemy::Page)
-      is_expected.to be_able_to(:order, Alchemy::Page)
-      is_expected.to be_able_to(:sort, Alchemy::Page)
       is_expected.to be_able_to(:switch_language, Alchemy::Page)
     end
 

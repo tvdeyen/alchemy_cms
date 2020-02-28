@@ -11,9 +11,12 @@ module Alchemy
     end
 
     describe "#index" do
-      it "should assign @layout_root" do
+      let!(:contentpage) { create(:alchemy_page) }
+      let!(:layoutpage) { create(:alchemy_page, :layoutpage) }
+
+      it "should assign layoutpages to @pages" do
         get :index
-        expect(assigns(:layout_root)).to be_a(Page)
+        expect(assigns(:layoutpages)).to eq([layoutpage])
       end
 
       it "should assign @languages" do

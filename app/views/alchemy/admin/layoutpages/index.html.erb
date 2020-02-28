@@ -1,35 +1,49 @@
 <% content_for :toolbar do %>
-<div class="toolbar_buttons">
-  <%= render 'alchemy/admin/partials/site_select' %>
-  <%= render 'alchemy/admin/partials/language_tree_select' %>
-  <%= toolbar_button(
-    icon: :plus,
-    url: alchemy.new_admin_page_path(parent_id: @layout_root.id, layoutpage: true),
-    hotkey: 'alt+n',
-    dialog_options: {
+  <div class="toolbar_buttons">
+    <%= render 'alchemy/admin/partials/site_select' %>
+    <%= render 'alchemy/admin/partials/language_tree_select' %>
+    <%= toolbar_button(
+      icon: :plus,
+      url: alchemy.new_admin_page_path(layoutpage: true),
+      hotkey: 'alt+n',
+      dialog_options: {
+        title: Alchemy.t('Add global page'),
+        size: '340x170',
+        overflow: true
+      },
       title: Alchemy.t('Add global page'),
-      size: '340x170',
-      overflow: true
-    },
-    title: Alchemy.t('Add global page'),
-    label: Alchemy.t('Add global page'),
-    if_permitted_to: [:create, Alchemy::Page]
-  ) %>
-  <%= toolbar_button(
-    icon: clipboard_empty?('pages') ? 'clipboard' : 'paste',
-    url: alchemy.admin_clipboard_path(remarkable_type: 'pages'),
-    dialog_options: {
-      title: Alchemy.t('Clipboard'),
-      size: '380x270'
-    },
-    title: Alchemy.t('Show clipboard'),
-    link_options: {id: "clipboard_button"},
-    label: Alchemy.t('Show clipboard'),
-    if_permitted_to: [:create, Alchemy::Page]
-  ) %>
-</div>
+      label: Alchemy.t('Add global page'),
+      if_permitted_to: [:create, Alchemy::Page]
+    ) %>
+    <%= toolbar_button(
+      icon: clipboard_empty?('pages') ? 'clipboard' : 'paste',
+      url: alchemy.admin_clipboard_path(remarkable_type: 'pages'),
+      dialog_options: {
+        title: Alchemy.t('Clipboard'),
+        size: '380x270'
+      },
+      title: Alchemy.t('Show clipboard'),
+      link_options: {id: "clipboard_button"},
+      label: Alchemy.t('Show clipboard'),
+      if_permitted_to: [:create, Alchemy::Page]
+    ) %>
+  </div>
+  <%= render 'alchemy/admin/partials/search_form', url: alchemy.admin_layoutpages_path %>
 <% end %>
 
-<ul class="list" id="layoutpages">
-  <%= render partial: "layoutpage", collection: @layout_root.children %>
-</ul>
+<div id="archive_all" class="resources-table-wrapper">
+  <% if @layoutpages.any? %>
+    <%= render 'alchemy/admin/resources/table_header' %>
+    <table class="list">
+      <thead>
+        <tr>
+          <th class="icon"></th>
+          <th><%= Alchemy::Page.human_attribute_name(:name) %></th>
+          <th class="tools"></th>
+        </tr>
+      </thead>
+      <%= render partial: "alchemy/admin/pages/page", collection: @layoutpages %>
+    </table>
+    <%= paginate @layoutpages, scope: alchemy, theme: 'alchemy' %>
+  <% end %>
+</div>

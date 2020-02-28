@@ -9,16 +9,8 @@ module Alchemy
 
     let(:default_language) { Language.default }
 
-    let(:default_language_root) do
-      create(:alchemy_page, :language_root, language: default_language, name: 'Home')
-    end
-
     let(:page) do
       create :alchemy_page, :public,
-        parent_id: default_language_root.id,
-        page_layout: 'news',
-        name: 'News',
-        urlname: 'news',
         language: default_language,
         autogenerate_elements: true
     end
@@ -28,8 +20,8 @@ module Alchemy
     end
 
     describe "#index" do
-      before do
-        default_language_root
+      let!(:default_language_root) do
+        create(:alchemy_page, :language_root, language: default_language, name: 'Home')
       end
 
       it 'renders :show template' do
@@ -40,11 +32,6 @@ module Alchemy
         it 'loads default language root page' do
           get :index
           expect(assigns(:page)).to eq(default_language_root)
-        end
-
-        it 'sets @root_page to default language root' do
-          get :index
-          expect(assigns(:root_page)).to eq(default_language_root)
         end
 
         context 'and the root page is not public' do
@@ -146,19 +133,12 @@ module Alchemy
           get :index, params: {locale: 'de'}
           expect(assigns(:page)).to eq(startseite)
         end
-
-        it 'sets @root_page to root page of that language' do
-          get :index, params: {locale: 'de'}
-          expect(assigns(:root_page)).to eq(startseite)
-        end
       end
     end
 
     describe 'requesting a not yet public page' do
       let(:not_yet_public) do
-        create :alchemy_page,
-          parent: default_language_root,
-          public_on: 1.day.from_now
+        create(:alchemy_page, public_on: 1.day.from_now)
       end
 
       it "renders 404" do
@@ -170,10 +150,7 @@ module Alchemy
 
     describe 'requesting a no longer public page' do
       let(:no_longer_public) do
-        create :alchemy_page,
-          parent: default_language_root,
-          public_on: 2.days.ago,
-          public_until: 1.day.ago
+        create(:alchemy_page, public_on: 2.days.ago, public_until: 1.day.ago)
       end
 
       it "renders 404" do
@@ -185,10 +162,7 @@ module Alchemy
 
     describe 'requesting a still public page' do
       let(:still_public_page) do
-        create :alchemy_page,
-          parent: default_language_root,
-          public_on: 2.days.ago,
-          public_until: 1.day.from_now
+        create(:alchemy_page, public_on: 2.days.ago, public_until: 1.day.from_now)
       end
 
       it "renders page" do
@@ -199,10 +173,7 @@ module Alchemy
 
     describe 'requesting a page without time limit' do
       let(:still_public_page) do
-        create :alchemy_page,
-          parent: default_language_root,
-          public_on: 2.days.ago,
-          public_until: nil
+        create(:alchemy_page, public_on: 2.days.ago, public_until: nil)
       end
 
       it "renders page" do
@@ -212,6 +183,15 @@ module Alchemy
     end
 
     context "requested for a page containing a feed" do
+      let(:page) do
+        create :alchemy_page, :public,
+          page_layout: 'news',
+          name: 'News',
+          urlname: 'news',
+          language: default_language,
+          autogenerate_elements: true
+      end
+
       render_views
 
       it "should render a rss feed" do
@@ -228,7 +208,7 @@ module Alchemy
 
     context "requested for a page that does not contain a feed" do
       it "should render xml 404 error" do
-        get :show, params: {urlname: default_language_root.urlname, format: :rss}
+        get :show, params: {urlname: page.urlname, format: :rss}
         expect(response.status).to eq(404)
       end
     end
@@ -246,7 +226,7 @@ module Alchemy
     describe "url nesting" do
       render_views
 
-      let(:catalog)  { create(:alchemy_page, :public, name: "Catalog", urlname: 'catalog', parent: default_language_root, language: default_language, visible: true) }
+      let(:catalog)  { create(:alchemy_page, :public, name: "Catalog", urlname: 'catalog', language: default_language, visible: true) }
       let(:products) { create(:alchemy_page, :public, name: "Products", urlname: 'products', parent: catalog, language: default_language, visible: true) }
       let(:product)  { create(:alchemy_page, :public, name: "Screwdriver", urlname: 'screwdriver', parent: products, language: default_language, autogenerate_elements: true, visible: true) }
 

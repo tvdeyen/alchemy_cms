@@ -87,7 +87,7 @@ module Alchemy
 
     stampable stamper_class_name: Alchemy.user_class_name
 
-    belongs_to :language, optional: true
+    belongs_to :language
 
     belongs_to :creator,
       primary_key: Alchemy.user_class_primary_key,
@@ -116,7 +116,9 @@ module Alchemy
     validates_presence_of :language, on: :create, unless: :root
     validates_presence_of :page_layout
     validates_format_of :page_layout, with: /\A[a-z0-9_-]+\z/, unless: -> { page_layout.blank? }
-    validates_presence_of :parent_id, if: proc { Page.count > 1 }
+
+    before_validation :set_language_from_parent_or_default,
+      if: -> { language_id.blank? }
 
     before_save :set_language_code,
       if: -> { language.present? }
@@ -132,9 +134,6 @@ module Alchemy
 
     before_save :set_fixed_attributes,
       if: -> { fixed_attributes.any? }
-
-    before_create :set_language_from_parent_or_default,
-      if: -> { language_id.blank? }
 
     after_update :create_legacy_url,
       if: :should_create_legacy_url?
@@ -158,17 +157,6 @@ module Alchemy
     # Class methods
     #
     class << self
-      # The root page of the page tree
-      #
-      # Internal use only. You wouldn't use this page ever.
-      #
-      # Automatically created when accessed the first time.
-      #
-      def root
-        super || create!(name: 'Root')
-      end
-      alias_method :rootpage, :root
-
       # Used to store the current page previewed in the edit page template.
       #
       def current_preview=(page)
@@ -210,23 +198,6 @@ module Alchemy
           copy_elements(source, page)
           page
         end
-      end
-
-      def layout_root_for(language_id)
-        where({parent_id: Page.root.id, layoutpage: true, language_id: language_id}).limit(1).first
-      end
-
-      def find_or_create_layout_root_for(language_id)
-        layoutroot = layout_root_for(language_id)
-        return layoutroot if layoutroot
-        language = Language.find(language_id)
-        Page.create!(
-          name: "Layoutroot for #{language.name}",
-          layoutpage: true,
-          language: language,
-          autogenerate_elements: false,
-          parent_id: Page.root.id
-        )
       end
 
       def copy_and_paste(source, new_parent, new_name)
@@ -414,11 +385,6 @@ module Alchemy
       children.published.first
     end
 
-    # Gets the language_root page for page
-    def get_language_root
-      self_and_ancestors.find_by(language_root: true)
-    end
-
     def copy_children_to(new_parent)
       children.each do |child|
         next if child == new_parent
@@ -551,7 +517,7 @@ module Alchemy
     end
 
     def set_language_from_parent_or_default
-      self.language = parent.language || Language.default
+      self.language = parent&.language || Language.default
       set_language_code
     end
 

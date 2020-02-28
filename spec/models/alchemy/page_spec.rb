@@ -38,13 +38,6 @@ module Alchemy
           expect(contentpage.errors[:page_layout].size).to eq(1)
         end
 
-        it "should validate the parent_id" do
-          contentpage.parent_id = nil
-          expect(contentpage).not_to be_valid
-          contentpage.valid?
-          expect(contentpage.errors[:parent_id].size).to eq(1)
-        end
-
         context 'with page having same urlname' do
           before { with_same_urlname }
 
@@ -76,11 +69,7 @@ module Alchemy
       end
 
       context "creating the rootpage without parent_id and page_layout" do
-        let(:rootpage) { build(:alchemy_page, parent_id: nil, page_layout: nil, name: 'Rootpage') }
-
-        before do
-          Page.delete_all
-        end
+        let(:rootpage) { build(:alchemy_page, :root) }
 
         it "should be valid" do
           expect(rootpage).to be_valid
@@ -232,14 +221,14 @@ module Alchemy
           end
         end
 
-        context "with restricted parent gets created" do
+        context "if parent gets restricted" do
           before do
             page.save
-            page.parent.update!(restricted: true)
+            page.update!(restricted: true)
             @new_page = create(:alchemy_page, name: 'New Page', parent_id: page.id)
           end
 
-          it "is also be restricted" do
+          it "is also restricted" do
             expect(@new_page.restricted?).to be_truthy
           end
         end
@@ -359,16 +348,11 @@ module Alchemy
     end
 
     describe '.ancestors_for' do
-      let(:lang_root) { Page.language_root_for(Language.default.id) }
-      let(:parent)    { create(:alchemy_page, :public) }
-      let(:page)      { create(:alchemy_page, :public, parent_id: parent.id) }
+      let(:parent)     { create(:alchemy_page, :public) }
+      let(:page)       { create(:alchemy_page, :public, parent_id: parent.id) }
 
       it "returns an array of all parents including self" do
-        expect(Page.ancestors_for(page)).to eq([lang_root, parent, page])
-      end
-
-      it "does not include the root page" do
-        expect(Page.ancestors_for(page)).not_to include(Page.root)
+        expect(Page.ancestors_for(page)).to eq([parent, page])
       end
 
       context "with current page nil" do
@@ -379,51 +363,59 @@ module Alchemy
     end
 
     describe '.contentpages' do
-      let!(:layoutroot) do
-        Page.find_or_create_layout_root_for(klingon.id)
-      end
-
-      let!(:layoutpage) do
+      let(:layoutpage) do
         create :alchemy_page, :public, {
           name: 'layoutpage',
           layoutpage: true,
-          parent_id: layoutroot.id,
           language: klingon
         }
       end
 
-      let!(:klingon_lang_root) do
-        create :alchemy_page, :language_root, {
-          name: 'klingon_lang_root',
-          layoutpage: nil,
-          language: klingon
-        }
-      end
-
-      let!(:contentpage) do
+      let(:contentpage) do
         create :alchemy_page, :public, {
           name: 'contentpage',
-          parent_id: language_root.id,
           language: language
         }
       end
 
+      let!(:pages) { [contentpage, layoutpage] }
+
+      subject { Page.contentpages }
+
       it "returns a collection of contentpages" do
-        expect(Page.contentpages.to_a).to include(
-          language_root,
-          klingon_lang_root,
-          contentpage
-        )
+        is_expected.to include(contentpage)
       end
 
-      it "does not contain pages with attribute :layoutpage set to true" do
-        expect(Page.contentpages.to_a.select { |p| p.layoutpage == true }).to be_empty
+      it "does not contain layoutpages" do
+        is_expected.to_not include(layoutpage)
       end
 
-      it "contains pages with attribute :layoutpage set to nil" do
-        expect(Page.contentpages.to_a.select do |page|
-          page.layoutpage.nil?
-        end).to include(klingon_lang_root)
+      context 'with attribute :layoutpage set to nil' do
+        let(:layoutpage) do
+          create :alchemy_page, :public, {
+            name: 'layoutpage',
+            layoutpage: nil,
+            language: klingon
+          }
+        end
+
+        it "contains page" do
+          is_expected.to include(layoutpage)
+        end
+      end
+
+      context 'with attribute :layoutpage set to false' do
+        let(:layoutpage) do
+          create :alchemy_page, :public, {
+            name: 'layoutpage',
+            layoutpage: false,
+            language: klingon
+          }
+        end
+
+        it "contains page" do
+          is_expected.to include(layoutpage)
+        end
       end
     end
 
@@ -570,44 +562,25 @@ module Alchemy
 
         context "with language given" do
           it "does not set the language from parent" do
-            expect_any_instance_of(Page).not_to receive(:set_language_from_parent_or_default)
-            Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard', language: language)
+            page = Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard', language: language)
+            expect(page.language).to eq(language)
           end
         end
 
         context "with no language given" do
-          it "sets the language from parent" do
-            expect_any_instance_of(Page).to receive(:set_language_from_parent_or_default)
-            Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard')
+          context 'with parent present' do
+            it "sets the language from parent" do
+              page = Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard')
+              expect(page.language).to eq(language_root.language)
+            end
           end
-        end
-      end
-    end
 
-    describe '.find_or_create_layout_root_for' do
-      subject { Page.find_or_create_layout_root_for(language.id) }
-
-      let!(:root_page) { create(:alchemy_page, :root) }
-      let(:language)   { create(:alchemy_language, name: 'English') }
-
-      context 'if no layout root page for given language id is present' do
-        it "creates one" do
-          expect {
-            subject
-          }.to change { Page.count }.by(1)
-        end
-      end
-
-      context 'if layout root page for given language id is present' do
-        let!(:page) do
-          create :alchemy_page,
-            layoutpage: true,
-            parent_id: root_page.id,
-            language_id: language.id
-        end
-
-        it "returns layout root page" do
-          is_expected.to eq(page)
+          context 'without parent present' do
+            it "sets the default language" do
+              page = Page.create!(name: 'A', page_layout: 'standard')
+              expect(page.language).to eq(Alchemy::Language.default)
+            end
+          end
         end
       end
     end
@@ -620,24 +593,41 @@ module Alchemy
     end
 
     describe '.layoutpages' do
-      it "should return 1 layoutpage" do
-        create(:alchemy_page, :public, layoutpage: true, name: 'Layoutpage', parent_id: rootpage.id, language: language)
-        expect(Page.layoutpages.size).to eq(1)
+      let!(:layoutpage) { create(:alchemy_page, :layoutpage) }
+      let!(:contentpage) { create(:alchemy_page) }
+
+      subject { Page.layoutpages }
+
+      it "includes layoutpages" do
+        is_expected.to include(layoutpage)
+      end
+
+      it "does not include contentpages" do
+        is_expected.to_not include(contentpage)
       end
     end
 
     describe '.not_locked' do
-      it "should return pages that are not blocked by a user at the moment" do
-        create(:alchemy_page, :public, :locked, name: 'First Public Child', parent_id: language_root.id, language: language)
-        create(:alchemy_page, :public, name: 'Second Public Child', parent_id: language_root.id, language: language)
-        expect(Page.not_locked.size).to eq(3)
+      let!(:locked) { create(:alchemy_page, :public, :locked) }
+      let!(:page) { create(:alchemy_page, :public) }
+
+      subject { Page.not_locked }
+
+      it "returns pages that are not locked by a user" do
+        is_expected.to include(page)
+        is_expected.to_not include(locked)
       end
     end
 
     describe '.not_restricted' do
-      it "should return 2 accessible pages" do
-        create(:alchemy_page, :public, name: 'First Public Child', restricted: true, parent_id: language_root.id, language: language)
-        expect(Page.not_restricted.size).to eq(2)
+      let!(:restricted) { create(:alchemy_page, :public, :restricted) }
+      let!(:page) { create(:alchemy_page, :public) }
+
+      subject { Page.not_restricted }
+
+      it "returns pages that do not have restricted access" do
+        is_expected.to include(page)
+        is_expected.to_not include(restricted)
       end
     end
 
@@ -683,28 +673,6 @@ module Alchemy
       it "should return 1 restricted page" do
         create(:alchemy_page, :public, name: 'First Public Child', restricted: true, parent_id: language_root.id, language: language)
         expect(Page.restricted.size).to eq(1)
-      end
-    end
-
-    describe '.root' do
-      context 'when root page is present' do
-        let!(:root_page) { Page.root }
-
-        it 'returns root page' do
-          expect(Page.root).to eq(root_page)
-        end
-      end
-
-      context 'when no root page is present yet' do
-        before do
-          Page.delete_all
-        end
-
-        it "creates and returns root page" do
-          expect {
-            Page.root
-          }.to change { Page.count }.by(1)
-        end
       end
     end
 
@@ -1177,16 +1145,13 @@ module Alchemy
       end
     end
 
-    describe '#get_language_root' do
-      before { language_root }
-      subject { public_page.get_language_root }
-
-      it "returns the language root page" do
-        is_expected.to eq language_root
-      end
-    end
-
     describe '#definition' do
+      let(:page) { build_stubbed(:alchemy_page) }
+
+      it "it returns the page layout definition as hash." do
+        expect(page.definition['name']).to eq('standard')
+      end
+
       context 'if the page layout could not be found in the definition file' do
         let(:page) { build_stubbed(:alchemy_page, page_layout: 'notexisting') }
 
@@ -1197,16 +1162,6 @@ module Alchemy
 
         it "it returns empty hash." do
           expect(page.definition).to eq({})
-        end
-      end
-
-      context "for a language root page" do
-        it "it returns the page layout definition as hash." do
-          expect(language_root.definition['name']).to eq('index')
-        end
-
-        it "it returns an empty hash for root page." do
-          expect(rootpage.definition).to eq({})
         end
       end
     end
@@ -1671,12 +1626,6 @@ module Alchemy
 
         it "should store all parents urlnames delimited by slash" do
           expect(page.urlname).to eq('parentparent/parent/page')
-        end
-
-        it "should not include the root page" do
-          Page.root.update_column(:urlname, 'root')
-          language_root.update(urlname: 'new-urlname')
-          expect(language_root.urlname).not_to match(/root/)
         end
 
         it "should not include the language root page" do
