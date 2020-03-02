@@ -798,6 +798,7 @@ en:
         urlname: "Urlname"
         visible: "visible in navigation"
         status:  Status
+        slug:  Slug
       alchemy/picture:
         image_file_name: "Filename"
         image_file_height: "Height"
