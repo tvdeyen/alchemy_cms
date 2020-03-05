@@ -311,7 +311,7 @@ module Alchemy
 
     describe '.locked' do
       it "should return 1 page that is blocked by a user at the moment" do
-        create(:alchemy_page, :public, :locked, name: 'First Public Child', parent_id: home_page.id, language: language)
+        create(:alchemy_page, :public, :locked, name: 'First Public Child')
         expect(Page.locked.size).to eq(1)
       end
     end
@@ -556,7 +556,7 @@ module Alchemy
         end
 
         it "should add a user stamper" do
-          page = create(:alchemy_page, name: 'A', language: language, parent_id: home_page.id)
+          page = create(:alchemy_page, name: 'A')
           expect(page.class.stamper_class.to_s).to eq('DummyUser')
         end
 
@@ -587,8 +587,8 @@ module Alchemy
 
     describe '.home_pages' do
       it "should return 1 home_page" do
-        create(:alchemy_page, :public, name: 'First Public Child', parent_id: home_page.id, language: language)
-        expect(Page.home_pages.size).to eq(1)
+        home = create(:alchemy_page, :home_page)
+        expect(Page.home_pages).to eq([home])
       end
     end
 
@@ -635,51 +635,42 @@ module Alchemy
       subject(:published) { Page.published }
 
       let!(:public_one) do
-        create :alchemy_page, :public,
-          name: 'First Public Child',
-          parent_id: home_page.id,
-          language: language
+        create(:alchemy_page, :public)
       end
 
       let!(:public_two) do
-        create :alchemy_page, :public,
-          name: 'Second Public Child',
-          parent_id: home_page.id,
-          language: language
+        create(:alchemy_page, :public)
       end
 
       let!(:non_public_page) do
-        create :alchemy_page,
-          name: 'Non Public Child',
-          parent_id: home_page.id,
-          language: language
+        create(:alchemy_page)
       end
 
-      it "returns public available pages" do
-        expect(published).to include(public_one)
-        expect(published).to include(public_two)
-        expect(published).to_not include(non_public_page)
+      it "returns public pages" do
+        is_expected.to include(public_one)
+        is_expected.to include(public_two)
+        is_expected.to_not include(non_public_page)
       end
     end
 
     describe '.public_home_pages' do
-      it "should return pages that are public home pages" do
-        create(:alchemy_page, :public, name: 'First Public Child', parent_id: home_page.id, language: language)
-        expect(Page.public_home_pages.size).to eq(1)
+      it "returns public home pages" do
+        home = create(:alchemy_page, :public, :home_page)
+        expect(Page.public_home_pages).to eq([home])
       end
     end
 
     describe '.restricted' do
-      it "should return 1 restricted page" do
-        create(:alchemy_page, :public, name: 'First Public Child', restricted: true, parent_id: home_page.id, language: language)
-        expect(Page.restricted.size).to eq(1)
+      it "returns restricted pages" do
+        restricted = create(:alchemy_page, :public, :restricted)
+        expect(Page.restricted).to eq([restricted])
       end
     end
 
     describe '.visible' do
-      it "should return 1 visible page" do
-        create(:alchemy_page, :public, name: 'First Public Child', visible: true, parent_id: home_page.id, language: language)
-        expect(Page.visible.size).to eq(1)
+      it "returns visible pages" do
+        visible = create(:alchemy_page, visible: true)
+        expect(Page.visible).to eq([visible])
       end
     end
 

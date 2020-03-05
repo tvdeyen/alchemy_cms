@@ -24,7 +24,7 @@ RSpec.describe 'Requests for PagesController#sitemap' do
   end
 
   context 'in multi language mode' do
-    let!(:page2) { create(:alchemy_page, parent: page) }
+    let!(:page2) { create(:alchemy_page) }
     let!(:pages) { [page, page2] }
 
     before do
