@@ -36,14 +36,14 @@ module Alchemy
       def seed_pages
         desc "Seeding Alchemy content pages from #{page_seeds_file}"
         if contentpages.length > 1
-          abort "The pages seed file must only contain one root page! You have #{contentpages.length}."
+          abort "The pages seed file must only contain one home page! You have #{contentpages.length}."
         end
 
         contentpages.each do |page|
           create_page(page, {
             parent: Alchemy::Page.root,
             language: Alchemy::Language.default,
-            language_root: true
+            home_page: true
           })
         end
       end

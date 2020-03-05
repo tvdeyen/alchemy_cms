@@ -33,7 +33,7 @@ RSpec.describe 'Page seeding', type: :system do
         expect(Alchemy::Page.find_by(name: 'Footer')).to be_present
       end
 
-      context 'when more then one content root page is present' do
+      context 'when more then one home page is present' do
         let(:seeds_file) do
           'spec/fixtures/pages_with_two_roots.yml'
         end

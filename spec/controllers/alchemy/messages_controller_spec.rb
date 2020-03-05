@@ -33,7 +33,7 @@ module Alchemy
         post :create, params: {message: {email: ''}}
       end
 
-      let(:page)    { mock_model('Page', get_language_root: mock_model('Page')) }
+      let(:page)    { mock_model('Page', get_home_page: mock_model('Page')) }
       let(:element) { mock_model('Element', page: page, ingredient: '') }
       let(:message) { Message.new }
 
@@ -211,10 +211,10 @@ module Alchemy
 
                 before do
                   allow(controller).to receive(:mailer_config).and_return({'fields' => %w(email)})
-                  allow(Language).to receive(:current_root_page).and_return double(urlname: 'lang-root')
+                  allow(Language).to receive(:home_page).and_return double(urlname: 'lang-root')
                 end
 
-                it "should redirect to the language root page" do
+                it "should redirect to the home page" do
                   allow(Language).to receive(:current).and_return(language)
                   expect(
                     subject

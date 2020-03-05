@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe 'Requesting a page' do
   let!(:default_language) { Alchemy::Language.default }
 
-  let!(:default_language_root) do
-    create(:alchemy_page, :language_root, language: default_language, name: 'Home')
+  let!(:home_page) do
+    create(:alchemy_page, :home_page, language: default_language, name: 'Home')
   end
 
   let(:public_page) do
@@ -130,13 +130,13 @@ RSpec.describe 'Requesting a page' do
           end
         end
 
-        context "if index page is unpublished" do
+        context "if home page is unpublished" do
           let!(:public_child) do
-            create(:alchemy_page, :public, name: 'Public Child', parent_id: default_language_root.id)
+            create(:alchemy_page, :public, name: 'Public Child', parent_id: home_page.id)
           end
 
           before do
-            default_language_root.update(
+            home_page.update(
               public_on: nil,
               visible: false,
               name: 'Not Public',
@@ -144,7 +144,7 @@ RSpec.describe 'Requesting a page' do
             )
           end
 
-          context "and index page locale is default locale" do
+          context "and home page locale is default locale" do
             it 'redirects to public child without prefixed locale' do
               visit '/'
               expect(page.current_path).to eq('/home/public-child')

@@ -18,10 +18,10 @@ FactoryBot.define do
       parent_id { nil }
     end
 
-    trait :language_root do
+    trait :home_page do
       name { 'Startseite' }
       page_layout { language.page_layout }
-      language_root { true }
+      home_page { true }
       public_on { Time.current }
     end
 

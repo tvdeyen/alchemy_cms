@@ -7,7 +7,7 @@ module Alchemy
     let(:rootpage)      { Page.root }
     let(:language)      { Language.default }
     let(:klingon)       { create(:alchemy_language, :klingon) }
-    let(:language_root) { create(:alchemy_page, :language_root) }
+    let(:home_page) { create(:alchemy_page, :home_page) }
     let(:page)          { mock_model(Page, page_layout: 'foo') }
     let(:public_page)   { create(:alchemy_page, :public) }
     let(:news_page)     { create(:alchemy_page, :public, page_layout: 'news', autogenerate_elements: true) }
@@ -311,7 +311,7 @@ module Alchemy
 
     describe '.locked' do
       it "should return 1 page that is blocked by a user at the moment" do
-        create(:alchemy_page, :public, :locked, name: 'First Public Child', parent_id: language_root.id, language: language)
+        create(:alchemy_page, :public, :locked, name: 'First Public Child', parent_id: home_page.id, language: language)
         expect(Page.locked.size).to eq(1)
       end
     end
@@ -556,13 +556,13 @@ module Alchemy
         end
 
         it "should add a user stamper" do
-          page = create(:alchemy_page, name: 'A', language: language, parent_id: language_root.id)
+          page = create(:alchemy_page, name: 'A', language: language, parent_id: home_page.id)
           expect(page.class.stamper_class.to_s).to eq('DummyUser')
         end
 
         context "with language given" do
           it "does not set the language from parent" do
-            page = Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard', language: language)
+            page = Page.create!(name: 'A', parent_id: home_page.id, page_layout: 'standard', language: language)
             expect(page.language).to eq(language)
           end
         end
@@ -570,8 +570,8 @@ module Alchemy
         context "with no language given" do
           context 'with parent present' do
             it "sets the language from parent" do
-              page = Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard')
-              expect(page.language).to eq(language_root.language)
+              page = Page.create!(name: 'A', parent_id: home_page.id, page_layout: 'standard')
+              expect(page.language).to eq(home_page.language)
             end
           end
 
@@ -585,10 +585,10 @@ module Alchemy
       end
     end
 
-    describe '.language_roots' do
-      it "should return 1 language_root" do
-        create(:alchemy_page, :public, name: 'First Public Child', parent_id: language_root.id, language: language)
-        expect(Page.language_roots.size).to eq(1)
+    describe '.home_pages' do
+      it "should return 1 home_page" do
+        create(:alchemy_page, :public, name: 'First Public Child', parent_id: home_page.id, language: language)
+        expect(Page.home_pages.size).to eq(1)
       end
     end
 
@@ -637,21 +637,21 @@ module Alchemy
       let!(:public_one) do
         create :alchemy_page, :public,
           name: 'First Public Child',
-          parent_id: language_root.id,
+          parent_id: home_page.id,
           language: language
       end
 
       let!(:public_two) do
         create :alchemy_page, :public,
           name: 'Second Public Child',
-          parent_id: language_root.id,
+          parent_id: home_page.id,
           language: language
       end
 
       let!(:non_public_page) do
         create :alchemy_page,
           name: 'Non Public Child',
-          parent_id: language_root.id,
+          parent_id: home_page.id,
           language: language
       end
 
@@ -662,23 +662,23 @@ module Alchemy
       end
     end
 
-    describe '.public_language_roots' do
-      it "should return pages that public language roots" do
-        create(:alchemy_page, :public, name: 'First Public Child', parent_id: language_root.id, language: language)
-        expect(Page.public_language_roots.size).to eq(1)
+    describe '.public_home_pages' do
+      it "should return pages that are public home pages" do
+        create(:alchemy_page, :public, name: 'First Public Child', parent_id: home_page.id, language: language)
+        expect(Page.public_home_pages.size).to eq(1)
       end
     end
 
     describe '.restricted' do
       it "should return 1 restricted page" do
-        create(:alchemy_page, :public, name: 'First Public Child', restricted: true, parent_id: language_root.id, language: language)
+        create(:alchemy_page, :public, name: 'First Public Child', restricted: true, parent_id: home_page.id, language: language)
         expect(Page.restricted.size).to eq(1)
       end
     end
 
     describe '.visible' do
       it "should return 1 visible page" do
-        create(:alchemy_page, :public, name: 'First Public Child', visible: true, parent_id: language_root.id, language: language)
+        create(:alchemy_page, :public, name: 'First Public Child', visible: true, parent_id: home_page.id, language: language)
         expect(Page.visible.size).to eq(1)
       end
     end
@@ -1083,7 +1083,7 @@ module Alchemy
         create :alchemy_page,
           name: "First child",
           language: language,
-          parent_id: language_root.id
+          parent_id: home_page.id
       end
 
       context "with existing public child" do
@@ -1091,16 +1091,16 @@ module Alchemy
           create :alchemy_page, :public,
           name: "First public child",
           language: language,
-          parent_id: language_root.id
+          parent_id: home_page.id
         end
 
         it "should return first_public_child" do
-          expect(language_root.first_public_child).to eq(first_public_child)
+          expect(home_page.first_public_child).to eq(first_public_child)
         end
       end
 
       it "should return nil if no public child exists" do
-        expect(language_root.first_public_child).to eq(nil)
+        expect(home_page.first_public_child).to eq(nil)
       end
     end
 
@@ -1617,13 +1617,13 @@ module Alchemy
       let(:page)          { create(:alchemy_page, parent_id: parent.id, name: 'page', visible: true) }
       let(:invisible)     { create(:alchemy_page, parent_id: page.id, name: 'invisible', visible: false) }
       let(:contact)       { create(:alchemy_page, parent_id: invisible.id, name: 'contact', visible: true) }
-      let(:language_root) { parentparent.parent }
+      let(:home_page) { parentparent.parent }
 
       it "should store all parents urlnames delimited by slash" do
         expect(page.urlname).to eq('parentparent/parent/page')
       end
 
-      it "should not include the language root page" do
+      it "should not include the home page" do
         expect(page.urlname).not_to match(/startseite/)
       end
 

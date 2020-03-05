@@ -191,7 +191,7 @@ module Alchemy
 
       def secure_attributes
         if can?(:create, Alchemy::Page)
-          Page::PERMITTED_ATTRIBUTES + [:language_root, :parent_id, :language_id, :language_code]
+          Page::PERMITTED_ATTRIBUTES + [:home_page, :parent_id, :language_id, :language_code]
         else
           Page::PERMITTED_ATTRIBUTES
         end

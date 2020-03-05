@@ -31,7 +31,7 @@ RSpec.describe "Link overlay", type: :system do
 
   context "linking pages", js: true do
     let(:lang_root) do
-      create(:alchemy_page, :language_root)
+      create(:alchemy_page, :home_page)
     end
 
     let!(:page1) do

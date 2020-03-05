@@ -20,8 +20,8 @@ module Alchemy
     end
 
     describe "#index" do
-      let!(:default_language_root) do
-        create(:alchemy_page, :language_root, language: default_language, name: 'Home')
+      let!(:home_page) do
+        create(:alchemy_page, :home_page, language: default_language, name: 'Home')
       end
 
       it 'renders :show template' do
@@ -29,14 +29,14 @@ module Alchemy
       end
 
       context 'requesting nothing' do
-        it 'loads default language root page' do
+        it 'loads default home page' do
           get :index
-          expect(assigns(:page)).to eq(default_language_root)
+          expect(assigns(:page)).to eq(home_page)
         end
 
-        context 'and the root page is not public' do
+        context 'and the home page is not public' do
           before do
-            default_language_root.update!(public_on: nil)
+            home_page.update!(public_on: nil)
           end
 
           context 'and redirect_to_public_child is set to false' do
@@ -73,7 +73,7 @@ module Alchemy
 
             context 'that has a public child' do
               let!(:public_child) do
-                create(:alchemy_page, :public, parent: default_language_root)
+                create(:alchemy_page, :public, parent: home_page)
               end
 
               it 'loads this page' do
@@ -84,7 +84,7 @@ module Alchemy
 
             context 'that has a non public child' do
               let!(:non_public_child) do
-                create(:alchemy_page, parent: default_language_root)
+                create(:alchemy_page, parent: home_page)
               end
 
               context 'that has a public child' do
@@ -120,7 +120,7 @@ module Alchemy
         end
 
         let!(:startseite) do
-          create :alchemy_page, :language_root,
+          create :alchemy_page, :home_page,
             language: deutsch,
             name: 'Startseite'
         end
@@ -129,7 +129,7 @@ module Alchemy
           allow(::I18n).to receive(:default_locale) { 'en' }
         end
 
-        it 'loads the root page of that language' do
+        it 'loads the home page of that language' do
           get :index, params: {locale: 'de'}
           expect(assigns(:page)).to eq(startseite)
         end

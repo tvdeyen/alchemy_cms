@@ -40,7 +40,7 @@ module Alchemy
     #
     # If the locale is the default locale, then it redirects to '/' without the locale.
     #
-    # Loads the current language root page. The current language is either loaded via :locale
+    # Loads the current home page. The current language is either loaded via :locale
     # parameter or, if that's missing, the default language is used.
     #
     # If this page is not published then it redirects to the first published descendant it finds.
@@ -83,15 +83,15 @@ module Alchemy
 
     # == Loads index page
     #
-    # Loads the current public language root page.
+    # Loads the current public home page.
     #
-    # If the root page is not public it redirects to the first published child.
+    # If the home page is not public it redirects to the first published child.
     # This can be configured via +redirect_to_public_child+ [default: true]
     #
     # If no index page and no admin users are present we show the "Welcome to Alchemy" page.
     #
     def load_index_page
-      @page ||= Language.current_root_page
+      @page ||= Language.home_page
       render template: 'alchemy/welcome', layout: false if signup_required?
     end
 

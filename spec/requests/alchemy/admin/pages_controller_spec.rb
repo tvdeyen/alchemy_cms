@@ -137,7 +137,7 @@ module Alchemy
 
         before do
           expect(Page).to receive(:find).with(page.id.to_s).and_return(page)
-          allow(Page).to receive(:language_root_for).and_return(mock_model(Alchemy::Page))
+          allow(Page).to receive(:home_page_for).and_return(mock_model(Alchemy::Page))
         end
 
         it "should assign @preview_mode with true" do

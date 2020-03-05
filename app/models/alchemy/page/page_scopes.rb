@@ -7,9 +7,9 @@ module Alchemy
     extend ActiveSupport::Concern
 
     included do
-      # All language root pages
+      # All home pages
       #
-      scope :language_roots, -> { where(language_root: true) }
+      scope :home_pages, -> { where(home_page: true) }
 
       # All layout pages
       #
@@ -43,10 +43,10 @@ module Alchemy
       #
       scope :restricted, -> { where(restricted: true) }
 
-      # All pages that are a published language root
+      # All pages that are a published home page
       #
-      scope :public_language_roots, -> {
-        published.language_roots.where(
+      scope :public_home_pages, -> {
+        published.home_pages.where(
           language_code: Language.published.pluck(:language_code)
         )
       }

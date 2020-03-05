@@ -22,7 +22,7 @@ RSpec.describe 'Admin pages index feature', type: :system do
       let(:klingon) { create(:alchemy_language, :klingon, public: false) }
 
       before do
-        create(:alchemy_page, :language_root, name: 'Klingon', language: klingon)
+        create(:alchemy_page, :home_page, name: 'Klingon', language: klingon)
       end
 
       context 'and an author' do

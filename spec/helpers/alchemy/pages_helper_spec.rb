@@ -4,10 +4,10 @@ require 'rails_helper'
 
 module Alchemy
   describe PagesHelper do
-    let(:language_root)            { create(:alchemy_page, :language_root) }
+    let(:home_page)            { create(:alchemy_page, :home_page) }
     let(:public_page)              { create(:alchemy_page, :public) }
     let(:klingon)                  { create(:alchemy_language, :klingon) }
-    let(:klingon_language_root)    { create(:alchemy_page, :language_root, language: klingon) }
+    let(:klingon_home_page)    { create(:alchemy_page, :home_page, language: klingon) }
 
     before do
       helper.controller.class_eval { include Alchemy::ConfigurationMethods }
@@ -152,23 +152,23 @@ module Alchemy
 
         context "when current page has no meta description set" do
           before do
-            language_root.meta_description = "description from language root"
-            allow(Language).to receive_messages(current_root_page: language_root)
+            home_page.meta_description = "description from home"
+            allow(Language).to receive_messages(home_page: home_page)
           end
 
           context "when #meta_description is an empty string" do
             before { public_page.meta_description = "" }
 
-            it "returns the meta description of its language root page" do
-              is_expected.to eq "description from language root"
+            it "returns the meta description of its home page" do
+              is_expected.to eq "description from home"
             end
           end
 
           context "when #meta_description is nil" do
             before { public_page.meta_description = nil }
 
-            it "returns the meta description of its language root page" do
-              is_expected.to eq "description from language root"
+            it "returns the meta description of its home page" do
+              is_expected.to eq "description from home"
             end
           end
         end
@@ -184,23 +184,23 @@ module Alchemy
 
         context "when current page has no meta keywords set" do
           before do
-            language_root.meta_keywords = "keywords, from language root"
-            allow(Language).to receive_messages(current_root_page: language_root)
+            home_page.meta_keywords = "keywords, from home"
+            allow(Language).to receive_messages(home_page: home_page)
           end
 
           context "when #meta_keywords is an empty string" do
             before { public_page.meta_keywords = "" }
 
-            it "returns the keywords of its language root page" do
-              is_expected.to eq "keywords, from language root"
+            it "returns the keywords of its home page" do
+              is_expected.to eq "keywords, from home"
             end
           end
 
           context "when #meta_keywords is nil" do
             before { public_page.meta_keywords = nil }
 
-            it "returns the keywords of its language root page" do
-              is_expected.to eq "keywords, from language root"
+            it "returns the keywords of its home page" do
+              is_expected.to eq "keywords, from home"
             end
           end
         end

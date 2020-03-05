@@ -95,7 +95,7 @@ module Alchemy
       elsif mailer_config['forward_to_page'] && mailer_config['mail_success_page']
         urlname = Page.find_by(urlname: mailer_config['mail_success_page']).urlname
       else
-        urlname = Language.current_root_page.urlname
+        urlname = Language.home_page.urlname
       end
       redirect_to show_page_path(
         urlname: urlname,

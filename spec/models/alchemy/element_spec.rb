@@ -584,7 +584,7 @@ module Alchemy
     end
 
     context 'previous and next elements.' do
-      let(:page) { create(:alchemy_page, :language_root) }
+      let(:page) { create(:alchemy_page, :home_page) }
 
       before(:each) do
         @element1 = create(:alchemy_element, page: page, name: 'headline')

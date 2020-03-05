@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_213334) do
+ActiveRecord::Schema.define(version: 2020_03_05_231812) do
 
   create_table "alchemy_attachments", force: :cascade do |t|
     t.string "name"
@@ -237,7 +237,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_213334) do
     t.string "urlname"
     t.string "title"
     t.string "language_code"
-    t.boolean "language_root"
+    t.boolean "home_page"
     t.string "page_layout"
     t.text "meta_keywords"
     t.text "meta_description"
@@ -261,6 +261,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_213334) do
     t.datetime "public_on"
     t.datetime "public_until"
     t.datetime "locked_at"
+    t.index ["home_page", "language_id"], name: "index_alchemy_pages_on_home_page_and_language_id"
     t.index ["language_id"], name: "index_pages_on_language_id"
     t.index ["locked_at", "locked_by"], name: "index_alchemy_pages_on_locked_at_and_locked_by"
     t.index ["parent_id", "lft"], name: "index_pages_on_parent_id_and_lft"

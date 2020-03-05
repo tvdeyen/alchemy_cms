@@ -37,7 +37,7 @@ cache_pages: true
 #
 # ==== Config Options:
 #
-#   show_root [Boolean] # Show language root page in sitemap?
+#   show_root [Boolean] # Show home page in sitemap?
 #   show_flag [Boolean] # Enables the Checkbox in Page#update overlay. So your customer can set the visibility of pages in the sitemap.
 #
 sitemap:

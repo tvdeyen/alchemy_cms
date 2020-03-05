@@ -57,7 +57,7 @@ module Alchemy
     before_destroy :check_for_default
 
     scope :published,       -> { where(public: true) }
-    scope :with_root_page,  -> { joins(:pages).where(Page.table_name => {language_root: true}) }
+    scope :with_root_page,  -> { joins(:pages).where(Page.table_name => {home_page: true}) }
 
     class << self
       def on_site(site)
@@ -78,9 +78,9 @@ module Alchemy
         RequestStore.store[:alchemy_current_language] || default
       end
 
-      # The root page of the current language.
-      def current_root_page
-        current.pages.language_roots.first
+      # The home page of the current language.
+      def home_page
+        current.pages.home_pages.first
       end
 
       # Default language for current site

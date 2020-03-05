@@ -150,7 +150,7 @@ Alchemy::Engine.routes.draw do
 
   get '/:locale' => 'pages#index',
     constraints: {locale: Alchemy::RoutingConstraints::LOCALE_REGEXP},
-    as: :show_language_root
+    as: :show_home_page
 
   # The page show action has to be last route
   constraints(locale: Alchemy::RoutingConstraints::LOCALE_REGEXP) do

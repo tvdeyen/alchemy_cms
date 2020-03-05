@@ -3,7 +3,7 @@
 require 'rails_helper'
 module Alchemy
   describe 'alchemy/pages/_meta_data' do
-    let(:root_page)       { Page.new }
+    let(:home_page)       { Page.new }
     let(:page)            { Page.new(language_code: "en", title: "Road Runner", urlname: "roadrunner") }
     let(:title_prefix)    { "" }
     let(:title_suffix)    { "" }
@@ -26,17 +26,17 @@ module Alchemy
         end
 
         context "are not set" do
-          before { allow(Language).to receive(:current_root_page).and_return(root_page) }
+          before { allow(Language).to receive(:home_page).and_return(home_page) }
 
-          context "but the language root page has meta keywords" do
-            before { root_page.meta_keywords = "keywords, language, root" }
+          context "but the home page has meta keywords" do
+            before { home_page.meta_keywords = "keywords, language, root" }
 
             it "renders its keywords in the correct meta tag" do
               is_expected.to match /meta name="keywords" content="keywords, language, root" lang="en"/
             end
           end
 
-          context "and the language root page is also missing meta keywords" do
+          context "and the home page is also missing meta keywords" do
             it "does not render the meta keywords tag" do
               is_expected.not_to match /meta name="keywords"/
             end
@@ -54,17 +54,17 @@ module Alchemy
         end
 
         context "is not set" do
-          before { allow(Language).to receive(:current_root_page).and_return(root_page) }
+          before { allow(Language).to receive(:home_page).and_return(home_page) }
 
-          context "but the language root page has a meta description" do
-            before { root_page.meta_description = "description from language root" }
+          context "but the home page has a meta description" do
+            before { home_page.meta_description = "description from home" }
 
             it "renders its description in the correct meta tag" do
-              is_expected.to match /meta name="description" content="description from language root"/
+              is_expected.to match /meta name="description" content="description from home"/
             end
           end
 
-          context "and the language root page is also missing a meta description" do
+          context "and the home page is also missing a meta description" do
             it "does not render the meta description tag" do
               is_expected.not_to match /meta name="description"/
             end

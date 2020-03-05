@@ -9,7 +9,7 @@
 #  urlname          :string
 #  title            :string
 #  language_code    :string
-#  language_root    :boolean
+#  home_page        :boolean
 #  page_layout      :string
 #  meta_keywords    :text
 #  meta_description :text
@@ -169,11 +169,11 @@ module Alchemy
         RequestStore.store[:alchemy_current_preview]
       end
 
-      # @return the language root page for given language id.
+      # @return the home page for given language id.
       # @param language_id [Fixnum]
       #
-      def language_root_for(language_id)
-        language_roots.find_by_language_id(language_id)
+      def home_page_for(language_id)
+        home_pages.find_by_language_id(language_id)
       end
 
       # Creates a copy of given source.

@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe 'Show page feature:', type: :system do
   let!(:default_language) { Alchemy::Language.default }
 
-  let!(:default_language_root) do
-    create(:alchemy_page, :language_root, language: default_language, name: 'Home')
+  let!(:home_page) do
+    create(:alchemy_page, :home_page, language: default_language, name: 'Home')
   end
 
   let(:public_page) do
