@@ -9,37 +9,6 @@ module Alchemy
       content.try(:essence).try(:caption)
     end
 
-    # Renders links to language root pages of all published languages.
-    #
-    # @option options linkname [String] ('name')
-    #   Renders name/code of language, or I18n translation for code.
-    #
-    # @option options show_title [Boolean] (true)
-    #   Renders title attributes for the links.
-    #
-    # @option options spacer [String] ('')
-    #   Renders the passed spacer string. You can also overwrite the spacer partial: "alchemy/language_links/_spacer".
-    #
-    # @option options reverse [Boolean] (false)
-    #   Reverses the ordering of the links.
-    #
-    def language_links(options = {})
-      options = {
-        linkname: 'name',
-        show_title: true,
-        spacer: '',
-        reverse: false
-      }.merge(options)
-      languages = Language.on_current_site.published.with_root_page.order("name #{options[:reverse] ? 'DESC' : 'ASC'}")
-      return nil if languages.count < 2
-      render(
-        partial: "alchemy/language_links/language",
-        collection: languages,
-        spacer_template: "alchemy/language_links/spacer",
-        locals: {languages: languages, options: options}
-      )
-    end
-
     # Renders the layout for current page.
     #
     # Page layout files belongs in +/app/views/alchemy/page_layouts/+
