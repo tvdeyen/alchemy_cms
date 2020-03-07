@@ -1,19 +1,31 @@
 .search_field {
   position: relative;
-  margin-bottom: $default-margin;
   height: 29px;
 }
 
 .search_field {
-  .fa-search {
+  .fa-search,
+  button {
     position: absolute;
+  }
+
+  .fa-search {
     left: 8px;
     top: 9px;
   }
 
-  label {
+  button {
     display: block;
+    top: 0;
+    left: 0;
+    width: 32px;
     height: inherit;
+    box-shadow: none;
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    appearance: none;
   }
 }
 
@@ -30,12 +42,13 @@
 
 #toolbar,
 #overlay_toolbar {
-
   .search_form {
+    display: flex;
     position: absolute;
     top: 0;
     right: 0;
     height: 45px;
+    align-items: center;
   }
 
   .search_field {
@@ -55,7 +68,7 @@
     margin: 0;
     text-align: left;
     box-shadow: none;
-    -webkit-appearance: none;
+    appearance: none;
 
     @media screen and (min-width: $medium-screen-break-point) {
       width: 150px;
