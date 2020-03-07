@@ -3,6 +3,9 @@
   <%= f.hidden_field(:layoutpage) %>
   <% unless page.layoutpage %>
     <%= f.input :parent_id, input_html: { class: 'alchemy_selectbox' } %>
+    <% if Alchemy::Page.home_pages.where(language: Alchemy::Language.current).none? %>
+      <%= f.input :home_page %>
+    <% end %>
   <% end %>
   <%= f.input :page_layout,
     collection: @page_layouts,

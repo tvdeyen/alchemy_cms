@@ -7,7 +7,7 @@ module Alchemy
     let(:rootpage)      { Page.root }
     let(:language)      { Language.default }
     let(:klingon)       { create(:alchemy_language, :klingon) }
-    let(:home_page) { create(:alchemy_page, :home_page) }
+    let(:home_page)     { create(:alchemy_page, :home_page) }
     let(:page)          { mock_model(Page, page_layout: 'foo') }
     let(:public_page)   { create(:alchemy_page, :public) }
     let(:news_page)     { create(:alchemy_page, :public, page_layout: 'news', autogenerate_elements: true) }
@@ -73,6 +73,39 @@ module Alchemy
 
         it "should be valid" do
           expect(rootpage).to be_valid
+        end
+      end
+
+      context 'if home_page is already set' do
+        let(:page) { build(:alchemy_page, language: home_page.language) }
+
+        it "cannot set another one" do
+          page.home_page = true
+          expect(page).to be_invalid
+          expect(page.errors.full_messages_for(:home_page)).to eq(['Home page has already been taken'])
+        end
+
+        context 'but on another language' do
+          let!(:home_page) { create(:alchemy_page, :home_page) }
+          let(:page) { build(:alchemy_page, language: create(:alchemy_language)) }
+
+          it "can set another one" do
+            page.home_page = true
+            expect(page).to be_valid
+          end
+        end
+
+        context 'that is this page' do
+          it { expect(home_page).to be_valid }
+        end
+      end
+
+      context 'if home_page is not yet set' do
+        let(:page) { build(:alchemy_page) }
+
+        it "can set it" do
+          page.home_page = true
+          expect(page).to be_valid
         end
       end
     end
@@ -426,6 +459,14 @@ module Alchemy
 
       it "the copy should have added (copy) to name" do
         expect(subject.name).to eq("#{page.name} (Copy)")
+      end
+
+      context 'a home page' do
+        let(:page) { create(:alchemy_page, :home_page) }
+
+        it "the copy should not be a home page" do
+          expect(subject.home_page?).to be(false)
+        end
       end
 
       context 'a visible page' do
@@ -1756,7 +1797,13 @@ module Alchemy
 
       describe '#status' do
         it "returns a combined status hash" do
-          expect(page.status).to eq({public: true, visible: true, restricted: false, locked: false})
+          expect(page.status).to eq(
+            public: true,
+            visible: true,
+            restricted: false,
+            locked: false,
+            home_page: false
+          )
         end
       end
 
@@ -1775,6 +1822,10 @@ module Alchemy
 
         it "returns a translated status string for restricted status" do
           expect(page.status_title(:restricted)).to eq('Page is not restricted.')
+        end
+
+        it "returns a translated status string for home page status" do
+          expect(page.status_title(:home_page)).to eq('Page is not the home page.')
         end
       end
     end

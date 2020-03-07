@@ -467,6 +467,9 @@ en:
     page_published: "Published page"
     page_restricted: "restricted"
     page_states:
+      home_page:
+        "true": "Page is the home page."
+        "false": "Page is not the home page."
       visible:
         "true": "Page is visible in navigation."
         "false": "Page is not visible in navigation."

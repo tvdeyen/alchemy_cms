@@ -1,4 +1,8 @@
 <span class="page_status with-hint">
+  <%= render_icon(:home, transform: 'shrink-2', class: page.home_page? ? nil : 'disabled') %>
+  <span class="hint-bubble"><%= page.status_title(:home_page) %></span>
+</span>
+<span class="page_status with-hint">
   <%= render_icon(:compass, transform: 'shrink-2', class: page.public? ? nil : 'disabled') %>
   <span class="hint-bubble"><%= page.status_title(:public) %></span>
 </span>

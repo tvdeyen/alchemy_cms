@@ -52,19 +52,22 @@ module Alchemy
     }
 
     SKIPPED_ATTRIBUTES_ON_COPY = %w(
-      id
-      updated_at
+      cached_tag_list
       created_at
       creator_id
-      updater_id
+      depth
+      home_page
+      id
       lft
       rgt
-      depth
+      updated_at
+      updater_id
       urlname
-      cached_tag_list
     )
 
     PERMITTED_ATTRIBUTES = [
+      :layoutpage,
+      :menu_id,
       :meta_description,
       :meta_keywords,
       :name,
@@ -72,15 +75,13 @@ module Alchemy
       :public_on,
       :public_until,
       :restricted,
-      :robot_index,
       :robot_follow,
+      :robot_index,
       :sitemap,
       :tag_list,
       :title,
       :urlname,
-      :visible,
-      :layoutpage,
-      :menu_id
+      :visible
     ]
 
     acts_as_nested_set(dependent: :destroy)
@@ -116,6 +117,8 @@ module Alchemy
     validates_presence_of :language, on: :create, unless: :root
     validates_presence_of :page_layout
     validates_format_of :page_layout, with: /\A[a-z0-9_-]+\z/, unless: -> { page_layout.blank? }
+
+    validate :only_one_home_page, if: :home_page
 
     before_validation :set_language_from_parent_or_default,
       if: -> { language_id.blank? }
@@ -502,6 +505,12 @@ module Alchemy
     end
 
     private
+
+    def only_one_home_page
+      if Alchemy::Page.home_pages.where(language: language).where.not(id: id).exists?
+        errors.add(:home_page, :taken)
+      end
+    end
 
     def set_fixed_attributes
       fixed_attributes.all.each do |attribute, value|

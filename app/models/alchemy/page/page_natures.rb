@@ -58,6 +58,7 @@ module Alchemy
     #
     def status
       {
+        home_page: home_page?,
         public: public?,
         visible: visible?,
         locked: locked?,

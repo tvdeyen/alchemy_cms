@@ -22,6 +22,10 @@
       <label><%= Alchemy.t(:page_status) %></label>
       <p>
         <span class="page_status">
+          <%= render_icon(:home, transform: 'shrink-2', class: @page.home_page? ? nil : 'disabled') %>
+          <%= @page.status_title(:home_page) %>
+        </span>
+        <span class="page_status">
           <%= render_icon(:compass, transform: 'shrink-2', class: @page.public? ? nil : 'disabled') %>
           <%= @page.status_title(:public) %>
         </span>

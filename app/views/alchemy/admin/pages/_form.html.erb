@@ -18,6 +18,9 @@
       <% if configuration(:sitemap)['show_flag'] %>
         <%= page_status_checkbox(@page, :sitemap) %>
       <% end %>
+      <%= page_status_checkbox(@page, :home_page, {
+        disabled: !@page.home_page && Alchemy::Page.home_pages.where(language: @page.language).exists?
+      }) %>
     </div>
   </div>
 
