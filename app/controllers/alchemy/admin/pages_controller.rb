@@ -101,6 +101,7 @@ module Alchemy
           @while_page_edit = request.referer.include?('edit')
         else
           configure
+          render :configure
         end
       end
 

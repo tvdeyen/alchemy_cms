@@ -40,4 +40,48 @@ describe Alchemy::Admin::PagesHelper do
       end
     end
   end
+
+  describe '#page_status_checkbox' do
+    let(:page) { build(:alchemy_page) }
+    let(:attribute) { :restricted }
+    let(:html_options) { {} }
+
+    subject { helper.page_status_checkbox(page, attribute, html_options) }
+
+    it "returns a checkbox nested inside a label" do
+      is_expected.to have_selector('label > input[type="checkbox"]')
+    end
+
+    context "with fixed attribute" do
+      before do
+        expect(page).to receive(:attribute_fixed?).with(attribute) { true }
+      end
+
+      it "disables checkbox" do
+        is_expected.to have_selector('input[disabled]')
+      end
+
+      it "adds a hint" do
+        is_expected.to have_selector('.with-hint > input[type="checkbox"] + .hint-bubble', text: "Value can't be changed for this page type")
+      end
+    end
+
+    context "with html_options" do
+      let(:html_options) { { disabled: true } }
+
+      it "passes them to the checkbox" do
+        is_expected.to have_selector('input[disabled]')
+      end
+    end
+
+    context "with errors on attribute" do
+      before do
+        expect(page).to receive(:errors).twice { { attribute => ['Not allowed'] } }
+      end
+
+      it "displays them" do
+        is_expected.to have_selector('label > input[type="checkbox"] + .error', text: 'Not allowed')
+      end
+    end
+  end
 end

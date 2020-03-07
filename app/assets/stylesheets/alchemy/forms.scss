@@ -103,12 +103,15 @@ form {
       label { color: $error_text_color }
     }
 
-    small.error {
+    .error {
       color: $error_text_color;
       display: block;
+      clear: both;
+    }
+
+    small.error {
       margin-left: $form-left-width;
       line-height: 1.5em;
-      clear: both;
       text-align: right;
       margin-bottom: 0.25em;
     }

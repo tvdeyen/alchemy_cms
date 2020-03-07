@@ -34,7 +34,7 @@ module Alchemy
         end
       end
 
-      def page_status_checkbox(page, attribute)
+      def page_status_checkbox(page, attribute, html_options = {})
         label = page.class.human_attribute_name(attribute)
 
         if page.attribute_fixed?(attribute)
@@ -46,8 +46,13 @@ module Alchemy
             "#{checkbox}\n#{label}\n#{hint}".html_safe
           end
         else
-          checkbox = check_box(:page, attribute)
+          checkbox = check_box(:page, attribute, html_options)
           content = "#{checkbox}\n#{label}".html_safe
+        end
+
+        if page.errors[attribute].any?
+          error = content_tag(:span, page.errors[attribute].join, class: 'error')
+          content = content + error
         end
 
         content_tag(:label, class: 'checkbox') { content }

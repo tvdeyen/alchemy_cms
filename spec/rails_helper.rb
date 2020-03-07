@@ -71,6 +71,7 @@ RSpec.configure do |config|
     config.include Alchemy::TestSupport::IntegrationHelpers, type: type
   end
   config.include FactoryBot::Syntax::Methods
+  config.include Capybara::RSpecMatchers, type: :request
   config.include CapybaraSelect2, type: :system
 
   config.use_transactional_fixtures = true

@@ -185,6 +185,59 @@ module Alchemy
         end
       end
 
+      describe "#update" do
+        let(:page) { create(:alchemy_page) }
+
+        subject do
+          patch(admin_page_path(page), params: params, xhr: true)
+          response.body
+        end
+
+        context "with valid page params" do
+          let(:params) do
+            {
+              page: {
+                name: 'New Name'
+              }
+            }
+          end
+
+          let(:referer) { '/admin/pages/configure' }
+
+          before do
+            expect_any_instance_of(ActionDispatch::Request).to receive(:referer) do
+              referer
+            end
+          end
+
+          it "displays success message" do
+            is_expected.to match /Alchemy\.growl\("New Name saved"\)/
+          end
+
+          context "on page edit screen" do
+            let(:referer) { '/admin/pages/edit' }
+
+            it "reloads the preview" do
+              is_expected.to match /Alchemy\.reloadPreview\(\)/
+            end
+          end
+        end
+
+        context "with invalid page params" do
+          let(:params) do
+            {
+              page: {
+                name: ''
+              }
+            }
+          end
+
+          it "displays form again" do
+            is_expected.to have_selector('form.edit_page')
+          end
+        end
+      end
+
       describe '#create' do
         subject { post admin_pages_path(page: page_params) }
 
