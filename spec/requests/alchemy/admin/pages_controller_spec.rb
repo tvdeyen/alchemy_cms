@@ -44,6 +44,21 @@ module Alchemy
           end
         end
 
+        context 'with parent_id query' do
+          let!(:page) { create(:alchemy_page, language: language) }
+          let!(:page2) { create(:alchemy_page, parent: page) }
+
+          it 'assigns pages having parent id' do
+            get admin_pages_path(q: {parent_id_eq: page.id})
+            expect(assigns(:pages)).to eq([page2])
+          end
+
+          it 'assigns parent' do
+            get admin_pages_path(q: {parent_id_eq: page.id})
+            expect(assigns(:parent)).to eq(page)
+          end
+        end
+
         context 'without any pages' do
           it "assigns a new page" do
             get admin_pages_path

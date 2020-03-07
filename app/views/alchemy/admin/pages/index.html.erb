@@ -40,7 +40,7 @@
       <label><%= Alchemy.t('Show clipboard') %></label>
     </div>
   </div>
-  <%= render 'alchemy/admin/partials/search_form', url: alchemy.admin_pages_path %>
+  <%= render 'search_form', url: alchemy.admin_pages_path %>
 <% end %>
 
 <div id="archive_all" class="resources-table-wrapper">
@@ -65,5 +65,15 @@
 <script>
   $(function() {
     Alchemy.Pages.watchPagePublicationState()
+    Alchemy.Pages.parentSelect({
+      url: '<%= alchemy.api_pages_path %>',
+      placeholder: '<%= Alchemy.t(:all_pages) %>',
+      <% if @parent %>
+      initialSelection: {
+        id: <%= @parent.id %>,
+        text: '<%= @parent.name %>'
+      }
+    <% end %>
+    })
   })
 </script>

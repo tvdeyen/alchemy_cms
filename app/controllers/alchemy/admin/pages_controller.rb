@@ -29,6 +29,10 @@ module Alchemy
           ransack(search_filter_params[:q])
         @pages = @query.result.page(params[:page] || 1).per(items_per_page)
 
+        if params.dig(:q, :parent_id_eq).present?
+          @parent = Alchemy::Page.find(params[:q][:parent_id_eq])
+        end
+
         if @pages.empty?
           @page = Alchemy::Page.new(language: Alchemy::Language.current)
           @page_layouts = PageLayout.layouts_for_select(@language.id)
@@ -196,6 +200,18 @@ module Alchemy
         else
           Page::PERMITTED_ATTRIBUTES
         end
+      end
+
+      def common_search_filter_includes
+        [
+          {q: [
+            resource_handler.search_field_name,
+            :parent_id_eq,
+            :s
+          ]},
+          :page,
+          :per_page
+        ].freeze
       end
 
       def page_is_locked?

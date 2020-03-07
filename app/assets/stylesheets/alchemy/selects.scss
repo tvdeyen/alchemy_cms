@@ -1,5 +1,3 @@
-$medium-select-box-width: 90px;
-
 select {
   @include button-defaults(
     $background-color: $form-field-background-color,
@@ -19,6 +17,10 @@ select {
 
   &.alchemy_selectbox.medium {
     width: $medium-select-box-width;
+  }
+
+  &.alchemy_selectbox.large {
+    width: $large-select-box-width;
   }
 }
 
@@ -74,6 +76,10 @@ select {
 
     &.medium {
       width: $medium-select-box-width;
+    }
+
+    &.large {
+      width: $large-select-box-width;
     }
 
     &.select2-container-active {
@@ -250,10 +256,17 @@ select {
   display: inline-block;
   vertical-align: middle;
 
-  label {
+  label, input {
     display: inline-block;
     vertical-align: middle;
+  }
+
+  label {
     margin-right: 2*$default-margin;
+  }
+
+  input.large {
+    width: $large-select-box-width;
   }
 }
 

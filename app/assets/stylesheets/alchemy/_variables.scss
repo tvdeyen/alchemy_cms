@@ -47,6 +47,9 @@ $default-border-style: solid !default;
 $default-border: $default-border-width $default-border-style $default-border-color !default;
 $default-border-radius: 3px !default;
 
+$medium-select-box-width: 90px !default;
+$large-select-box-width: 220px !default;
+
 $form-field-margin: $default-margin 0 !default;
 $form-field-height: 31px !default;
 $form-field-background-color: $white !default;

@@ -21,5 +21,16 @@ Alchemy.Pages = {
         $public_until_field.val('')
       })
     })
+  },
+
+  parentSelect: function parentSelect(options) {
+    $('#q_parent_id_eq').alchemyPageSelect({
+      initialSelection: options.initialSelection,
+      placeholder: options.placeholder,
+      minimumInputLength: 1,
+      url: options.url
+    }).on('change', function onChange() {
+      this.form.submit()
+    })
   }
 }
