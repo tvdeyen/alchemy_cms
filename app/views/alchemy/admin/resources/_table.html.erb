@@ -18,7 +18,9 @@
   </tbody>
 </table>
 <% elsif search_filter_params[:q].present? %>
-<p><%= Alchemy.t('Nothing found') %></p>
+  <%= render_message do %>
+    <%= Alchemy.t(:no_search_results) %>
+  <% end %>
 <% end %>
 
 <%= paginate resources_instance_variable, scope: resource_url_proxy, theme: 'alchemy' %>

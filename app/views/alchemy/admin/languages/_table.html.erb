@@ -36,8 +36,10 @@
     <%= render_resources %>
   </tbody>
 </table>
-<%- elsif search_filter_params[:q].present? -%>
-<p><%= Alchemy.t('Nothing found') %></p>
-<%- end -%>
+<% elsif search_filter_params[:q].present? %>
+  <%= render_message do %>
+    <%= Alchemy.t(:no_search_results) %>
+  <% end %>
+<% end %>
 
 <%= paginate @languages, theme: 'alchemy' %>

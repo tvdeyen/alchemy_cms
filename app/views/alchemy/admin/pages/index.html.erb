@@ -47,13 +47,18 @@
   <% if @pages.any? %>
     <%= render 'alchemy/admin/resources/table_header' %>
     <%= render 'table' %>
-  <% elsif can?(:create, Alchemy::Page) %>
+  <% elsif can?(:create, Alchemy::Page) && !params[:q] %>
     <div class="panel no-resource-found">
       <%= render_message do %>
         <%= Alchemy.t(:no_resource_found) % { resource: Alchemy::Page.model_name.human } %>
       <% end %>
       <%= render 'new_page_form', page: @page %>
     </div>
+  <% else %>
+    <%= render 'alchemy/admin/resources/table_header' %>
+    <%= render_message do %>
+      <%= Alchemy.t(:no_search_results) %>
+    <% end %>
   <% end %>
 </div>
 
