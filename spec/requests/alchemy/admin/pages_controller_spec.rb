@@ -44,6 +44,16 @@ module Alchemy
           end
         end
 
+        context 'with search query' do
+          let!(:page) { create(:alchemy_page, language: language) }
+          let!(:page2) { create(:alchemy_page, language: language) }
+
+          it 'assigns pages matching query' do
+            get admin_pages_path(q: {name_or_urlname_or_title_cont: page.name})
+            expect(assigns(:pages)).to eq([page])
+          end
+        end
+
         context 'with parent_id query' do
           let!(:page) { create(:alchemy_page, language: language) }
           let!(:page2) { create(:alchemy_page, parent: page) }

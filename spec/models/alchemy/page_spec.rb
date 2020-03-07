@@ -708,6 +708,12 @@ module Alchemy
       end
     end
 
+    describe '.searchable_alchemy_resource_attributes' do
+      it do
+        expect(Page.searchable_alchemy_resource_attributes).to eq(%w[name urlname title])
+      end
+    end
+
     describe '.visible' do
       it "returns visible pages" do
         visible = create(:alchemy_page, visible: true)
