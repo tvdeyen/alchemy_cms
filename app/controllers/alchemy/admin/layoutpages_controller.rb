@@ -8,6 +8,7 @@ module Alchemy
 
       def index
         @query = Page.layoutpages.where(language: Language.current).ransack(search_filter_params[:q])
+        @query.sorts = default_sort_order if @query.sorts.empty?
         @layoutpages = @query.result.page(params[:page] || 1).per(items_per_page)
         @languages = Language.on_current_site
       end

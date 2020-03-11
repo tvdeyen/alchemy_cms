@@ -27,6 +27,7 @@ module Alchemy
           includes(:locker).
           where(language_id: @language.id).
           ransack(search_filter_params[:q])
+        @query.sorts = 'name asc' if @query.sorts.empty?
         @pages = @query.result.page(params[:page] || 1).per(items_per_page)
 
         if params.dig(:q, :parent_id_eq).present?

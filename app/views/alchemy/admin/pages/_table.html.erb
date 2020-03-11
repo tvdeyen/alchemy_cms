@@ -2,7 +2,12 @@
   <thead>
     <tr>
       <th class="icon"></th>
-      <th><%= Alchemy::Page.human_attribute_name(:name) %></th>
+      <th>
+        <%= sort_link(@query, :name) %>
+      </th>
+      <th class="date">
+        <%= sort_link(@query, :updated_at, default_order: 'desc') %>
+      </th>
       <th class="status"><%= Alchemy::Page.human_attribute_name(:status) %></th>
       <th class="tools"></th>
     </tr>

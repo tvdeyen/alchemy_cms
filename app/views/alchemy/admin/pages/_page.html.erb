@@ -38,6 +38,9 @@
       title: Alchemy.t(:edit_page)
     ) -%>
   </td>
+  <td class="date">
+    <%= l page.updated_at, format: :'alchemy.page_status' %>
+  </td>
   <% unless page.layoutpage? %>
     <td class="status">
       <%= render 'page_status', page: page %>
