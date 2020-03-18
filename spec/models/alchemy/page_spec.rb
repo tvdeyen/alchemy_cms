@@ -587,20 +587,6 @@ module Alchemy
           page = create(:alchemy_page, name: 'A', language: language, parent_id: language_root.id)
           expect(page.class.stamper_class.to_s).to eq('DummyUser')
         end
-
-        context "with language given" do
-          it "does not set the language from parent" do
-            expect_any_instance_of(Page).not_to receive(:set_language_from_parent_or_default)
-            Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard', language: language)
-          end
-        end
-
-        context "with no language given" do
-          it "sets the language from parent" do
-            expect_any_instance_of(Page).to receive(:set_language_from_parent_or_default)
-            Page.create!(name: 'A', parent_id: language_root.id, page_layout: 'standard')
-          end
-        end
       end
     end
 
@@ -1580,42 +1566,6 @@ module Alchemy
           expect(page.published_at).to eq(current_time)
           expect(page.public_on).to    eq(public_on)
           expect(page.public_until).to eq(nil)
-        end
-      end
-    end
-
-    describe '#set_language_from_parent_or_default' do
-      let(:default_language) { mock_model('Language', code: 'es') }
-      let(:page) { Page.new }
-
-      before { allow(page).to receive(:parent).and_return(parent) }
-
-      subject { page }
-
-      context "parent has a language" do
-        let(:parent) { mock_model('Page', language: default_language, language_id: default_language.id, language_code: default_language.code) }
-
-        before do
-          page.send(:set_language_from_parent_or_default)
-        end
-
-        describe '#language_id' do
-          subject { super().language_id }
-          it { is_expected.to eq(parent.language_id) }
-        end
-      end
-
-      context "parent has no language" do
-        let(:parent) { mock_model('Page', language: nil, language_id: nil, language_code: nil) }
-
-        before do
-          allow(Language).to receive(:default).and_return(default_language)
-          page.send(:set_language_from_parent_or_default)
-        end
-
-        describe '#language_id' do
-          subject { super().language_id }
-          it { is_expected.to eq(default_language.id) }
         end
       end
     end

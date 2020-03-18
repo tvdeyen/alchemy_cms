@@ -20,7 +20,6 @@ FactoryBot.define do
 
     trait :root do
       name { 'Root' }
-      language { nil }
       parent_id { nil }
       page_layout { nil }
     end
@@ -43,7 +42,6 @@ FactoryBot.define do
       parent_id { Alchemy::Page.root.id }
       language_root { false }
       page_layout { nil }
-      language { nil }
     end
 
     trait :layoutpage do

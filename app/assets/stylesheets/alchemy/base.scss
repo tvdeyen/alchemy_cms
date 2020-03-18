@@ -48,6 +48,10 @@ body {
   &.prevent-scrolling {
     overflow: hidden;
   }
+
+  @media screen and (prefers-color-scheme: dark) {
+    background-color: black;
+  }
 }
 
 a {

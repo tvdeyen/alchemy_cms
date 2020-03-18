@@ -87,7 +87,7 @@ module Alchemy
 
     stampable stamper_class_name: Alchemy.user_class_name
 
-    belongs_to :language, optional: true
+    belongs_to :language
 
     belongs_to :creator,
       primary_key: Alchemy.user_class_primary_key,
@@ -113,13 +113,11 @@ module Alchemy
     has_many :legacy_urls, class_name: 'Alchemy::LegacyPageUrl'
     has_many :nodes, class_name: 'Alchemy::Node', inverse_of: :page
 
-    validates_presence_of :language, on: :create, unless: :root
     validates_presence_of :page_layout, unless: :systempage?
     validates_format_of :page_layout, with: /\A[a-z0-9_-]+\z/, unless: -> { systempage? || page_layout.blank? }
     validates_presence_of :parent_id, if: proc { Page.count > 1 }
 
     before_save :set_language_code,
-      if: -> { language.present? },
       unless: :systempage?
 
     before_save :set_restrictions_to_child_pages,
@@ -136,10 +134,6 @@ module Alchemy
 
     before_save :set_fixed_attributes,
       if: -> { fixed_attributes.any? }
-
-    before_create :set_language_from_parent_or_default,
-      if: -> { language_id.blank? },
-      unless: :systempage?
 
     after_update :create_legacy_url,
       if: :should_create_legacy_url?
@@ -170,7 +164,7 @@ module Alchemy
       # Automatically created when accessed the first time.
       #
       def root
-        super || create!(name: 'Root')
+        super || create!(name: 'Root', language: Language.default)
       end
       alias_method :rootpage, :root
 
@@ -553,11 +547,6 @@ module Alchemy
       pages.where(restricted: options.fetch(:restricted, false))
         .reorder(lft: options.fetch(:order))
         .limit(1).first
-    end
-
-    def set_language_from_parent_or_default
-      self.language = parent.language || Language.default
-      set_language_code
     end
 
     def set_language_code

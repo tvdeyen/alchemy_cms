@@ -99,11 +99,12 @@ module Alchemy
       end
 
       def create_page(draft, attributes = {})
+        language = Alchemy::Language.default
         children = draft.delete('children') || []
         page = Alchemy::Page.create!(draft.merge(attributes))
         log "Created page: #{page.name}"
         children.each do |child|
-          create_page(child, parent: page)
+          create_page(child, parent: page, language: language)
         end
       end
     end

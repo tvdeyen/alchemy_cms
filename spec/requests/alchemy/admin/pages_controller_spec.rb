@@ -403,6 +403,7 @@ module Alchemy
         let(:page_params) do
           {
             parent_id: parent.id,
+            language_id: parent.language_id,
             name: 'new Page',
             page_layout: 'standard'
           }
