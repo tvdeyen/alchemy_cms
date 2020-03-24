@@ -1,39 +1,66 @@
-//= require jquery-ui/widgets/draggable
-//= require jquery-ui/widgets/sortable
-//
+//= require sortable/Sortable.min
+
 var Alchemy = window.Alchemy || {}
 
 $.extend(Alchemy, {
-  SortableElements: function SortableElements(page_id, form_token, $selector) {
-    function getTinymceIDs(ui) {
-      var $textareas = ui.item.find('textarea.has_tinymce')
+  SortableElements: function SortableElements(page_id, form_token, selector) {
+    function getTinymceIDs(item) {
+      var textareas = item.querySelectorAll('textarea.has_tinymce')
 
-      return $($textareas).map(function() {
-        var id = this.id.replace(/tinymce_/, '')
+      return Array.from(textareas).map(function map(textarea) {
+        var id = textarea.id.replace(/tinymce_/, '')
         return parseInt(id, 10)
       })
     }
 
-    var $sortable_area = $selector || $('#element_area .sortable-elements')
+    var sortable_area = document.querySelector(selector)
+
     var sortable_options = {
-      items: '> .element-editor',
-      handle: '> .element-header .element-handle',
-      placeholder: 'droppable_element_placeholder',
-      dropOnEmpty: true,
-      opacity: 0.5,
-      cursor: 'move',
-      containment: $('#element_area'),
-      tolerance: 'pointer',
-      update: function update(event, ui) {
+      handle: '.element-header',
+      ghostClass: 'droppable_element_placeholder',
+      // dropOnEmpty: true,
+      // opacity: 0.5,
+      // cursor: 'move',
+      // containment: $('#element_area'),
+      // tolerance: 'pointer',
+      onStart: function start(event) {
+        var item = event.item
+        // var $this = $(this)
+        // var name = item.dataset.elementName
+        // var $dropzone = $('[data-droppable-elements~="' + name + '"]')
+
+        // $this.sortable('option', 'connectWith', $dropzone)
+        // $this.sortable('refresh')
+        // $dropzone.css('minHeight', 36)
+        item.classList.add('dragged') // keep?
+
+        // if (item.hasClass('compact')) {
+        //   ui.placeholder.addClass('compact').css({
+        //     height: item.outerHeight()
+        //   })
+        // }
+        Alchemy.Tinymce.remove(getTinymceIDs(item))
+      },
+      onEnd: function stop(event) {
+        var item = event.item
+        // var name = item.data('element-name')
+        // var $dropzone = $('[data-droppable-elements~="' + name + '"]')
+
+        // $dropzone.css('minHeight', '')
+        item.classList.remove('dragged')
+        Alchemy.Tinymce.init(getTinymceIDs(item))
+      },
+      onSort: function update(event) {
+        var item = event.item
         // This callback is called twice for both elements, the source and the receiving
         // but, we only want to call ajax callback once on the receiving element.
         if (Alchemy.initializedSortableElements) { return }
 
-        var $this = ui.item.parent().closest('.ui-sortable')
+        var $this = item.parent().closest('.ui-sortable')
         var element_ids = $.map($this.children(), function(child) {
           return $(child).data('element-id')
         })
-        var parent_element_id = ui.item.parent().closest('[data-element-id]').data('element-id')
+        var parent_element_id = item.parent().closest('[data-element-id]').data('element-id')
         var params = {
           page_id: page_id,
           authenticity_token: encodeURIComponent(form_token),
@@ -55,39 +82,15 @@ $.extend(Alchemy, {
             Alchemy.TrashWindow.refresh(page_id)
           }
         })
-      },
-      start: function start(_evt, ui) {
-        var $this = $(this)
-        var name = ui.item.data('element-name')
-        var $dropzone = $('[data-droppable-elements~="' + name + '"]')
-        var ids = getTinymceIDs(ui)
-
-        $this.sortable('option', 'connectWith', $dropzone)
-        $this.sortable('refresh')
-        $dropzone.css('minHeight', 36)
-        ui.item.addClass('dragged')
-
-        if (ui.item.hasClass('compact')) {
-          ui.placeholder.addClass('compact').css({
-            height: ui.item.outerHeight()
-          })
-        }
-        Alchemy.Tinymce.remove(ids)
-      },
-      stop: function stop(_evt, ui) {
-        var ids = getTinymceIDs(ui)
-        var name = ui.item.data('element-name')
-        var $dropzone = $('[data-droppable-elements~="' + name + '"]')
-
-        $dropzone.css('minHeight', '')
-        ui.item.removeClass('dragged')
-        Alchemy.Tinymce.init(ids)
       }
     }
 
     Alchemy.initializedSortableElements = false
-    $sortable_area.sortable(sortable_options)
-    $sortable_area.find('.nested-elements').sortable(sortable_options)
+
+    new Sortable(sortable_area, sortable_options)
+
+    // $sortable_area.sortable(sortable_options)
+    // $sortable_area.find('.nested-elements').sortable(sortable_options)
   },
 
   DraggableTrashItems: function DraggableTrashItems() {

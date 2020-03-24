@@ -1,6 +1,6 @@
 (function() {
   var $el;
-  var $element_area;
+  var element_area;
   var element_html = '<%= j render(Alchemy::ElementEditor.new(@element)) %>';
 
 <%- if @cut_element_id -%>
@@ -12,24 +12,24 @@
     Alchemy.FixedElements.buildTabs('<%= Alchemy.t(:main_content) %>');
   }
   Alchemy.FixedElements.createTab('<%= @element.id %>', '<%= @element.display_name %>');
-  $element_area = $('#fixed-element-<%= @element.id %>');
+  element_area = '#fixed-element-<%= @element.id %>';
 <% elsif @element.parent_element %>
-  $element_area = $('#element_<%= @element.parent_element_id %> > .nestable-elements > .nested-elements');
+  element_area = '#element_<%= @element.parent_element_id %> > .nestable-elements > .nested-elements';
   Alchemy.Buttons.enable('.nestable-elements');
 <% else %>
-  $element_area = $('#main-content-elements');
+  element_area = '#main-content-elements';
 <% end %>
 
 <%- if @insert_at_top -%>
-  $element_area.prepend(element_html);
+  $(element_area).prepend(element_html);
 <%- else -%>
-  $element_area.append(element_html);
+  $(element_area).append(element_html);
 <%- end -%>
 
-  if ($element_area.find('.element-editor').length > 0) {
-    Alchemy.SortableElements(<%= @page.id %>, '<%= form_authenticity_token %>', $element_area);
+  if ($(element_area).find('.element-editor').length > 0) {
+    Alchemy.SortableElements(<%= @page.id %>, '<%= form_authenticity_token %>', element_area);
   } else {
-    $element_area.sortable('refresh');
+    $(element_area).sortable('refresh');
   }
 
   Alchemy.growl('<%= Alchemy.t(:successfully_added_element) %>');

@@ -24,7 +24,7 @@
   Alchemy.SortableElements(
     <%= @page.id %>,
     '<%= form_authenticity_token %>',
-    $('> .nestable-elements .nested-elements', $el)
+    '#element_<%= @element.id %> > .nestable-elements .nested-elements'
   );
 
   <% end -%>
