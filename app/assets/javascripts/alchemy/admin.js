@@ -17,7 +17,6 @@
 //= require handlebars
 //= require alchemy/templates
 //= require alchemy/alchemy.base
-//= require alchemy/alchemy.utils
 //= require alchemy/alchemy.autocomplete
 //= require alchemy/alchemy.browser
 //= require alchemy/alchemy.buttons
