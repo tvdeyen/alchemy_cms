@@ -3,12 +3,12 @@
 module Alchemy
   class PageTreeSerializer < BaseSerializer
     def attributes
-      {"pages" => nil}
+      { "pages" => nil }
     end
 
     def pages
       tree = []
-      path = [{id: object.parent_id, children: tree}]
+      path = [{ id: object.parent_id, children: tree }]
       page_list = object.self_and_descendants
       base_level = object.level - 1
       # Load folded pages in advance
@@ -59,8 +59,8 @@ module Alchemy
         slug: page.slug,
         urlname: page.urlname,
         level: level,
-        root: level == 1,
-        root_or_leaf: level == 1 || !has_children,
+        root: level == 0,
+        root_or_leaf: level == 0 || !has_children,
         children: [],
       }
 
