@@ -33,15 +33,15 @@ module Alchemy
       @page = Page.find_by(id: params[:page_id]) || Language.current_root_page
 
       render json: PageTreeSerializer.new(@page,
-        ability: current_ability,
-        user: current_alchemy_user,
-        elements: params[:elements],
-        full: true)
+                                     ability: current_ability,
+                                     user: current_alchemy_user,
+                                     elements: params[:elements],
+                                     full: true)
     end
 
     # Returns a json object for page
     #
-    # You can either load the page via id or its urlname
+    # You can either load the page via id or its url_path
     #
     def show
       authorize! :show, @page
@@ -51,19 +51,19 @@ module Alchemy
     private
 
     def load_page
-      @page = load_page_by_id || load_page_by_urlname || raise(ActiveRecord::RecordNotFound)
+      @page = load_page_by_id || load_page_by_url_path || raise(ActiveRecord::RecordNotFound)
     end
 
     def load_page_by_id
-      # The route param is called :urlname although it might be an integer
-      Page.where(id: params[:urlname]).includes(page_includes).first
+      # The route param is called :url_path although it might be an integer
+      Page.where(id: params[:url_path]).includes(page_includes).first
     end
 
-    def load_page_by_urlname
+    def load_page_by_url_path
       return unless Language.current
 
       Language.current.pages.where(
-        urlname: params[:urlname],
+        url_path: params[:url_path],
         language_code: params[:locale] || Language.current.code,
       ).includes(page_includes).first
     end

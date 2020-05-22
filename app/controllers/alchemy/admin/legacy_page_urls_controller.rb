@@ -34,7 +34,7 @@ module Alchemy
     end
 
     def legacy_page_url_params
-      params.require(:legacy_page_url).permit(:urlname)
+      params.require(:legacy_page_url).permit(:url_path)
     end
   end
 end

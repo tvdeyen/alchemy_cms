@@ -25,7 +25,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
         %w(standard news).each do |page_layout|
           it "runs callback on #{page_layout} layout" do
             page = create(:alchemy_page, :public, page_layout: page_layout)
-            get :show, params: {urlname: page.urlname}
+            get :show, params: { url_path: page.url_path }
             expect(assigns(:on_all_layouts)).to eq(page_layout)
           end
         end
@@ -57,7 +57,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
           let(:page) { create(:alchemy_page, :public, page_layout: "standard") }
 
           it "runs the callback" do
-            get :show, params: {urlname: page.urlname}
+            get :show, params: { url_path: page.url_path }
             expect(assigns(:successful_for_standard)).to eq(true)
           end
         end
@@ -77,7 +77,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
 
         context "for show action" do
           it "doesn't run the callback" do
-            get :show, params: {urlname: page.urlname}
+            get :show, params: { url_path: page.url_path }
             expect(assigns(:successful_for_standard)).to eq(nil)
           end
         end
@@ -98,11 +98,11 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
         before do
           ApplicationController.class_eval do
             on_page_layout(:standard) do
-              @urlname = @page.urlname
+              @url_path = @page.url_path
             end
 
             on_page_layout(:news) do
-              @urlname = @page.urlname
+              @url_path = @page.url_path
             end
           end
         end
@@ -111,8 +111,8 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
           it "runs both callbacks for #{page_layout} layout" do
             page = create(:alchemy_page, :public, page_layout: page_layout)
 
-            get :show, params: {urlname: page.urlname}
-            expect(assigns(:urlname)).to eq(page.urlname)
+            get :show, params: { url_path: page.url_path }
+            expect(assigns(:url_path)).to eq(page.url_path)
           end
         end
       end
@@ -156,7 +156,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
 
       context "for show action" do
         it "runs both callbacks" do
-          get :show, params: {urlname: page.urlname}
+          get :show, params: { url_path: page.url_path }
           expect(assigns(:successful_for_standard_first)).to eq(true)
           expect(assigns(:successful_for_standard_second)).to eq(true)
         end
@@ -184,7 +184,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
 
       context "for show action" do
         it "evaluates the given block" do
-          get :show, params: {urlname: page.urlname}
+          get :show, params: { url_path: page.url_path }
           expect(assigns(:successful_for_callback_method)).to eq(true)
         end
       end
@@ -212,7 +212,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
 
       context "for show action" do
         it "runs the given callback method" do
-          get :show, params: {urlname: page.urlname}
+          get :show, params: { url_path: page.url_path }
           expect(assigns(:successful_for_callback_method)).to eq(true)
         end
       end
@@ -250,7 +250,7 @@ RSpec.describe Alchemy::PagesController, "OnPageLayout mixin", type: :controller
         it "evaluates the given callback on both page_layouts for show action" do
           page = create(:alchemy_page, :public, page_layout: page_layout)
 
-          get :show, params: {urlname: page.urlname}
+          get :show, params: { url_path: page.url_path }
           expect(assigns(:successful)).to eq(page_layout)
         end
       end
@@ -317,7 +317,7 @@ RSpec.describe Alchemy::Admin::PagesController, "OnPageLayout mixin", type: :con
       let(:page) { create(:alchemy_page, page_layout: "standard") }
 
       it "callback also runs" do
-        get :show, params: {id: page.id}
+        get :show, params: { id: page.id }
         expect(assigns(:successful_for_alchemy_admin_pages_controller)).to be(true)
       end
     end

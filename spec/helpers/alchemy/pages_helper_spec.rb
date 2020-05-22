@@ -4,10 +4,10 @@ require "rails_helper"
 
 module Alchemy
   describe PagesHelper do
-    let(:language_root)            { create(:alchemy_page, :language_root) }
-    let(:public_page)              { create(:alchemy_page, :public) }
-    let(:klingon)                  { create(:alchemy_language, :klingon) }
-    let(:klingon_language_root)    { create(:alchemy_page, :language_root, language: klingon) }
+    let(:language_root) { create(:alchemy_page, :language_root) }
+    let(:public_page) { create(:alchemy_page, :public) }
+    let(:klingon) { create(:alchemy_language, :klingon) }
+    let(:klingon_language_root) { create(:alchemy_page, :language_root, language: klingon) }
 
     before do
       helper.controller.class_eval { include Alchemy::ConfigurationMethods }
@@ -92,8 +92,8 @@ module Alchemy
 
     describe "#render_breadcrumb" do
       let(:parent) { create(:alchemy_page, :public, visible: true) }
-      let(:page)   { create(:alchemy_page, :public, parent_id: parent.id, visible: true) }
-      let(:user)   { nil }
+      let(:page) { create(:alchemy_page, :public, parent_id: parent.id, visible: true) }
+      let(:user) { nil }
 
       before do
         allow(helper).to receive(:multi_language?).and_return(false)
@@ -120,7 +120,7 @@ module Alchemy
         let(:user) { build(:alchemy_dummy_user) }
 
         it "should render a breadcrumb of restricted pages only" do
-          page.update_columns(restricted: true, urlname: "a-restricted-public-page", name: "A restricted Public Page", title: "A restricted Public Page")
+          page.update_columns(restricted: true, url_path: "a-restricted-public-page", name: "A restricted Public Page", title: "A restricted Public Page")
           result = helper.render_breadcrumb(page: page, restricted_only: true).strip
           expect(result).to have_selector("*[contains(\"#{page.name}\")]")
           expect(result).to_not have_selector("*[contains(\"#{parent.name}\")]")
@@ -128,25 +128,25 @@ module Alchemy
       end
 
       it "should render a breadcrumb of visible pages only" do
-        page.update_columns(visible: false, urlname: "a-invisible-page", name: "A Invisible Page", title: "A Invisible Page")
+        page.update_columns(visible: false, url_path: "a-invisible-page", name: "A Invisible Page", title: "A Invisible Page")
         expect(helper.render_breadcrumb(page: page)).not_to match(/A Invisible Page/)
       end
 
       it "should render a breadcrumb of visible and unpublished pages" do
-        page.update_columns(public_on: nil, urlname: "a-unpublic-page", name: "A Unpublic Page", title: "A Unpublic Page")
+        page.update_columns(public_on: nil, url_path: "a-unpublic-page", name: "A Unpublic Page", title: "A Unpublic Page")
         expect(helper.render_breadcrumb(page: page)).to match(/A Unpublic Page/)
       end
 
       context "with options[:without]" do
         it "should render a breadcrumb without this page" do
-          page.update_columns(urlname: "not-me", name: "Not Me", title: "Not Me")
+          page.update_columns(url_path: "not-me", name: "Not Me", title: "Not Me")
           expect(helper.render_breadcrumb(page: page, without: page)).not_to match(/Not Me/)
         end
       end
 
       context "with options[:without] as array" do
         it "should render a breadcrumb without these pages." do
-          page.update_columns(urlname: "not-me", name: "Not Me", title: "Not Me")
+          page.update_columns(url_path: "not-me", name: "Not Me", title: "Not Me")
           expect(helper.render_breadcrumb(page: page, without: [page])).not_to match(/Not Me/)
         end
       end
@@ -186,8 +186,8 @@ module Alchemy
 
           it "should render language links referring to their language root page" do
             code = klingon_language_root.language_code
-            urlname = klingon_language_root.urlname
-            expect(helper.language_links).to have_selector("a.#{code}[href='/#{code}/#{urlname}']")
+            url_path = klingon_language_root.url_path
+            expect(helper.language_links).to have_selector("a.#{code}[href='/#{code}/#{url_path}']")
           end
 
           context "with options[:linkname]" do

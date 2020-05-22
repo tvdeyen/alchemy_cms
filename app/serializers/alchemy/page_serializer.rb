@@ -4,7 +4,7 @@ module Alchemy
   class PageSerializer < ActiveModel::Serializer
     attributes :id,
       :name,
-      :urlname,
+      :url_path,
       :page_layout,
       :title,
       :language_code,

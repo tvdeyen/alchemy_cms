@@ -6,7 +6,7 @@
 #
 #  id               :integer          not null, primary key
 #  name             :string
-#  urlname          :string
+#  url_path          :string
 #  title            :string
 #  language_code    :string
 #  language_root    :boolean
@@ -60,7 +60,7 @@ module Alchemy
       lft
       rgt
       depth
-      urlname
+      url_path
       cached_tag_list
     )
 
@@ -77,7 +77,7 @@ module Alchemy
       :sitemap,
       :tag_list,
       :title,
-      :urlname,
+      :url_path,
       :visible,
       :layoutpage,
       :menu_id,
@@ -428,9 +428,9 @@ module Alchemy
     def update_node!(node)
       hash = { lft: node.left, rgt: node.right, parent_id: node.parent, depth: node.depth, restricted: node.restricted }
 
-      if Config.get(:url_nesting) && urlname != node.url
-        LegacyPageUrl.create(page_id: id, urlname: urlname)
-        hash[:urlname] = node.url
+      if Config.get(:url_nesting) && url_path != node.url
+        LegacyPageUrl.create(page_id: id, url_path: url_path)
+        hash[:url_path] = node.url
       end
 
       update_columns(hash)
@@ -532,20 +532,20 @@ module Alchemy
 
     def should_create_legacy_url?
       if active_record_5_1?
-        saved_change_to_urlname?
+        saved_change_to_url_path?
       else
-        urlname_changed?
+        url_path_changed?
       end
     end
 
-    # Stores the old urlname in a LegacyPageUrl
+    # Stores the old url_path in a LegacyPageUrl
     def create_legacy_url
       if active_record_5_1?
-        former_urlname = urlname_before_last_save
+        former_url_path = url_path_before_last_save
       else
-        former_urlname = urlname_was
+        former_url_path = url_path_was
       end
-      legacy_urls.find_or_create_by(urlname: former_urlname)
+      legacy_urls.find_or_create_by(url_path: former_url_path)
     end
 
     def set_published_at

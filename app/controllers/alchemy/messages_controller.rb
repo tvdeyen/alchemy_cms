@@ -43,7 +43,7 @@ module Alchemy
 
     def index #:nodoc:
       redirect_to show_page_path(
-        urlname: @page.urlname,
+        url_path: @page.url_path,
         locale: prefix_locale? ? @page.language_code : nil,
       )
     end
@@ -92,14 +92,14 @@ module Alchemy
     def redirect_to_success_page
       flash[:notice] = Alchemy.t(:success, scope: "contactform.messages")
       if success_page
-        urlname = success_page_urlname
+        url_path = success_page_url_path
       elsif mailer_config["forward_to_page"] && mailer_config["mail_success_page"]
-        urlname = Page.find_by(urlname: mailer_config["mail_success_page"]).urlname
+        url_path = Page.find_by(url_path: mailer_config["mail_success_page"]).url_path
       else
-        urlname = Language.current_root_page.urlname
+        url_path = Language.current_root_page.url_path
       end
       redirect_to show_page_path(
-        urlname: urlname,
+        url_path: url_path,
         locale: prefix_locale? ? Language.current.code : nil,
       )
     end
@@ -108,10 +108,10 @@ module Alchemy
       @_success_page ||= @element.ingredient(:success_page)
     end
 
-    def success_page_urlname
+    def success_page_url_path
       case success_page
       when Alchemy::Page
-        success_page.urlname
+        success_page.url_path
       when String
         success_page
       end

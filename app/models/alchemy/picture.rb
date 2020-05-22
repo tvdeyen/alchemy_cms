@@ -162,7 +162,7 @@ module Alchemy
 
     # Returns an uri escaped name.
     #
-    def urlname
+    def url_path
       if name.blank?
         "image_#{id}"
       else

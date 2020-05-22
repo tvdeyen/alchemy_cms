@@ -17,10 +17,10 @@ RSpec.describe "Legacy page url management", type: :system, js: true do
   it "lets a user add a page link" do
     open_page_properties
     click_link "Links"
-    fill_in "legacy_page_url_urlname", with: "new-urlname"
+    fill_in "legacy_page_url_url_path", with: "new-url_path"
     click_button "Add"
     within "#legacy_page_urls" do
-      expect(page).to have_content("new-urlname")
+      expect(page).to have_content("new-url_path")
     end
     within "#legacy_urls_label" do
       expect(page).to have_content("(1) Link")
@@ -31,7 +31,7 @@ RSpec.describe "Legacy page url management", type: :system, js: true do
     it "displays error message" do
       open_page_properties
       click_link "Links"
-      fill_in "legacy_page_url_urlname", with: "invalid url name"
+      fill_in "legacy_page_url_url_path", with: "invalid url name"
       click_button "Add"
       within "#new_legacy_page_url" do
         expect(page).to have_content("URL path is invalid")
@@ -41,7 +41,7 @@ RSpec.describe "Legacy page url management", type: :system, js: true do
 
   context "with legacy page url present" do
     before do
-      a_page.legacy_urls.create!(urlname: "a-page-link")
+      a_page.legacy_urls.create!(url_path: "a-page-link")
       open_page_properties
       click_link "(1) Link"
     end

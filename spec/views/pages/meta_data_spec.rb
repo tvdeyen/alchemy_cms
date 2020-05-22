@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+
 module Alchemy
   describe "alchemy/pages/_meta_data" do
     let!(:language) { create(:alchemy_language, code: :en) }
-    let(:root_page)       { Page.new }
-    let(:page)            { Page.new(language_code: "en", title: "Road Runner", urlname: "roadrunner") }
-    let(:title_prefix)    { "" }
-    let(:title_suffix)    { "" }
+    let(:root_page) { Page.new }
+    let(:page) { Page.new(language_code: "en", title: "Road Runner", url_path: "roadrunner") }
+    let(:title_prefix) { "" }
+    let(:title_suffix) { "" }
     let(:title_separator) { "" }
 
     subject do
@@ -98,7 +99,7 @@ module Alchemy
         end
 
         context "with a given prefix and separator" do
-          let(:title_prefix)    { "C64" }
+          let(:title_prefix) { "C64" }
           let(:title_separator) { " - " }
 
           it "renders the prefixed title" do
@@ -107,7 +108,7 @@ module Alchemy
         end
 
         context "with a given suffix and separator" do
-          let(:title_suffix)    { "C64" }
+          let(:title_suffix) { "C64" }
           let(:title_separator) { " - " }
 
           it "renders the suffixed title" do
@@ -116,8 +117,8 @@ module Alchemy
         end
 
         context "with a given prefix, suffix and separator" do
-          let(:title_prefix)    { "C64" }
-          let(:title_suffix)    { "Platform game" }
+          let(:title_prefix) { "C64" }
+          let(:title_suffix) { "Platform game" }
           let(:title_separator) { " - " }
 
           it "renders the suffixed title" do

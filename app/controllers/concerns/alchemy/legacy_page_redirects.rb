@@ -3,7 +3,7 @@
 module Alchemy
   # Handles Legacy page redirects
   #
-  # If the page could not be found via its urlname we try to find
+  # If the page could not be found via its url_path we try to find
   # a legacy page url for requested url to redirect to.
   #
   module LegacyPageRedirects
@@ -27,7 +27,7 @@ module Alchemy
 
     # Use the bare minimum to redirect to legacy page
     #
-    # Don't use query string of legacy urlname.
+    # Don't use query string of legacy url_path.
     # This drops the given query string.
     #
     def legacy_page_redirect_url
@@ -36,15 +36,15 @@ module Alchemy
 
       alchemy.show_page_path(
         locale: prefix_locale? ? page.language_code : nil,
-        urlname: page.urlname,
+        url_path: page.url_path,
       )
     end
 
     def legacy_urls
       # /slug/tree => slug/tree
-      urlname = (request.fullpath[1..-1] if request.fullpath[0] == "/") || request.fullpath
+      url_path = (request.fullpath[1..-1] if request.fullpath[0] == "/") || request.fullpath
       LegacyPageUrl.joins(:page).where(
-        urlname: urlname,
+        url_path: url_path,
         Page.table_name => {
           language_id: Language.current.id,
         },

@@ -14,10 +14,10 @@ module Alchemy
     end
 
     describe "#index" do
-      let(:page) { mock_model("Page", {urlname: "contact", page_layout: "contact"}) }
+      let(:page) { mock_model("Page", { url_path: "contact", page_layout: "contact" }) }
 
       it "should redirect to @page" do
-        expect(get(:index)).to redirect_to(show_page_path(urlname: page.urlname))
+        expect(get(:index)).to redirect_to(show_page_path(url_path: page.url_path))
       end
     end
 
@@ -30,10 +30,10 @@ module Alchemy
 
     describe "#create" do
       subject do
-        post :create, params: {message: {email: ""}}
+        post :create, params: { message: { email: "" } }
       end
 
-      let(:page)    { mock_model("Page", get_language_root: mock_model("Page")) }
+      let(:page) { mock_model("Page", get_language_root: mock_model("Page")) }
       let(:element) { mock_model("Element", page: page, ingredient: "") }
       let(:message) { Message.new }
 
@@ -155,29 +155,29 @@ module Alchemy
 
           describe "#redirect_to_success_page" do
             context "if 'success_page' ingredient of element" do
-              context "is set with urlname string" do
+              context "is set with url_path string" do
                 before do
                   allow(element).to receive(:ingredient).with(:success_page).and_return("success-page")
                 end
 
-                it "should redirect to the given urlname" do
+                it "should redirect to the given url_path" do
                   expect(
                     subject,
-                  ).to redirect_to(show_page_path(urlname: "success-page"))
+                  ).to redirect_to(show_page_path(url_path: "success-page"))
                 end
               end
 
               context "is set with page instance" do
-                let(:page) { build(:alchemy_page, name: "Success", urlname: "success-page") }
+                let(:page) { build(:alchemy_page, name: "Success", url_path: "success-page") }
 
                 before do
                   allow(element).to receive(:ingredient).with(:success_page).and_return(page)
                 end
 
-                it "should redirect to the given urlname" do
+                it "should redirect to the given url_path" do
                   expect(
                     subject,
-                  ).to redirect_to(show_page_path(urlname: "success-page"))
+                  ).to redirect_to(show_page_path(url_path: "success-page"))
                 end
               end
             end
@@ -196,13 +196,13 @@ module Alchemy
                       "mail_success_page" => "mailer-config-success-page",
                     }
                   end
-                  allow(Page).to receive(:find_by).and_return double(urlname: "mailer-config-success-page")
+                  allow(Page).to receive(:find_by).and_return double(url_path: "mailer-config-success-page")
                 end
 
                 it "redirect to the given success page" do
                   expect(
                     subject,
-                  ).to redirect_to(show_page_path(urlname: "mailer-config-success-page"))
+                  ).to redirect_to(show_page_path(url_path: "mailer-config-success-page"))
                 end
               end
 
@@ -210,15 +210,15 @@ module Alchemy
                 let(:language) { mock_model("Language", code: "en", locale: "en", pages: double(find_by: build_stubbed(:alchemy_page))) }
 
                 before do
-                  allow(controller).to receive(:mailer_config).and_return({"fields" => %w(email)})
-                  allow(Language).to receive(:current_root_page).and_return double(urlname: "lang-root")
+                  allow(controller).to receive(:mailer_config).and_return({ "fields" => %w(email) })
+                  allow(Language).to receive(:current_root_page).and_return double(url_path: "lang-root")
                 end
 
                 it "should redirect to the language root page" do
                   allow(Language).to receive(:current).and_return(language)
                   expect(
                     subject,
-                  ).to redirect_to(show_page_path(urlname: "lang-root"))
+                  ).to redirect_to(show_page_path(url_path: "lang-root"))
                 end
               end
             end

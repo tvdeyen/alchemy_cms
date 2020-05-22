@@ -1,0 +1,1 @@
+../../../../db/migrate/20200521224434_rename_urlname_to_url_path.rb

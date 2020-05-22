@@ -62,7 +62,7 @@ describe "The Routing" do
         }).to route_to(
           controller: "alchemy/pages",
           action: "show",
-          urlname: "products/my-product",
+          url_path: "products/my-product",
         )
       end
 
@@ -73,7 +73,7 @@ describe "The Routing" do
           }).to route_to(
             controller: "alchemy/pages",
             action: "show",
-            urlname: "products/my-product",
+            url_path: "products/my-product",
             locale: "de",
           )
         end
@@ -87,7 +87,7 @@ describe "The Routing" do
         }).to route_to(
           controller: "alchemy/pages",
           action: "show",
-          urlname: "catalog/products/my-product",
+          url_path: "catalog/products/my-product",
         )
       end
 
@@ -98,7 +98,7 @@ describe "The Routing" do
           }).to route_to(
             controller: "alchemy/pages",
             action: "show",
-            urlname: "catalog/products/my-product",
+            url_path: "catalog/products/my-product",
             locale: "de",
           )
         end
@@ -112,7 +112,7 @@ describe "The Routing" do
         }).to route_to(
           controller: "alchemy/pages",
           action: "show",
-          urlname: "2011/12/08/my-post",
+          url_path: "2011/12/08/my-post",
         )
       end
 
@@ -123,7 +123,7 @@ describe "The Routing" do
           }).to route_to(
             controller: "alchemy/pages",
             action: "show",
-            urlname: "2011/12/08/my-post",
+            url_path: "2011/12/08/my-post",
             locale: "de",
           )
         end
@@ -146,7 +146,7 @@ describe "The Routing" do
       }).to route_to(
         controller: "alchemy/pages",
         action: "show",
-        urlname: "news",
+        url_path: "news",
         format: "rss",
       )
     end
@@ -159,7 +159,7 @@ describe "The Routing" do
       }).to route_to(
         controller: "alchemy/pages",
         action: "show",
-        urlname: "index",
+        url_path: "index",
         format: "php",
         id: "234",
       )
@@ -169,7 +169,7 @@ describe "The Routing" do
       }).to route_to(
         controller: "alchemy/pages",
         action: "show",
-        urlname: "action",
+        url_path: "action",
         format: "do",
       )
     end
@@ -208,7 +208,7 @@ describe "The Routing" do
     context "customized" do
       before(:all) do
         Alchemy.admin_path = "backend"
-        Alchemy.admin_constraints = {subdomain: "hidden"}
+        Alchemy.admin_constraints = { subdomain: "hidden" }
         Rails.application.reload_routes!
       end
 

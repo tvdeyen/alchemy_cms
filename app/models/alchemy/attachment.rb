@@ -77,7 +77,7 @@ module Alchemy
     end
 
     # An url save filename without format suffix
-    def urlname
+    def url_path
       CGI.escape(file_name.gsub(/\.#{extension}$/, "").tr(".", " "))
     end
 

@@ -22,7 +22,7 @@ module Alchemy
       end
 
       context "with current language present" do
-        let!(:root_node)  { create(:alchemy_node) }
+        let!(:root_node) { create(:alchemy_node) }
         let!(:child_node) { create(:alchemy_node, parent_id: root_node.id) }
 
         it "returns root nodes from current language" do
@@ -55,14 +55,14 @@ module Alchemy
         let(:node) { create(:alchemy_node, :with_page) }
 
         it "returns the url from page" do
-          expect(node.url).to eq("/#{node.page.urlname}")
+          expect(node.url).to eq("/#{node.page.url_path}")
         end
 
         context "and with url set" do
           let(:node) { build(:alchemy_node, :with_page, url: "http://google.com") }
 
           it "still returns the url from the page" do
-            expect(node.url).to eq("/#{node.page.urlname}")
+            expect(node.url).to eq("/#{node.page.url_path}")
           end
         end
       end

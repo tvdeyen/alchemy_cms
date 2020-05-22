@@ -6,7 +6,7 @@ include Alchemy::ElementsHelper
 
 module Alchemy
   describe UrlHelper do
-    let(:page) { mock_model(Page, urlname: "testpage", language_code: "en") }
+    let(:page) { mock_model(Page, url_path: "testpage", language_code: "en") }
 
     before do
       helper.controller.class_eval { include Alchemy::ConfigurationMethods }
@@ -21,19 +21,19 @@ module Alchemy
             expect(helper).to receive(:prefix_locale?) { false }
           end
 
-          it "returns a Hash with urlname and no locale parameter" do
-            expect(show_page_path_params).to include(urlname: "testpage")
+          it "returns a Hash with url_path and no locale parameter" do
+            expect(show_page_path_params).to include(url_path: "testpage")
             expect(show_page_path_params).to_not include(locale: "en")
           end
 
           context "with addiitonal parameters" do
             subject(:show_page_path_params) do
-              helper.show_page_path_params(page, {query: "test"})
+              helper.show_page_path_params(page, { query: "test" })
             end
 
-            it "returns a Hash with urlname, no locale and query parameter" do
+            it "returns a Hash with url_path, no locale and query parameter" do
               expect(show_page_path_params).to \
-                include(urlname: "testpage", query: "test")
+                include(url_path: "testpage", query: "test")
               expect(show_page_path_params).to_not \
                 include(locale: "en")
             end
@@ -45,19 +45,19 @@ module Alchemy
             expect(helper).to receive(:prefix_locale?) { true }
           end
 
-          it "returns a Hash with urlname and locale parameter" do
+          it "returns a Hash with url_path and locale parameter" do
             expect(show_page_path_params).to \
-              include(urlname: "testpage", locale: "en")
+              include(url_path: "testpage", locale: "en")
           end
 
           context "with additional parameters" do
             subject(:show_page_path_params) do
-              helper.show_page_path_params(page, {query: "test"})
+              helper.show_page_path_params(page, { query: "test" })
             end
 
-            it "returns a Hash with urlname, locale and query parameter" do
+            it "returns a Hash with url_path, locale and query parameter" do
               expect(show_page_path_params).to \
-                include(urlname: "testpage", locale: "en", query: "test")
+                include(url_path: "testpage", locale: "en", query: "test")
             end
           end
         end
@@ -74,7 +74,7 @@ module Alchemy
           end
 
           it "should return the correct relative path string with additional parameters" do
-            expect(helper.show_alchemy_page_path(page, {query: "test"})).to \
+            expect(helper.show_alchemy_page_path(page, { query: "test" })).to \
               eq("/#{page.language_code}/testpage?query=test")
           end
         end
@@ -89,7 +89,7 @@ module Alchemy
           end
 
           it "should return the correct relative path string with additional parameter" do
-            expect(helper.show_alchemy_page_path(page, {query: "test"})).to \
+            expect(helper.show_alchemy_page_path(page, { query: "test" })).to \
               eq("/testpage?query=test")
           end
         end
@@ -107,7 +107,7 @@ module Alchemy
           end
 
           it "should return the correct url string with additional parameters" do
-            expect(helper.show_alchemy_page_url(page, {query: "test"})).to \
+            expect(helper.show_alchemy_page_url(page, { query: "test" })).to \
               eq("http://#{helper.request.host}/#{page.language_code}/testpage?query=test")
           end
         end
@@ -123,7 +123,7 @@ module Alchemy
           end
 
           it "should return the correct url string with additional parameter" do
-            expect(helper.show_alchemy_page_url(page, {query: "test"})).to \
+            expect(helper.show_alchemy_page_url(page, { query: "test" })).to \
               eq("http://#{helper.request.host}/testpage?query=test")
           end
         end
@@ -131,16 +131,16 @@ module Alchemy
     end
 
     context "attachment path helpers" do
-      let(:attachment) { mock_model(Attachment, urlname: "test-attachment.pdf") }
+      let(:attachment) { mock_model(Attachment, url_path: "test-attachment.pdf") }
 
       it "should return the correct relative path to download an attachment" do
         expect(helper.download_alchemy_attachment_path(attachment)).to \
-          eq("/attachment/#{attachment.id}/download/#{attachment.urlname}")
+          eq("/attachment/#{attachment.id}/download/#{attachment.url_path}")
       end
 
       it "should return the correct url to download an attachment" do
         expect(helper.download_alchemy_attachment_url(attachment)).to \
-          eq("http://#{helper.request.host}/attachment/#{attachment.id}/download/#{attachment.urlname}")
+          eq("http://#{helper.request.host}/attachment/#{attachment.id}/download/#{attachment.url_path}")
       end
     end
 
@@ -151,7 +151,7 @@ module Alchemy
       let(:current_server) { "" }
 
       it "returns the url to this element" do
-        is_expected.to eq("#{current_server}/#{element.page.urlname}##{element_dom_id(element)}")
+        is_expected.to eq("#{current_server}/#{element.page.url_path}##{element_dom_id(element)}")
       end
     end
   end

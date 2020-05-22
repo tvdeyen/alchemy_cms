@@ -11,7 +11,7 @@ RSpec.describe "Page request caching" do
     end
 
     it "sets no-cache header" do
-      get "/#{page.urlname}"
+      get "/#{page.url_path}"
       expect(response.headers).to have_key("Cache-Control")
       expect(response.headers["Cache-Control"]).to eq("no-cache")
     end
@@ -38,7 +38,7 @@ RSpec.describe "Page request caching" do
           end
 
           it "sets public cache control header" do
-            get "/#{page.urlname}"
+            get "/#{page.url_path}"
             expect(response.headers).to have_key("Cache-Control")
             expect(response.headers["Cache-Control"]).to eq("public, must-revalidate")
           end
@@ -55,7 +55,7 @@ RSpec.describe "Page request caching" do
           end
 
           it "sets max-age cache control header" do
-            get "/#{page.urlname}"
+            get "/#{page.url_path}"
             expect(response.headers).to have_key("Cache-Control")
             expect(response.headers["Cache-Control"]).to \
               eq("max-age=#{expiration_time.to_i}, public, must-revalidate")
@@ -69,19 +69,19 @@ RSpec.describe "Page request caching" do
         end
 
         it "sets private cache control header" do
-          get "/#{page.urlname}"
+          get "/#{page.url_path}"
           expect(response.headers).to have_key("Cache-Control")
           expect(response.headers["Cache-Control"]).to eq("private, must-revalidate")
         end
       end
 
       it "sets etag header" do
-        get "/#{page.urlname}"
+        get "/#{page.url_path}"
         expect(response.headers).to have_key("ETag")
       end
 
       it "sets last-modified header" do
-        get "/#{page.urlname}"
+        get "/#{page.url_path}"
         expect(response.headers).to have_key("Last-Modified")
         expect(response.headers["Last-Modified"]).to eq(page.published_at.httpdate)
       end
@@ -93,13 +93,13 @@ RSpec.describe "Page request caching" do
       end
 
       it "sets no-cache header" do
-        get "/#{page.urlname}"
+        get "/#{page.url_path}"
         expect(response.headers).to have_key("Cache-Control")
         expect(response.headers["Cache-Control"]).to eq("no-cache")
       end
 
       it "does not set last-modified header" do
-        get "/#{page.urlname}"
+        get "/#{page.url_path}"
         expect(response.headers).to_not have_key("Last-Modified")
       end
     end
@@ -112,13 +112,13 @@ RSpec.describe "Page request caching" do
       end
 
       it "sets no-cache header" do
-        get "/#{page.urlname}"
+        get "/#{page.url_path}"
         expect(response.headers).to have_key("Cache-Control")
         expect(response.headers["Cache-Control"]).to eq("no-cache")
       end
 
       it "does not set last-modified header" do
-        get "/#{page.urlname}"
+        get "/#{page.url_path}"
         expect(response.headers).to_not have_key("Last-Modified")
       end
     end

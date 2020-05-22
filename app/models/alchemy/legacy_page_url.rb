@@ -5,7 +5,7 @@
 # Table name: alchemy_legacy_page_urls
 #
 #  id         :integer          not null, primary key
-#  urlname    :string           not null
+#  url_path    :string           not null
 #  page_id    :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -16,7 +16,7 @@ class Alchemy::LegacyPageUrl < ActiveRecord::Base
     class_name: "Alchemy::Page",
     required: true
 
-  validates :urlname,
+  validates :url_path,
     presence: true,
-    format: {with: /\A[:\.\w\-+_\/\?&%;=]*\z/}
+    format: { with: /\A[:\.\w\-+_\/\?&%;=]*\z/ }
 end

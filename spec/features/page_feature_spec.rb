@@ -44,7 +44,7 @@ RSpec.describe "Show page feature:", type: :system do
     end
 
     it "should include all its elements and contents" do
-      visit "/#{public_page.urlname}"
+      visit "/#{public_page.url_path}"
       within("div#content div.article div.intro") do
         expect(page).to have_content("Welcome to Peters Petshop")
       end
@@ -67,7 +67,7 @@ RSpec.describe "Show page feature:", type: :system do
   describe "menubar" do
     context "rendering for guest users" do
       it "is prohibited" do
-        visit "/#{public_page.urlname}"
+        visit "/#{public_page.url_path}"
         within("body") { expect(page).not_to have_selector("#alchemy_menubar") }
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe "Show page feature:", type: :system do
     context "rendering for members" do
       it "is prohibited" do
         authorize_user(build(:alchemy_dummy_user))
-        visit "/#{public_page.urlname}"
+        visit "/#{public_page.url_path}"
         within("body") { expect(page).not_to have_selector("#alchemy_menubar") }
       end
     end
@@ -83,7 +83,7 @@ RSpec.describe "Show page feature:", type: :system do
     context "rendering for authors" do
       it "is allowed" do
         authorize_user(:as_author)
-        visit "/#{public_page.urlname}"
+        visit "/#{public_page.url_path}"
         within("body") { expect(page).to have_selector("#alchemy_menubar") }
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe "Show page feature:", type: :system do
     context "rendering for editors" do
       it "is allowed" do
         authorize_user(:as_editor)
-        visit "/#{public_page.urlname}"
+        visit "/#{public_page.url_path}"
         within("body") { expect(page).to have_selector("#alchemy_menubar") }
       end
     end
@@ -99,7 +99,7 @@ RSpec.describe "Show page feature:", type: :system do
     context "rendering for admins" do
       it "is allowed" do
         authorize_user(:as_admin)
-        visit "/#{public_page.urlname}"
+        visit "/#{public_page.url_path}"
         within("body") { expect(page).to have_selector("#alchemy_menubar") }
       end
     end
@@ -107,7 +107,7 @@ RSpec.describe "Show page feature:", type: :system do
     context "contains" do
       before do
         authorize_user(:as_admin)
-        visit "/#{public_page.urlname}"
+        visit "/#{public_page.url_path}"
       end
 
       it "a link to the admin area" do
@@ -165,7 +165,7 @@ RSpec.describe "Show page feature:", type: :system do
 
     context "as a guest user" do
       it "I am not able to visit the page" do
-        visit restricted_page.urlname
+        visit restricted_page.url_path
         expect(current_path).to eq(Alchemy.login_path)
       end
     end
@@ -176,8 +176,8 @@ RSpec.describe "Show page feature:", type: :system do
       end
 
       it "I am able to visit the page" do
-        visit restricted_page.urlname
-        expect(current_path).to eq("/#{restricted_page.urlname}")
+        visit restricted_page.url_path
+        expect(current_path).to eq("/#{restricted_page.url_path}")
       end
     end
   end

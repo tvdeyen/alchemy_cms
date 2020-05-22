@@ -5,7 +5,7 @@ module Alchemy
     SHOW_PAGE_PARAMS_KEYS = [
       "action",
       "controller",
-      "urlname",
+      "url_path",
       "locale",
     ]
 
@@ -54,11 +54,11 @@ module Alchemy
       show
     end
 
-    # == The show action gets invoked if one requests '/:urlname' or '/:locale/:urlname'
+    # == The show action gets invoked if one requests '/:url_path' or '/:locale/:url_path'
     #
     # If the locale is the default locale, then it redirects to '/' without the locale.
     #
-    # Loads the page via it's urlname. If more than one language is published the
+    # Loads the page via it's url_path. If more than one language is published the
     # current language is either loaded via :locale parameter or, if that's missing,
     # the page language is used and a redirect to the page with prefixed locale happens.
     #
@@ -98,10 +98,10 @@ module Alchemy
       render template: "alchemy/welcome", layout: false if signup_required?
     end
 
-    # == Loads page by urlname
+    # == Loads page by url_path
     #
     # If a locale is specified in the request parameters,
-    # scope pages to it to make sure we can raise a 404 if the urlname
+    # scope pages to it to make sure we can raise a 404 if the url_path
     # is not available in that language.
     #
     # @return Alchemy::Page
@@ -111,7 +111,7 @@ module Alchemy
       page_not_found! unless Language.current
 
       @page ||= Language.current.pages.contentpages.find_by(
-        urlname: params[:urlname],
+        url_path: params[:url_path],
         language_code: params[:locale] || Language.current.code,
       )
     end
@@ -125,7 +125,7 @@ module Alchemy
     #
     # * action
     # * controller
-    # * urlname
+    # * url_path
     # * locale
     #
     def additional_params

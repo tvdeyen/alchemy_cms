@@ -5,10 +5,10 @@ require "rails_helper"
 module Alchemy
   describe EssenceFile do
     let(:attachment) { create(:alchemy_attachment) }
-    let(:essence)    { EssenceFile.new(attachment: attachment) }
+    let(:essence) { EssenceFile.new(attachment: attachment) }
 
     it_behaves_like "an essence" do
-      let(:essence)          { EssenceFile.new }
+      let(:essence) { EssenceFile.new }
       let(:ingredient_value) { attachment }
     end
 
@@ -16,7 +16,7 @@ module Alchemy
       subject { essence.attachment_url }
 
       it "returns the download attachment url." do
-        is_expected.to match(/\/attachment\/#{attachment.id}\/download\/#{attachment.urlname}\.#{attachment.suffix}/)
+        is_expected.to match(/\/attachment\/#{attachment.id}\/download\/#{attachment.url_path}\.#{attachment.suffix}/)
       end
 
       context "without attachment assigned" do

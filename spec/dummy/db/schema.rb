@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_14_091507) do
+ActiveRecord::Schema.define(version: 2020_05_21_224434) do
 
   create_table "alchemy_attachments", force: :cascade do |t|
     t.string "name"
@@ -168,12 +168,12 @@ ActiveRecord::Schema.define(version: 2020_05_14_091507) do
   end
 
   create_table "alchemy_legacy_page_urls", force: :cascade do |t|
-    t.string "urlname", null: false
+    t.string "url_path", null: false
     t.integer "page_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["page_id"], name: "index_alchemy_legacy_page_urls_on_page_id"
-    t.index ["urlname"], name: "index_alchemy_legacy_page_urls_on_urlname"
+    t.index ["url_path"], name: "index_alchemy_legacy_page_urls_on_url_path"
   end
 
   create_table "alchemy_nodes", force: :cascade do |t|
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(version: 2020_05_14_091507) do
 
   create_table "alchemy_pages", force: :cascade do |t|
     t.string "name"
-    t.string "urlname"
+    t.string "url_path"
     t.string "title"
     t.string "language_code"
     t.boolean "language_root"
@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(version: 2020_05_14_091507) do
     t.index ["public_on", "public_until"], name: "index_alchemy_pages_on_public_on_and_public_until"
     t.index ["rgt"], name: "index_alchemy_pages_on_rgt"
     t.index ["updater_id"], name: "index_alchemy_pages_on_updater_id"
-    t.index ["urlname"], name: "index_pages_on_urlname"
+    t.index ["url_path"], name: "index_pages_on_urlname"
   end
 
   create_table "alchemy_pictures", force: :cascade do |t|

@@ -5,7 +5,7 @@ require "rails_helper"
 module Alchemy
   describe EssencePicture do
     it_behaves_like "an essence" do
-      let(:essence)          { EssencePicture.new }
+      let(:essence) { EssencePicture.new }
       let(:ingredient_value) { Picture.new }
     end
 
@@ -63,7 +63,7 @@ module Alchemy
       end
 
       context "with format in the options" do
-        let(:options) { {format: "gif"} }
+        let(:options) { { format: "gif" } }
 
         it "takes this as format." do
           expect(picture_url).to match(/\.gif/)
@@ -85,7 +85,7 @@ module Alchemy
 
         context "but with crop sizes in the options" do
           let(:options) do
-            {crop_from: "30x30", crop_size: "75x75"}
+            { crop_from: "30x30", crop_size: "75x75" }
           end
 
           it "passes these crop sizes instead." do
@@ -98,7 +98,7 @@ module Alchemy
       end
 
       context "with other options" do
-        let(:options) { {foo: "baz"} }
+        let(:options) { { foo: "baz" } }
 
         it "adds them to the url" do
           expect(picture_url).to match /\?foo=baz/
@@ -152,7 +152,7 @@ module Alchemy
 
       context "with content having size setting" do
         before do
-          expect(essence.content).to receive(:settings) { {size: "30x70"} }
+          expect(essence.content).to receive(:settings) { { size: "30x70" } }
         end
 
         it "includes this size." do
@@ -250,7 +250,7 @@ module Alchemy
         let(:essence) { build_stubbed(:alchemy_essence_picture, crop_from: "0x0", crop_size: "100x100") }
 
         it "returns a hash containing cropping coordinates" do
-          is_expected.to eq({x1: 0, y1: 0, x2: 100, y2: 100})
+          is_expected.to eq({ x1: 0, y1: 0, x2: 100, y2: 100 })
         end
       end
 
@@ -285,7 +285,7 @@ module Alchemy
       let(:picture) do
         mock_model Picture,
           name: "Cute Cat Kittens",
-          urlname: "cute-cat-kittens",
+          url_path: "cute-cat-kittens",
           security_token: "kljhgfd",
           default_render_format: "jpg"
       end
@@ -350,7 +350,7 @@ module Alchemy
 
             context "with crop set to true" do
               before do
-                allow(content).to receive(:settings) { {crop: true} }
+                allow(content).to receive(:settings) { { crop: true } }
               end
 
               it { is_expected.to be(true) }

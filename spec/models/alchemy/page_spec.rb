@@ -18,23 +18,23 @@ module Alchemy
     context "validations" do
       context "Creating a normal content page" do
         let(:contentpage) { build(:alchemy_page) }
-        let(:with_same_urlname) { create(:alchemy_page, urlname: "existing_twice") }
-        let(:global_with_same_urlname) { create(:alchemy_page, urlname: "existing_twice", layoutpage: true) }
+        let(:with_same_url_path) { create(:alchemy_page, url_path: "existing_twice") }
+        let(:global_with_same_url_path) { create(:alchemy_page, url_path: "existing_twice", layoutpage: true) }
 
-        context "when its urlname exists as global page" do
-          before { global_with_same_urlname }
+        context "when its url_path exists as global page" do
+          before { global_with_same_url_path }
 
           it "it should be possible to save." do
-            contentpage.urlname = "existing_twice"
+            contentpage.url_path = "existing_twice"
             expect(contentpage).to be_valid
           end
         end
 
-        context "with page having same urlname" do
-          before { with_same_urlname }
+        context "with page having same url_path" do
+          before { with_same_url_path }
 
           it "should not be valid" do
-            contentpage.urlname = "existing_twice"
+            contentpage.url_path = "existing_twice"
             expect(contentpage).not_to be_valid
           end
         end
@@ -44,17 +44,17 @@ module Alchemy
 
           before do
             stub_alchemy_config(:url_nesting, true)
-            with_same_urlname
+            with_same_url_path
           end
 
-          it "should only validate urlname dependent of parent" do
-            contentpage.urlname = "existing_twice"
+          it "should only validate url_path dependent of parent" do
+            contentpage.url_path = "existing_twice"
             contentpage.parent = other_parent
             expect(contentpage).to be_valid
           end
 
-          it "should validate urlname dependent of parent" do
-            contentpage.urlname = "existing_twice"
+          it "should validate url_path dependent of parent" do
+            contentpage.url_path = "existing_twice"
             expect(contentpage).not_to be_valid
           end
         end
@@ -101,28 +101,28 @@ module Alchemy
       end
 
       context "after_update" do
-        context "urlname has changed" do
+        context "url_path has changed" do
           it "should store legacy url" do
-            page.urlname = "new-urlname"
+            page.url_path = "new-url_path"
             page.save!
             expect(page.legacy_urls).not_to be_empty
-            expect(page.legacy_urls.first.urlname).to eq("my-testpage")
+            expect(page.legacy_urls.first.url_path).to eq("my-testpage")
           end
 
-          it "should not store legacy url twice for same urlname" do
-            page.urlname = "new-urlname"
+          it "should not store legacy url twice for same url_path" do
+            page.url_path = "new-url_path"
             page.save!
-            page.urlname = "my-testpage"
+            page.url_path = "my-testpage"
             page.save!
-            page.urlname = "another-urlname"
+            page.url_path = "another-url_path"
             page.save!
-            expect(page.legacy_urls.select { |u| u.urlname == "my-testpage" }.size).to eq(1)
+            expect(page.legacy_urls.select { |u| u.url_path == "my-testpage" }.size).to eq(1)
           end
         end
 
-        context "urlname has not changed" do
+        context "url_path has not changed" do
           it "should not store a legacy url" do
-            page.urlname = "my-testpage"
+            page.url_path = "my-testpage"
             page.save!
             expect(page.legacy_urls).to be_empty
           end
@@ -175,10 +175,10 @@ module Alchemy
         let(:parent_2) { create(:alchemy_page, name: "Parent 2", visible: true) }
         let(:page) { create(:alchemy_page, parent: parent_1, name: "Page", visible: true) }
 
-        it "updates the urlname" do
-          expect(page.urlname).to eq("parent-1/page")
+        it "updates the url_path" do
+          expect(page.url_path).to eq("parent-1/page")
           page.move_to_child_of parent_2
-          expect(page.urlname).to eq("parent-2/page")
+          expect(page.url_path).to eq("parent-2/page")
         end
       end
 
@@ -499,31 +499,31 @@ module Alchemy
           expect(page.title).to eq("My Testpage")
         end
 
-        it "should get a webfriendly urlname" do
+        it "should get a webfriendly url_path" do
           page = create(:alchemy_page, name: "klingon$&stößel ", language: language, parent: language_root)
-          expect(page.urlname).to eq("klingon-stoessel")
+          expect(page.url_path).to eq("klingon-stoessel")
         end
 
         context "with no name set" do
-          it "should not set a urlname" do
+          it "should not set a url_path" do
             page = Page.create(name: "", language: language, parent: language_root)
-            expect(page.urlname).to be_blank
+            expect(page.url_path).to be_blank
           end
         end
 
-        it "should generate a three letter urlname from two letter name" do
+        it "should generate a three letter url_path from two letter name" do
           page = create(:alchemy_page, name: "Au", language: language, parent: language_root)
-          expect(page.urlname).to eq("-au")
+          expect(page.url_path).to eq("-au")
         end
 
-        it "should generate a three letter urlname from two letter name with umlaut" do
+        it "should generate a three letter url_path from two letter name with umlaut" do
           page = create(:alchemy_page, name: "Aü", language: language, parent: language_root)
-          expect(page.urlname).to eq("aue")
+          expect(page.url_path).to eq("aue")
         end
 
-        it "should generate a three letter urlname from one letter name" do
+        it "should generate a three letter url_path from one letter name" do
           page = create(:alchemy_page, name: "A", language: language, parent: language_root)
-          expect(page.urlname).to eq("--a")
+          expect(page.url_path).to eq("--a")
         end
 
         it "should add a user stamper" do
@@ -1564,7 +1564,7 @@ module Alchemy
       end
     end
 
-    context "urlname updating" do
+    context "url_path updating" do
       let(:parentparent) { create(:alchemy_page, name: "parentparent", visible: true) }
       let(:parent) { create(:alchemy_page, parent: parentparent, name: "parent", visible: true) }
       let(:page) { create(:alchemy_page, parent: parent, name: "page", visible: true) }
@@ -1577,54 +1577,54 @@ module Alchemy
           stub_alchemy_config(:url_nesting, true)
         end
 
-        it "should store all parents urlnames delimited by slash" do
-          expect(page.urlname).to eq("parentparent/parent/page")
+        it "should store all parents url_paths delimited by slash" do
+          expect(page.url_path).to eq("parentparent/parent/page")
         end
 
         it "should not include the language root page" do
-          expect(page.urlname).not_to match(/startseite/)
+          expect(page.url_path).not_to match(/startseite/)
         end
 
         it "should not include invisible pages" do
-          expect(contact.urlname).not_to match(/invisible/)
+          expect(contact.url_path).not_to match(/invisible/)
         end
 
         context "with an invisible parent" do
           before { parent.update_attribute(:visible, false) }
 
-          it "does not change if set_urlname is called" do
-            expect { page.send(:set_urlname) }.not_to change { page.urlname }
+          it "does not change if set_url_path is called" do
+            expect { page.send(:set_url_path) }.not_to change { page.url_path }
           end
 
-          it "does not change if update_urlname! is called" do
-            expect { page.update_urlname! }.not_to change { page.urlname }
+          it "does not change if update_url_path! is called" do
+            expect { page.update_url_path! }.not_to change { page.url_path }
           end
         end
 
-        context "after changing page's urlname" do
-          it "updates urlnames of descendants" do
+        context "after changing page's url_path" do
+          it "updates url_paths of descendants" do
             page
-            parentparent.urlname = "new-urlname"
+            parentparent.url_path = "new-url_path"
             parentparent.save!
             page.reload
-            expect(page.urlname).to eq("new-urlname/parent/page")
+            expect(page.url_path).to eq("new-url_path/parent/page")
           end
 
           it "should create a legacy url" do
             allow(page).to receive(:slug).and_return("foo")
-            page.update_urlname!
+            page.update_url_path!
             expect(page.legacy_urls).not_to be_empty
-            expect(page.legacy_urls.pluck(:urlname)).to include("parentparent/parent/page")
+            expect(page.legacy_urls.pluck(:url_path)).to include("parentparent/parent/page")
           end
         end
 
         context "after updating my visibility" do
-          it "should update urlnames of descendants" do
+          it "should update url_paths of descendants" do
             page
             parentparent.visible = false
             parentparent.save!
             page.reload
-            expect(page.urlname).to eq("parent/page")
+            expect(page.url_path).to eq("parent/page")
           end
         end
       end
@@ -1634,15 +1634,15 @@ module Alchemy
           stub_alchemy_config(:url_nesting, false)
         end
 
-        it "should only store my urlname" do
-          expect(page.urlname).to eq("page")
+        it "should only store my url_path" do
+          expect(page.url_path).to eq("page")
         end
       end
     end
 
     describe "#update_node!" do
       let(:original_url) { "sample-url" }
-      let(:page) { create(:alchemy_page, language: language, parent: language_root, urlname: original_url, restricted: false) }
+      let(:page) { create(:alchemy_page, language: language, parent: language_root, url_path: original_url, restricted: false) }
       let(:node) { TreeNode.new(10, 11, 12, 13, "another-url", true) }
 
       context "when nesting is enabled" do
@@ -1657,7 +1657,7 @@ module Alchemy
           expect(page.rgt).to eq(node.right)
           expect(page.parent_id).to eq(node.parent)
           expect(page.depth).to eq(node.depth)
-          expect(page.urlname).to eq(node.url)
+          expect(page.url_path).to eq(node.url)
           expect(page.restricted).to eq(node.restricted)
         end
 
@@ -1692,7 +1692,7 @@ module Alchemy
           expect(page.rgt).to eq(node.right)
           expect(page.parent_id).to eq(node.parent)
           expect(page.depth).to eq(node.depth)
-          expect(page.urlname).to eq(original_url)
+          expect(page.url_path).to eq(original_url)
           expect(page.restricted).to eq(node.restricted)
         end
 
@@ -1741,24 +1741,24 @@ module Alchemy
     end
 
     describe "#slug" do
-      context "with parents path saved in urlname" do
-        let(:page) { build(:alchemy_page, urlname: "root/parent/my-name") }
+      context "with parents path saved in url_path" do
+        let(:page) { build(:alchemy_page, url_path: "root/parent/my-name") }
 
-        it "should return the last part of the urlname" do
+        it "should return the last part of the url_path" do
           expect(page.slug).to eq("my-name")
         end
       end
 
-      context "with single urlname" do
-        let(:page) { build(:alchemy_page, urlname: "my-name") }
+      context "with single url_path" do
+        let(:page) { build(:alchemy_page, url_path: "my-name") }
 
-        it "should return the last part of the urlname" do
+        it "should return the last part of the url_path" do
           expect(page.slug).to eq("my-name")
         end
       end
 
-      context "with nil as urlname" do
-        let(:page) { build(:alchemy_page, urlname: nil) }
+      context "with nil as url_path" do
+        let(:page) { build(:alchemy_page, url_path: nil) }
 
         it "should return nil" do
           expect(page.slug).to be_nil

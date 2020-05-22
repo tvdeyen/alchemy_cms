@@ -1,5 +1,5 @@
 .page-select--page,
-.page-select--page-urlname {
+.page-select--page-url_path {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -18,7 +18,7 @@
   }
 }
 
-.page-select--page-urlname {
+.page-select--page-url_path {
   margin-left: auto;
   padding: $default-padding 2*$default-padding;
   color: $dark-gray;

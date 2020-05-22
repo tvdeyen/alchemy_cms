@@ -46,8 +46,8 @@ sitemap:
 #
 # NOTE: After changing the url_nesting, you should run one of these convert rake tasks:
 #
-#   rake alchemy:convert:urlnames:to_nested
-#   rake alchemy:convert:urlnames:to_slug
+#   rake alchemy:convert:url_paths:to_nested
+#   rake alchemy:convert:url_paths:to_slug
 #
 url_nesting: true
 

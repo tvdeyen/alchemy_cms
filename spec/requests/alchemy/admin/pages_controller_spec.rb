@@ -324,12 +324,12 @@ module Alchemy
             stub_alchemy_config(:url_nesting, true)
           end
 
-          it "updates the pages urlnames" do
+          it "updates the pages url_paths" do
             post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
             [page_1, page_2, page_3].map(&:reload)
-            expect(page_1.urlname).to eq(page_1.slug.to_s)
-            expect(page_2.urlname).to eq("#{page_1.slug}/#{page_2.slug}")
-            expect(page_3.urlname).to eq("#{page_1.slug}/#{page_2.slug}/#{page_3.slug}")
+            expect(page_1.url_path).to eq(page_1.slug.to_s)
+            expect(page_2.url_path).to eq("#{page_1.slug}/#{page_2.slug}")
+            expect(page_3.url_path).to eq("#{page_1.slug}/#{page_2.slug}/#{page_3.slug}")
           end
 
           context "with invisible page in tree" do
@@ -342,12 +342,12 @@ module Alchemy
               }
             end
 
-            it "does not use this pages slug in urlnames of descendants" do
+            it "does not use this pages slug in url_paths of descendants" do
               post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
               [page_1, page_2, page_3].map(&:reload)
-              expect(page_1.urlname).to eq(page_1.slug.to_s)
-              expect(page_2.urlname).to eq("#{page_1.slug}/#{page_2.slug}")
-              expect(page_3.urlname).to eq("#{page_1.slug}/#{page_3.slug}")
+              expect(page_1.url_path).to eq(page_1.slug.to_s)
+              expect(page_2.url_path).to eq("#{page_1.slug}/#{page_2.slug}")
+              expect(page_3.url_path).to eq("#{page_1.slug}/#{page_3.slug}")
             end
           end
 
@@ -384,10 +384,10 @@ module Alchemy
               }.not_to raise_error
             end
 
-            it "still generates the correct urlname on page_3" do
+            it "still generates the correct url_path on page_3" do
               post order_admin_pages_path(set: set_of_pages.to_json), xhr: true
               [page_1, page_2, page_3].map(&:reload)
-              expect(page_3.urlname).to eq("#{page_1.slug}/#{page_2.slug}/#{page_3.slug}")
+              expect(page_3.url_path).to eq("#{page_1.slug}/#{page_2.slug}/#{page_3.slug}")
             end
           end
 
@@ -401,8 +401,8 @@ module Alchemy
       end
 
       describe "#configure" do
-        context "with page having nested urlname" do
-          let(:page) { create(:alchemy_page, name: "Foobar", urlname: "foobar") }
+        context "with page having nested url_path" do
+          let(:page) { create(:alchemy_page, name: "Foobar", url_path: "foobar") }
 
           it "should always show the slug" do
             get configure_admin_page_path(page), xhr: true
@@ -659,7 +659,7 @@ module Alchemy
           post visit_admin_page_path(page)
         end
 
-        let(:page) { create(:alchemy_page, urlname: "home", site: site) }
+        let(:page) { create(:alchemy_page, url_path: "home", site: site) }
 
         context "when the pages site is a catch-all" do
           let(:site) { create(:alchemy_site, host: "*") }

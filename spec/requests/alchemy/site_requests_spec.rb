@@ -14,7 +14,7 @@ RSpec.describe "Site requests" do
     end
 
     it "loads this site by host" do
-      get "http://#{site.host}/#{page.urlname}"
+      get "http://#{site.host}/#{page.url_path}"
       expect(assigns(:current_alchemy_site).host).to eq(site.host)
     end
   end

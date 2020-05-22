@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "alchemy/essences/_essence_page_view" do
-  let(:page) { build(:alchemy_page, urlname: "a-page") }
+  let(:page) { build(:alchemy_page, url_path: "a-page") }
   let(:essence) { Alchemy::EssencePage.new(page: page) }
   let(:content) { Alchemy::Content.new(essence: essence) }
 
@@ -19,7 +19,7 @@ describe "alchemy/essences/_essence_page_view" do
   context "with page" do
     it "renders a link to the page" do
       render content, content: content
-      expect(rendered).to have_selector("a[href='/#{page.urlname}']")
+      expect(rendered).to have_selector("a[href='/#{page.url_path}']")
     end
 
     it "has the page name as link text" do

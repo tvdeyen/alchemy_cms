@@ -39,7 +39,7 @@ RSpec.describe Alchemy::Admin::PreviewUrl do
         end
 
         it "returns the configured preview url" do
-          is_expected.to eq "http://www.example.com/#{page.urlname}"
+          is_expected.to eq "http://www.example.com/#{page.url_path}"
         end
       end
 
@@ -51,7 +51,7 @@ RSpec.describe Alchemy::Admin::PreviewUrl do
         end
 
         it "returns the configured preview url with https" do
-          is_expected.to eq "https://www.example.com/#{page.urlname}"
+          is_expected.to eq "https://www.example.com/#{page.url_path}"
         end
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Alchemy::Admin::PreviewUrl do
         end
 
         it "returns the configured preview url with userinfo" do
-          is_expected.to eq "https://foo:baz@www.example.com/#{page.urlname}"
+          is_expected.to eq "https://foo:baz@www.example.com/#{page.url_path}"
         end
       end
     end

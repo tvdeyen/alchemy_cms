@@ -23,7 +23,7 @@ module Alchemy
 
       routes.download_attachment_path(
         id: attachment.id,
-        name: attachment.urlname,
+        name: attachment.url_path,
         format: attachment.suffix,
       )
     end

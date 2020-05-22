@@ -9,7 +9,7 @@
     visible: false
     restricted: false
     name: false
-    urlname: false
+    url_path: false
     title: false
     robot_index: false
     robot_follow: false

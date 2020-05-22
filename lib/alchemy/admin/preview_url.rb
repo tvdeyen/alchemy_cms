@@ -31,7 +31,7 @@ module Alchemy
         if preview_config
           uri_class.build(
             host: uri.host,
-            path: "/#{page.urlname}",
+            path: "/#{page.url_path}",
             userinfo: userinfo,
           ).to_s
         else

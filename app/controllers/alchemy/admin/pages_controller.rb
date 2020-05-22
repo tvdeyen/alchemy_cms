@@ -138,7 +138,7 @@ module Alchemy
 
       def link
         @attachments = Attachment.all.collect { |f|
-          [f.name, download_attachment_path(id: f.id, name: f.urlname)]
+          [f.name, download_attachment_path(id: f.id, name: f.url_path)]
         }
         @url_prefix = prefix_locale? ? "#{@current_language.code}/" : ""
       end
@@ -168,7 +168,7 @@ module Alchemy
       def visit
         @page.unlock!
         redirect_to show_page_url(
-          urlname: @page.urlname,
+          url_path: @page.url_path,
           locale: prefix_locale? ? @page.language_code : nil,
           host: @page.site.host == "*" ? request.host : @page.site.host,
         )
@@ -263,7 +263,7 @@ module Alchemy
             my_right, tree = visit_nodes(item["children"], my_left + 1, item["id"], depth + 1, tree, urls[:children_path], my_restricted)
           end
 
-          tree[item["id"]] = TreeNode.new(my_left, my_right, parent, depth, urls[:my_urlname], my_restricted)
+          tree[item["id"]] = TreeNode.new(my_left, my_right, parent, depth, urls[:my_url_path], my_restricted)
           my_left = my_right + 1
         end
 
@@ -300,9 +300,9 @@ module Alchemy
       #   A children node
       #
       def process_url(ancestors_path, item)
-        default_urlname = (ancestors_path.blank? ? "" : "#{ancestors_path}/") + item["slug"].to_s
+        default_url_path = (ancestors_path.blank? ? "" : "#{ancestors_path}/") + item["slug"].to_s
 
-        pair = { my_urlname: default_urlname, children_path: default_urlname }
+        pair = { my_url_path: default_url_path, children_path: default_url_path }
 
         if item["visible"] == false
           # children ignore an ancestor in their path if invisible

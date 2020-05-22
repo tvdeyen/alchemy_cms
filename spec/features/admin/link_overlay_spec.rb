@@ -60,7 +60,7 @@ RSpec.describe "Link overlay", type: :system do
 
       begin
         within "#overlay_tab_internal_link" do
-          expect(page).to have_selector("#s2id_page_urlname")
+          expect(page).to have_selector("#s2id_page_url_path")
           select2_search(page2.name, from: "Page")
           click_link "apply"
         end
@@ -75,9 +75,9 @@ RSpec.describe "Link overlay", type: :system do
 
         click_button_with_label "Publish page"
 
-        visit "/#{page1.urlname}"
+        visit "/#{page1.url_path}"
 
-        expect(page).to have_link("Link me", href: "/#{page2.urlname}")
+        expect(page).to have_link("Link me", href: "/#{page2.url_path}")
       rescue Capybara::ElementNotFound => e
         pending e.message
         raise e

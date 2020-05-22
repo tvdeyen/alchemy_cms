@@ -51,25 +51,25 @@ module Alchemy
       end
     end
 
-    describe "urlname sanitizing" do
+    describe "url_path sanitizing" do
       it "escapes unsafe url characters" do
         attachment.file_name = "f#%&cking cute kitten pic.png"
-        expect(attachment.urlname).to eq("f%23%25%26cking+cute+kitten+pic")
+        expect(attachment.url_path).to eq("f%23%25%26cking+cute+kitten+pic")
       end
 
       it "removes format suffix from end of file name" do
         attachment.file_name = "pic.png.png"
-        expect(attachment.urlname).to eq("pic+png")
+        expect(attachment.url_path).to eq("pic+png")
       end
 
       it "converts dots into escaped spaces" do
         attachment.file_name = "cute.kitten.pic.png"
-        expect(attachment.urlname).to eq("cute+kitten+pic")
+        expect(attachment.url_path).to eq("cute+kitten+pic")
       end
 
       it "escapes umlauts in the name" do
         attachment.file_name = "süßes katzenbild.png"
-        expect(attachment.urlname).to eq("s%C3%BC%C3%9Fes+katzenbild")
+        expect(attachment.url_path).to eq("s%C3%BC%C3%9Fes+katzenbild")
       end
     end
 

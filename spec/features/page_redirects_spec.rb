@@ -22,7 +22,7 @@ RSpec.describe "Requesting a page" do
 
     let(:legacy_url) do
       Alchemy::LegacyPageUrl.create(
-        urlname: "index.php?option=com_content&view=article&id=48&Itemid=69",
+        url_path: "index.php?option=com_content&view=article&id=48&Itemid=69",
         page: second_page,
       )
     end
@@ -35,16 +35,16 @@ RSpec.describe "Requesting a page" do
       context "and page locale is default locale" do
         it "redirects to unprefixed locale url" do
           allow(::I18n).to receive(:default_locale) { public_page.language_code.to_sym }
-          visit("/#{public_page.language_code}/#{public_page.urlname}")
-          expect(page.current_path).to eq("/#{public_page.urlname}")
+          visit("/#{public_page.language_code}/#{public_page.url_path}")
+          expect(page.current_path).to eq("/#{public_page.url_path}")
         end
       end
 
       context "and page locale is not default locale" do
         it "does not redirect" do
           allow(::I18n).to receive(:default_locale).and_return(:de)
-          visit("/#{public_page.language_code}/#{public_page.urlname}")
-          expect(page.current_path).to eq("/#{public_page.language_code}/#{public_page.urlname}")
+          visit("/#{public_page.language_code}/#{public_page.url_path}")
+          expect(page.current_path).to eq("/#{public_page.language_code}/#{public_page.url_path}")
         end
       end
     end
@@ -53,16 +53,16 @@ RSpec.describe "Requesting a page" do
       context "and page locale is default locale" do
         it "doesn't prepend the url with the locale string" do
           allow(::I18n).to receive(:default_locale) { public_page.language_code.to_sym }
-          visit("/#{public_page.urlname}")
-          expect(page.current_path).to eq("/#{public_page.urlname}")
+          visit("/#{public_page.url_path}")
+          expect(page.current_path).to eq("/#{public_page.url_path}")
         end
 
         it "redirects legacy url with unknown format & query string without locale prefix" do
           allow(::I18n).to receive(:default_locale) { second_page.language_code.to_sym }
-          visit "/#{legacy_url.urlname}"
+          visit "/#{legacy_url.url_path}"
           uri = URI.parse(page.current_url)
           expect(uri.query).to be_nil
-          expect(uri.request_uri).to eq("/#{second_page.urlname}")
+          expect(uri.request_uri).to eq("/#{second_page.url_path}")
         end
       end
 
@@ -72,15 +72,15 @@ RSpec.describe "Requesting a page" do
         end
 
         it "redirects to url with the locale prefixed" do
-          visit("/#{public_page.urlname}")
-          expect(page.current_path).to eq("/en/#{public_page.urlname}")
+          visit("/#{public_page.url_path}")
+          expect(page.current_path).to eq("/en/#{public_page.url_path}")
         end
 
         it "redirects legacy url with unknown format & query string with locale prefix" do
-          visit "/#{legacy_url.urlname}"
+          visit "/#{legacy_url.url_path}"
           uri = URI.parse(page.current_url)
           expect(uri.query).to be_nil
-          expect(uri.request_uri).to eq("/en/#{second_page.urlname}")
+          expect(uri.request_uri).to eq("/en/#{second_page.url_path}")
         end
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe "Requesting a page" do
           public_on: nil,
           visible: false,
           name: "Not Public",
-          urlname: "",
+          url_path: "",
         )
         public_child
       end
@@ -140,7 +140,7 @@ RSpec.describe "Requesting a page" do
               public_on: nil,
               visible: false,
               name: "Not Public",
-              urlname: "",
+              url_path: "",
             )
           end
 
@@ -190,7 +190,7 @@ RSpec.describe "Requesting a page" do
     end
 
     it "should keep additional params" do
-      visit "/#{public_page.urlname}?query=Peter"
+      visit "/#{public_page.url_path}?query=Peter"
       expect(page.current_url).to match(/\?query=Peter/)
     end
 
@@ -199,10 +199,10 @@ RSpec.describe "Requesting a page" do
         allow(Alchemy.user_class).to receive(:admins).and_return([1, 2])
       end
 
-      it "should render 404 if urlname and lang parameter do not belong to same page" do
+      it "should render 404 if url_path and lang parameter do not belong to same page" do
         create(:alchemy_language, :klingon)
         expect {
-          visit "/kl/#{public_page.urlname}"
+          visit "/kl/#{public_page.url_path}"
         }.to raise_error(ActionController::RoutingError)
       end
 
@@ -210,7 +210,7 @@ RSpec.describe "Requesting a page" do
         public_page
         Alchemy::LegacyPageUrl.delete_all
         expect {
-          visit "/fo/#{public_page.urlname}"
+          visit "/fo/#{public_page.url_path}"
         }.to raise_error(ActionController::RoutingError)
       end
     end
@@ -221,7 +221,7 @@ RSpec.describe "Requesting a page" do
 
     let(:legacy_url) do
       Alchemy::LegacyPageUrl.create(
-        urlname: "index.php?option=com_content&view=article&id=48&Itemid=69",
+        url_path: "index.php?option=com_content&view=article&id=48&Itemid=69",
         page: second_page,
       )
     end
@@ -231,15 +231,15 @@ RSpec.describe "Requesting a page" do
     end
 
     it "redirects legacy url with unknown format & query string" do
-      visit "/#{legacy_url.urlname}"
+      visit "/#{legacy_url.url_path}"
       uri = URI.parse(page.current_url)
       expect(uri.query).to be_nil
-      expect(uri.request_uri).to eq("/#{second_page.urlname}")
+      expect(uri.request_uri).to eq("/#{second_page.url_path}")
     end
 
     it "redirects from nested language code url to normal url" do
-      visit "/en/#{public_page.urlname}"
-      expect(page.current_path).to eq("/#{public_page.urlname}")
+      visit "/en/#{public_page.url_path}"
+      expect(page.current_path).to eq("/#{public_page.url_path}")
     end
 
     context "redirects to public child" do
@@ -248,7 +248,7 @@ RSpec.describe "Requesting a page" do
           visible: false,
           public_on: nil,
           name: "Not Public",
-          urlname: "",
+          url_path: "",
         )
         public_child
       end
@@ -274,7 +274,7 @@ RSpec.describe "Requesting a page" do
     end
 
     it "should keep additional params" do
-      visit "/en/#{public_page.urlname}?query=Peter"
+      visit "/en/#{public_page.url_path}?query=Peter"
       expect(page.current_url).to match(/\?query=Peter/)
     end
   end

@@ -7,45 +7,45 @@ module Alchemy
     RESERVED_URLNAMES = %w(admin messages new)
 
     included do
-      before_validation :set_urlname,
+      before_validation :set_url_path,
         if: :renamed?,
         unless: -> { name.blank? }
 
       validates :name,
         presence: true
-      validates :urlname,
-        uniqueness: { scope: [:language_id, :layoutpage], if: -> { urlname.present? } },
+      validates :url_path,
+        uniqueness: { scope: [:language_id, :layoutpage], if: -> { url_path.present? } },
         exclusion: { in: RESERVED_URLNAMES },
-        length: { minimum: 3, if: -> { urlname.present? } }
+        length: { minimum: 3, if: -> { url_path.present? } }
 
       before_save :set_title,
         if: -> { title.blank? }
 
-      after_update :update_descendants_urlnames,
-        if: :should_update_descendants_urlnames?
+      after_update :update_descendants_url_paths,
+        if: :should_update_descendants_url_paths?
 
-      after_move :update_urlname!,
+      after_move :update_url_path!,
         if: -> { Config.get(:url_nesting) }
     end
 
-    # Returns true if name or urlname has changed.
+    # Returns true if name or url_path has changed.
     def renamed?
-      name_changed? || urlname_changed?
+      name_changed? || url_path_changed?
     end
 
-    # Makes a slug of all ancestors urlnames including mine and delimit them be slash.
-    # So the whole path is stored as urlname in the database.
-    def update_urlname!
-      new_urlname = nested_url_name(slug)
-      if urlname != new_urlname
-        legacy_urls.create(urlname: urlname)
-        update_column(:urlname, new_urlname)
+    # Makes a slug of all ancestors url_paths including mine and delimit them be slash.
+    # So the whole path is stored as url_path in the database.
+    def update_url_path!
+      new_url_path = nested_url_name(slug)
+      if url_path != new_url_path
+        legacy_urls.create(url_path: url_path)
+        update_column(:url_path, new_url_path)
       end
     end
 
-    # Returns always the last part of a urlname path
+    # Returns always the last part of a url_path path
     def slug
-      urlname.to_s.split("/").last
+      url_path.to_s.split("/").last
     end
 
     # Returns an array of visible/non-language_root ancestors.
@@ -63,31 +63,31 @@ module Alchemy
 
     private
 
-    def should_update_descendants_urlnames?
+    def should_update_descendants_url_paths?
       return false if !Config.get(:url_nesting)
 
       if active_record_5_1?
-        saved_change_to_urlname? || saved_change_to_visible?
+        saved_change_to_url_path? || saved_change_to_visible?
       else
-        urlname_changed? || visible_changed?
+        url_path_changed? || visible_changed?
       end
     end
 
-    def update_descendants_urlnames
+    def update_descendants_url_paths
       reload
-      descendants.each(&:update_urlname!)
+      descendants.each(&:update_url_path!)
     end
 
-    # Sets the urlname to a url friendly slug.
-    # Either from name, or if present, from urlname.
-    # If url_nesting is enabled the urlname contains the whole path.
-    def set_urlname
+    # Sets the url_path to a url friendly slug.
+    # Either from name, or if present, from url_path.
+    # If url_nesting is enabled the url_path contains the whole path.
+    def set_url_path
       if Config.get(:url_nesting)
         value = slug
       else
-        value = urlname
+        value = url_path
       end
-      self[:urlname] = nested_url_name(value)
+      self[:url_path] = nested_url_name(value)
     end
 
     def set_title
@@ -100,7 +100,7 @@ module Alchemy
     # so it does not collidate with the language code.
     #
     def convert_url_name(value)
-      url_name = convert_to_urlname(value.blank? ? name : value)
+      url_name = convert_to_url_path(value.blank? ? name : value)
       if url_name.length < 3
         ("-" * (3 - url_name.length)) + url_name
       else

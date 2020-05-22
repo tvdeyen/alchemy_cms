@@ -282,8 +282,8 @@ module Alchemy
       end
     end
 
-    describe "#urlname" do
-      subject { picture.urlname }
+    describe "#url_path" do
+      subject { picture.url_path }
 
       let(:picture) { build_stubbed(:alchemy_picture, name: "Cute kittens.jpg") }
 

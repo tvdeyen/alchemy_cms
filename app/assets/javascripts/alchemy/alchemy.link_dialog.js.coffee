@@ -18,7 +18,7 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
     # attach events we handle
     @attachEvents()
     # Store some jQuery objects for further reference
-    @$page_urlname = $('#page_urlname', @dialog_body)
+    @$page_url_path = $('#page_url_path', @dialog_body)
     @$element_anchor = $('#element_anchor', @dialog_body)
     @$anchor_link = $('#anchor_link', @dialog_body)
     @$external_url = $('#external_url', @dialog_body)
@@ -46,7 +46,7 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
         when 'anchor'
           url = @$anchor_link.val()
         else
-          url = @$page_urlname.val()
+          url = @$page_url_path.val()
           if @$element_anchor.val() != ''
             url += "##{@$element_anchor.val()}"
       # Create the link
@@ -60,7 +60,7 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
   initPageSelect: ->
     pageTemplate = HandlebarsTemplates.page
     element_anchor_placeholder = @$element_anchor.attr('placeholder')
-    @$page_urlname.select2
+    @$page_url_path.select2
       placeholder: Alchemy.t('Search page')
       allowClear: true
       minimumInputLength: 3
@@ -76,16 +76,16 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
           meta = data.meta
           results:
             data.pages.map (page) ->
-              id: "/#{page.urlname}"
+              id: "/#{page.url_path}"
               name: page.name
-              urlname: page.urlname
+              url_path: page.url_path
               page_id: page.id
           more: meta.page * meta.per_page < meta.total_count
       initSelection: ($element, callback) =>
-        urlname = $element.val()
+        url_path = $element.val()
         $.get Alchemy.routes.api_pages_path,
           q:
-            urlname_eq: urlname.replace(/^\//, '')
+            url_path_eq: url_path.replace(/^\//, '')
           page: 1
           per_page: 1,
           (data) =>
@@ -93,9 +93,9 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
             if page
               @initElementSelect(page.id)
               callback
-                id: "/#{page.urlname}"
+                id: "/#{page.url_path}"
                 name: page.name
-                urlname: page.name
+                url_path: page.name
                 page_id: page.id
       formatSelection: (page) ->
         page.name
@@ -198,7 +198,7 @@ class window.Alchemy.LinkDialog extends Alchemy.Dialog
   initInternalLinkTab: ->
     url = @$link.attr('href').split('#')
     # update the url field
-    @$page_urlname.val(url[0])
+    @$page_url_path.val(url[0])
     # store the anchor
     @$element_anchor.val(url[1])
 

@@ -674,8 +674,8 @@ en:
             blank: "^Please enter a name."
           page_layout:
             blank: "^Please choose a page layout."
-          urlname:
-            too_short: "^The pages urlname is too short (minimum of 3 characters)."
+          url_path:
+            too_short: "^The pages url_path is too short (minimum of 3 characters)."
             taken: "^URL-Name already taken."
             exclusion: "^URL-Name reserved."
       alchemy/picture:
@@ -799,7 +799,7 @@ en:
         locale: Localization
         code: ISO Code
       alchemy/legacy_page_url:
-        urlname: "URL path"
+        url_path: "URL path"
       alchemy/node:
         menu_type: Menu Type
         name: "Name"
@@ -825,7 +825,7 @@ en:
         tag_list: Tags
         title: "Title"
         updated_at: "Updated at"
-        urlname: "Urlname"
+        url_path: "URL path"
         visible: "visible in navigation"
       alchemy/picture:
         image_file_name: "Filename"

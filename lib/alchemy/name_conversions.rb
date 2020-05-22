@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Alchemy
-  # Provides methods for converting names into urlnames and vice versa.
+  # Provides methods for converting names into url_paths and vice versa.
   #
   module NameConversions
     # Converts a given name into url save and readable urlanme.
     # Uses rails parameterize, but converts german umlauts before.
     #
     # @returns String
-    def convert_to_urlname(name)
+    def convert_to_url_path(name)
       name
         .gsub(/[äÄ]/, "ae")
         .gsub(/[üÜ]/, "ue")

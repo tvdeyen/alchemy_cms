@@ -1,5 +1,5 @@
 <tr class="even" id="<%= dom_id(legacy_page_url) %>">
-  <td class="name"><%= legacy_page_url.urlname %></td>
+  <td class="name"><%= legacy_page_url.url_path %></td>
   <td class="tools">
     <%= link_to_dialog render_icon(:edit),
       edit_admin_legacy_page_url_path(legacy_page_url, page_id: @page.id),
