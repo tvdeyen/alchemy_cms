@@ -8,7 +8,7 @@ module Alchemy
     # Uses rails parameterize, but converts german umlauts before.
     #
     # @returns String
-    def convert_to_url_path(name)
+    def convert_to_slug(name)
       name
         .gsub(/[äÄ]/, "ae")
         .gsub(/[üÜ]/, "ue")

@@ -4,7 +4,7 @@ module Alchemy
   module Page::PageNaming
     extend ActiveSupport::Concern
     include NameConversions
-    RESERVED_URLNAMES = %w(admin messages new)
+    RESERVED_SLUGS = %w(admin messages new)
 
     included do
       before_validation :set_url_path,
@@ -15,7 +15,7 @@ module Alchemy
         presence: true
       validates :url_path,
         uniqueness: { scope: [:language_id, :layoutpage], if: -> { url_path.present? } },
-        exclusion: { in: RESERVED_URLNAMES },
+        exclusion: { in: RESERVED_SLUGS },
         length: { minimum: 3, if: -> { url_path.present? } }
 
       before_save :set_title,
@@ -36,7 +36,7 @@ module Alchemy
     # Makes a slug of all ancestors url_paths including mine and delimit them be slash.
     # So the whole path is stored as url_path in the database.
     def update_url_path!
-      new_url_path = nested_url_name(slug)
+      new_url_path = nested_url_path(slug)
       if url_path != new_url_path
         legacy_urls.create(url_path: url_path)
         update_column(:url_path, new_url_path)
@@ -78,6 +78,10 @@ module Alchemy
       descendants.each(&:update_url_path!)
     end
 
+    def set_title
+      self[:title] = name
+    end
+
     # Sets the url_path to a url friendly slug.
     # Either from name, or if present, from url_path.
     # If url_nesting is enabled the url_path contains the whole path.
@@ -87,29 +91,11 @@ module Alchemy
       else
         value = url_path
       end
-      self[:url_path] = nested_url_name(value)
+      self[:url_path] = nested_url_path(value)
     end
 
-    def set_title
-      self[:title] = name
-    end
-
-    # Converts the given name into an url friendly string.
-    #
-    # Names shorter than 3 will be filled up with dashes,
-    # so it does not collidate with the language code.
-    #
-    def convert_url_name(value)
-      url_name = convert_to_url_path(value.blank? ? name : value)
-      if url_name.length < 3
-        ("-" * (3 - url_name.length)) + url_name
-      else
-        url_name
-      end
-    end
-
-    def nested_url_name(value)
-      (ancestor_slugs << convert_url_name(value)).join("/")
+    def nested_url_path(value)
+      (ancestor_slugs << converted_slug(value)).join("/")
     end
 
     # Slugs of all visible/non-language_root ancestors.
@@ -119,6 +105,20 @@ module Alchemy
       return [] if !Config.get(:url_nesting) || parent.nil?
 
       visible_ancestors.map(&:slug).compact
+    end
+
+    # Converts the given name into an url friendly string.
+    #
+    # Names shorter than 3 will be filled up with dashes,
+    # so it does not collidate with the language code.
+    #
+    def converted_slug(value)
+      slug = convert_to_slug(value.blank? ? name : value)
+      if slug.length < 3
+        ("-" * (3 - slug.length)) + slug
+      else
+        slug
+      end
     end
   end
 end
