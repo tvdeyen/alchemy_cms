@@ -2014,6 +2014,30 @@ module Alchemy
       end
     end
 
+    describe "#display_urlname" do
+      subject { page.display_urlname }
+
+      context "for an external page" do
+        let(:page) { build(:alchemy_page, page_layout: "external", urlname: "https://google.com") }
+
+        it "returns an urlname prefixed with protocol" do
+          is_expected.to eq "https://google.com"
+        end
+      end
+
+      context "for a language root page" do
+        let(:page) { build(:alchemy_page, :language_root) }
+
+        it { is_expected.to eq("/") }
+      end
+
+      context "for a regular page" do
+        let(:page) { build(:alchemy_page, urlname: "url/path") }
+
+        it { is_expected.to eq("/url/path") }
+      end
+    end
+
     describe '#external_urlname' do
       let(:external_page) { build(:alchemy_page, page_layout: 'external') }
 

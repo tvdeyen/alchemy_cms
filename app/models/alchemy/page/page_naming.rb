@@ -54,6 +54,17 @@ module Alchemy
       urlname.to_s.split('/').last
     end
 
+    # Returns an human readable URL-Path
+    def display_urlname
+      if definition["redirects_to_external"]
+        external_urlname
+      elsif language_root?
+        "/"
+      else
+        "/#{urlname}"
+      end
+    end
+
     # Returns an urlname prefixed with http://, if no protocol is given
     def external_urlname
       return urlname if urlname =~ /\A(\/|[a-z]+:\/\/)/

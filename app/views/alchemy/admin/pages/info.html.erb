@@ -19,7 +19,7 @@
     <p><%= @page.urlname %></p>
   <% else %>
     <label><%= Alchemy::Page.human_attribute_name(:urlname) %></label>
-    <p><%= "/#{@page.urlname}" %></p>
+    <p><%= @page.display_urlname %></p>
   <% end %>
   </div>
   <div class="value">
