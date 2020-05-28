@@ -13,7 +13,8 @@ module Alchemy
       :tag_list,
       :created_at,
       :updated_at,
-      :status
+      :status,
+      :display_urlname
 
     has_many :elements
   end

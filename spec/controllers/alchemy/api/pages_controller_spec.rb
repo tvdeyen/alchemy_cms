@@ -237,6 +237,22 @@ module Alchemy
             expect(result['error']).to eq("Not authorized")
           end
         end
+
+        context "requesting a language root page" do
+          let(:page) { create(:alchemy_page, :language_root) }
+
+          it "display_urlname contains only slash" do
+            get :show, params: { urlname: page.urlname, format: :json }
+
+            expect(response.status).to eq(200)
+            expect(response.media_type).to eq("application/json")
+
+            result = JSON.parse(response.body)
+
+            expect(result).to have_key("display_urlname")
+            expect(result["display_urlname"]).to eq("/")
+          end
+        end
       end
 
       context 'requesting an unknown page' do
