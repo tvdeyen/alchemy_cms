@@ -62,6 +62,13 @@ module Alchemy
             expect(node.url).to eq("/#{node.page.urlname}")
           end
         end
+
+        context "for a language root page" do
+          let(:page) { build(:alchemy_page, :language_root) }
+          let(:node) { build(:alchemy_node, page: page) }
+
+          it { expect(node.url).to eq("/") }
+        end
       end
 
       context 'without page attached' do
