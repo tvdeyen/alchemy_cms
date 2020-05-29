@@ -35,7 +35,8 @@
     @include default-focus-style($box-shadow: 0 0 0 1px $focus-color);
   }
 
-  &[disabled], .disabled {
+  &[disabled],
+  .disabled {
     color: $form-field-disabled-text-color;
     background-color: $form-field-disabled-bg-color;
     cursor: not-allowed;

@@ -1,7 +1,8 @@
 @mixin default-focus-style(
   $border-color: $focus-color,
   $box-shadow: 0 0 0 2px $focus-color,
-  $border-radius: $default-border-radius) {
+  $border-radius: $default-border-radius
+) {
   border-color: $border-color;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
@@ -25,7 +26,8 @@
   $color: $button-text-color,
   $line-height: $form-field-line-height,
   $focus-border-color: $button-focus-border-color,
-  $focus-box-shadow: $button-focus-box-shadow) {
+  $focus-box-shadow: $button-focus-box-shadow
+) {
   display: inline-block;
   font-family: $default-font-family;
   font-size: $default-font-size;
@@ -49,7 +51,8 @@
     border-color: $hover-border-color;
   }
 
-  &:active, &.active {
+  &:active,
+  &.active {
     box-shadow: inset $button-box-shadow;
   }
 
@@ -60,9 +63,12 @@
     );
   }
 
-  &.disabled, &[disabled],
-  &.disabled:active, &[disabled]:active,
-  &.disabled:hover, &[disabled]:hover {
+  &.disabled,
+  &[disabled],
+  &.disabled:active,
+  &[disabled]:active,
+  &.disabled:hover,
+  &[disabled]:hover {
     background-color: transparentize($button-bg-color, 0.5);
     cursor: not-allowed;
     box-shadow: none;
@@ -75,29 +81,25 @@
 }
 
 @mixin form-label {
-  width: $form-left-width;
-  padding-right: 2 * $default-padding;
-  padding-top: 0.6em;
-  margin-top: $default-margin;
-  vertical-align: top;
-  word-break: normal;
-  float: left;
-  text-align: right;
+  display: block;
+  margin-bottom: $default-margin;
   font-size: $default-font-size;
+  font-weight: bold;
 }
 
 @mixin form-value-display {
-  float: right;
-  width: $form-right-width;
   margin: $form-field-margin;
-  padding: $default-padding 2*$default-padding;
+  padding: $default-padding 2 * $default-padding;
   line-height: 21px;
   min-height: $form-field-height;
   background: white;
   border-radius: $default-border-radius;
 }
 
-@mixin form-hint($background-color: $light_yellow, $border-color: $medium-gray) {
+@mixin form-hint(
+  $background-color: $light_yellow,
+  $border-color: $medium-gray
+) {
   font-size: $small-font-size;
   line-height: 1.5em;
   padding: $default-padding;
@@ -135,7 +137,10 @@
   box-shadow: $shadow;
 }
 
-@mixin label-base($margin: 2*$default-margin 0, $padding: $default-padding 3*$default-padding) {
+@mixin label-base(
+  $margin: 2 * $default-margin 0,
+  $padding: $default-padding 3 * $default-padding
+) {
   display: inline-block;
   vertical-align: middle;
   padding: $padding;
@@ -147,18 +152,18 @@
   color: $text-color;
 }
 
-@mixin tag-base($margin: 2*$default-margin 0, $padding: $default-padding 3*$default-padding) {
-  @include label-base(
-    $margin: $margin,
-    $padding: $padding
-  );
+@mixin tag-base(
+  $margin: 2 * $default-margin 0,
+  $padding: $default-padding 3 * $default-padding
+) {
+  @include label-base($margin: $margin, $padding: $padding);
 
   &:before {
     content: fa-content($fa-var-tag);
-    font-family: 'Font Awesome 5 Free';
+    font-family: "Font Awesome 5 Free";
     font-weight: 900;
     font-size: 0.8em;
-    padding-right: 2*$default-padding;
+    padding-right: 2 * $default-padding;
   }
 
   &:focus {
@@ -169,7 +174,8 @@
 @mixin linked-button(
   $border-radius: $default-border-radius,
   $line-height: $form-field-line-height,
-  $padding: 3px) {
+  $padding: 3px
+) {
   @include button-defaults(
     $line-height: $line-height,
     $background-color: $linked-button-color,
@@ -185,7 +191,7 @@
 
 @mixin zoom-in {
   cursor: pointer;
-  cursor: image-url('alchemy/lupe.cur');
+  cursor: image-url("alchemy/lupe.cur");
   cursor: -webkit-zoom-in;
   cursor: -moz-zoom-in;
   cursor: zoom-in;
@@ -203,7 +209,7 @@
   visibility: visible;
   top: 26px;
   opacity: 1;
-  transition-delay: .2s;
+  transition-delay: 0.2s;
 }
 
 @mixin clearfix {

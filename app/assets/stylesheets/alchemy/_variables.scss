@@ -21,8 +21,10 @@ $anchor-color: $very-dark-orange !default;
 
 $body-background-color: $light-gray !default;
 
-$default-font-family: "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif !default;
-$mono-font-family: Menlo, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace !default;
+$default-font-family: "Open Sans", "Lucida Grande", "Lucida Sans Unicode",
+  "Lucida Sans", Verdana, Tahoma, sans-serif !default;
+$mono-font-family: Menlo, Monaco, "Bitstream Vera Sans Mono", "Lucida Console",
+  Terminal, monospace !default;
 $base-font-size: 12px !default;
 $default-font-size: 1em !default;
 $small-font-size: 0.9em !default;
@@ -44,17 +46,19 @@ $default-border-color: rgba(#afafaf, 0.5) !default;
 $border-inset-color: lighten($default-border-color, 10%) !default;
 $default-border-width: 1px !default;
 $default-border-style: solid !default;
-$default-border: $default-border-width $default-border-style $default-border-color !default;
+$default-border: $default-border-width $default-border-style
+  $default-border-color !default;
 $default-border-radius: 3px !default;
 
 $form-field-margin: $default-margin 0 !default;
-$form-field-height: 31px !default;
+$form-field-height: auto !default;
 $form-field-background-color: $white !default;
 $form-field-border-width: $default-border-width !default;
 $form-field-border-style: $default-border-style !default;
-$form-field-border-color: $default-border-color $default-border-color $border-inset-color $border-inset-color !default;
+$form-field-border-color: $default-border-color $default-border-color
+  $border-inset-color $border-inset-color !default;
 $form-field-box-shadow: inset 0px 0 1px $medium-gray !default;
-$form-field-padding: 0.6em 0.75em !default;
+$form-field-padding: 0.75em 1em !default;
 $form-field-font-size: $default-font-size !default;
 $form-field-line-height: 1.25 !default;
 $form-field-text-color: $text-color !default;
@@ -101,9 +105,6 @@ $warning_background_color: #f3f0c1 !default;
 $error_border_color: #c49c9c !default;
 $error_text_color: #a23434 !default;
 $error_background_color: #efd3d3 !default;
-
-$form-left-width: 35% !default;
-$form-right-width: 65% !default;
 
 $sitemap-line-height: 32px !default;
 $sitemap-page-background-color: rgba($white, 0.75) !default;

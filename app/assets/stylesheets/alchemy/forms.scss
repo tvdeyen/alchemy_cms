@@ -1,8 +1,7 @@
 form {
-
   #main_content > &.alchemy {
     max-width: 600px;
-    padding: 2*$default-padding;
+    padding: 2 * $default-padding;
     margin: 2em auto;
   }
 
@@ -24,27 +23,13 @@ form {
     padding: $default-padding 0;
     @include clearfix;
 
-    > input[type="url"],
-    > input[type="number"],
-    > input[type="text"],
-    > input[type="email"],
-    > input[type="password"],
-    > textarea,
-    > .select2-container,
-    > .autocomplete_tag_list,
-    > .mce-tinymce,
-    > .with-hint {
-      width: $form-right-width;
-      float: right;
-    }
-
-    .input > .select2-container {
+    > .select2-container {
       width: 100%;
     }
 
     > .autocomplete_tag_list {
-
-      .select2-container, .select2-choices {
+      .select2-container,
+      .select2-choices {
         width: 100%;
       }
     }
@@ -58,8 +43,6 @@ form {
     }
 
     &.boolean {
-      margin-left: $form-left-width;
-
       label {
         width: 100%;
         text-align: left;
@@ -81,16 +64,16 @@ form {
     }
 
     &.field_with_errors {
-
       input[type="text"],
       input[type="email"],
       input[type="password"],
       textarea,
       .select2-choices {
-        @extend %field-with-error
+        @extend %field-with-error;
       }
 
-      .select2-choice, .select2-choices {
+      .select2-choice,
+      .select2-choices {
         border-color: $error_border_color;
         color: $error_text_color;
         margin-bottom: 4px;
@@ -100,13 +83,14 @@ form {
         }
       }
 
-      label { color: $error_text_color }
+      label {
+        color: $error_text_color;
+      }
     }
 
     small.error {
       color: $error_text_color;
       display: block;
-      margin-left: $form-left-width;
       line-height: 1.5em;
       clear: both;
       text-align: right;
@@ -115,8 +99,8 @@ form {
 
     &.language_locale small.error {
       @include form-hint(
-      $background-color: $error_background_color,
-      $border-color: $error_border_color
+        $background-color: $error_background_color,
+        $border-color: $error_border_color
       );
       text-align: left;
     }
@@ -126,26 +110,28 @@ form {
   .checkbox > .with-hint {
     cursor: default;
 
-    input, textarea {
+    input,
+    textarea {
       cursor: not-allowed;
     }
   }
 
   .inline-input {
     @include clearfix;
-    margin: 0 -1*$default-margin;
+    margin: 0 -1 * $default-margin;
 
-    .left-column, .right-column {
+    .left-column,
+    .right-column {
       padding: 0 $default-padding;
     }
 
     .left-column {
-      width: $form-right-width;
+      // width: $form-right-width;
       float: left;
     }
 
     .right-column {
-      width: $form-left-width;
+      // width: $form-left-width;
       float: right;
     }
 
@@ -160,19 +146,12 @@ form {
     }
   }
 
-  .control_group {
-    width: $form-right-width;
-    padding-top: $default-margin;
-    float: right;
-  }
-
   .check_boxes .control_group {
     padding-top: 0.6em;
   }
 
   .input .hint {
     @include form-hint;
-    margin-left: $form-left-width;
   }
 
   .submit {
@@ -187,9 +166,7 @@ form {
   }
 
   .input-row {
-
     .input-column {
-
       &:first-of-type {
         padding-left: 0;
       }
@@ -207,7 +184,6 @@ textarea#essence_picture_caption {
 
 // styles for link overlay selects
 .window_form {
-
   td.checkbox {
     text-align: left;
   }
@@ -219,5 +195,5 @@ textarea#essence_picture_caption {
 
 .input-column > label {
   display: block;
-  margin-top: $default-margin +1;
+  margin-top: $default-margin + 1;
 }
