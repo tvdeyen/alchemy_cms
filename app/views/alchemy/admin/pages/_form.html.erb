@@ -5,6 +5,9 @@
     include_blank: Alchemy.t('Please choose'),
     input_html: {class: 'alchemy_selectbox'} %>
 
+  <%= f.input :name, autofocus: true %>
+  <%= f.input :urlname, as: 'string', input_html: {value: @page.slug}, label: Alchemy::Page.human_attribute_name(:slug) %>
+
   <div class="input check_boxes">
     <label class="control-label"><%= Alchemy.t(:page_status) %></label>
     <div class="control_group">
@@ -16,26 +19,6 @@
       <% end %>
     </div>
   </div>
-
-  <%= f.input :name, autofocus: true %>
-  <%= f.input :urlname, as: 'string', input_html: {value: @page.slug}, label: Alchemy::Page.human_attribute_name(:slug) %>
-  <%= f.input :title,
-    input_html: {'data-alchemy-char-counter' => 60} %>
-
-  <div class="input check_boxes">
-    <label class="control-label"><%= Alchemy.t(:search_engines) %></label>
-    <div class="control_group">
-      <%= page_status_checkbox(@page, :robot_index) %>
-      <%= page_status_checkbox(@page, :robot_follow) %>
-    </div>
-  </div>
-
-  <%= f.input :meta_description,
-    as: 'text',
-    input_html: {'data-alchemy-char-counter' => 160} %>
-  <%= f.input :meta_keywords,
-    as: 'text',
-    hint: Alchemy.t('pages.update.comma_seperated') %>
 
   <% if @page.taggable? %>
     <div class="input string autocomplete_tag_list">
