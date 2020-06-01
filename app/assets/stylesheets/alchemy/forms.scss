@@ -20,8 +20,7 @@ form {
   }
 
   .input {
-    padding: $default-padding 0;
-    @include clearfix;
+    padding: 0.5rem 0;
 
     > .select2-container {
       width: 100%;
@@ -44,12 +43,9 @@ form {
 
     &.boolean {
       label {
-        width: 100%;
-        text-align: left;
-        padding: 0;
-        margin: $default-margin 0;
-        float: none;
+        display: inline;
         margin-left: 4px;
+        font-weight: normal;
       }
     }
 
@@ -117,22 +113,11 @@ form {
   }
 
   .inline-input {
-    @include clearfix;
-    margin: 0 -1 * $default-margin;
-
-    .left-column,
-    .right-column {
-      padding: 0 $default-padding;
-    }
+    display: flex;
 
     .left-column {
-      // width: $form-right-width;
-      float: left;
-    }
-
-    .right-column {
-      // width: $form-left-width;
-      float: right;
+      flex-grow: 1;
+      padding-right: 2 * $default-padding;
     }
 
     button,
@@ -147,7 +132,7 @@ form {
   }
 
   .check_boxes .control_group {
-    padding-top: 0.6em;
+    padding: 0.5em 0;
   }
 
   .input .hint {
@@ -160,12 +145,13 @@ form {
   }
 
   .input-column {
-    float: left;
     padding: 0 $default-padding;
     width: 50%;
   }
 
   .input-row {
+    display: flex;
+
     .input-column {
       &:first-of-type {
         padding-left: 0;

@@ -1,0 +1,8 @@
+<%= alchemy_form_for([:admin, @site]) do |f| %>
+  <%= f.input :name, input_html: { autofocus: true } %>
+  <%= f.input :host %>
+  <%= f.input :aliases, hint: Alchemy.t(:aliases, scope: [:resource_help_texts, :site]) %>
+  <%= f.input :redirect_to_primary_host %>
+  <%= f.input :public %>
+  <%= f.submit Alchemy.t(:save) %>
+<% end %>
