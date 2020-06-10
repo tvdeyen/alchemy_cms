@@ -34,7 +34,9 @@ export default function NodeTree() {
       group: "nodes",
       animation: 100,
       fallbackOnBody: true,
-      swapThreshold: 0.8,
+      swapThreshold: 0.65,
+      invertSwap: true,
+      forceFallback: true,
       direction: "horizontal",
       handle: ".node_name",
       onEnd: onFinishDragging

@@ -9,7 +9,9 @@ function initSortable(el) {
     group: "pages",
     animation: 100,
     fallbackOnBody: true,
-    swapThreshold: 0.8,
+    swapThreshold: 0.65,
+    invertSwap: true,
+    forceFallback: true,
     direction: "horizontal",
     handle: ".sitemap_sitename",
     onEnd: onFinishDragging
