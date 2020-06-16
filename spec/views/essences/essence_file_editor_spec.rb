@@ -15,7 +15,7 @@ describe "alchemy/essences/_essence_file_editor" do
   end
 
   before do
-    view.class.send :include, Alchemy::Admin::BaseHelper
+    view.extend(Alchemy::Admin::ContentsHelper)
     allow(view).to receive(:content_label).and_return("")
   end
 
@@ -43,7 +43,7 @@ describe "alchemy/essences/_essence_file_editor" do
     context "with content settings `only`" do
       it "renders a link to open the attachment library overlay with only pdfs" do
         within ".essence_file_tools" do
-          expect(content).to receive(:settings).at_least(:once).and_return({only: "pdf"})
+          expect(content).to receive(:settings).at_least(:once).and_return({ only: "pdf" })
           is_expected.to have_selector("a[href='/admin/attachments?content_id=#{content.id}&only=pdf']")
         end
       end
@@ -52,7 +52,7 @@ describe "alchemy/essences/_essence_file_editor" do
     context "with content settings `except`" do
       it "renders a link to open the attachment library overlay without pdfs" do
         within ".essence_file_tools" do
-          expect(content).to receive(:settings).at_least(:once).and_return({except: "pdf"})
+          expect(content).to receive(:settings).at_least(:once).and_return({ except: "pdf" })
           is_expected.to have_selector("a[href='/admin/attachments?content_id=#{content.id}&except=pdf']")
         end
       end

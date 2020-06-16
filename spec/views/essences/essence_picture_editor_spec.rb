@@ -25,8 +25,8 @@ describe "essences/_essence_picture_editor" do
   let(:settings) { Hash.new }
 
   before do
-    view.class.send(:include, Alchemy::Admin::BaseHelper)
-    view.class.send(:include, Alchemy::Admin::EssencesHelper)
+    view.extend(Alchemy::Admin::EssencesHelper)
+    view.extend(Alchemy::Admin::ContentsHelper)
     allow(view).to receive(:content_label).and_return("")
     allow(view).to receive(:essence_picture_thumbnail).and_return("")
   end
@@ -34,7 +34,7 @@ describe "essences/_essence_picture_editor" do
   subject do
     allow(content).to receive(:settings) { settings }
     render partial: "alchemy/essences/essence_picture_editor",
-      locals: {essence_picture_editor: Alchemy::ContentEditor.new(content)}
+      locals: { essence_picture_editor: Alchemy::ContentEditor.new(content) }
     rendered
   end
 

@@ -21,15 +21,17 @@ describe "alchemy/admin/partials/_main_navigation_entry.html.erb" do
   let(:navigation) { alchemy_module[:navigation] }
 
   before do
-    allow(view).to receive(:navigation).and_return(navigation)
-    allow(view).to receive(:alchemy_module).and_return(alchemy_module)
-    allow(view).to receive(:can?).and_return(true)
     view.extend Alchemy::Admin::NavigationHelper
+    allow(view).to receive(:can?).and_return(true)
+  end
+
+  subject! do
+    render "alchemy/admin/partials/main_navigation_entry",
+      navigation: navigation,
+      alchemy_module: alchemy_module
   end
 
   it "renders navigation with data attribute" do
-    render
-
     expect(rendered).to have_selector('div[data-turbolinks="false"]')
   end
 
@@ -49,8 +51,6 @@ describe "alchemy/admin/partials/_main_navigation_entry.html.erb" do
     end
 
     it "renders navigation without data attribute" do
-      render
-
       expect(rendered).not_to have_selector('div[data-turbolinks="false"]')
     end
   end

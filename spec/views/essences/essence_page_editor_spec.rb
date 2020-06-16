@@ -7,7 +7,7 @@ RSpec.describe "alchemy/essences/_essence_page_editor" do
   let(:essence) { Alchemy::EssencePage.new }
 
   before do
-    view.class.send(:include, Alchemy::Admin::EssencesHelper)
+    view.extend(Alchemy::Admin::ContentsHelper)
     allow(view).to receive(:content_label).and_return(content.name)
   end
 

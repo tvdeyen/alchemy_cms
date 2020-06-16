@@ -8,7 +8,7 @@ describe "alchemy/essences/_essence_text_editor" do
   let(:settings) { {} }
 
   before do
-    view.class.send :include, Alchemy::Admin::BaseHelper
+    view.extend(Alchemy::Admin::ContentsHelper)
     allow(view).to receive(:content_label).and_return("1e Zahl")
     allow(content).to receive(:settings) { settings }
     render partial: "alchemy/essences/essence_text_editor", locals: {

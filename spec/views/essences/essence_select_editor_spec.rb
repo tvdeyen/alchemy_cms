@@ -7,7 +7,7 @@ RSpec.describe "alchemy/essences/_essence_select_editor" do
   let(:essence) { Alchemy::EssenceSelect.new }
 
   before do
-    view.class.send(:include, Alchemy::Admin::BaseHelper)
+    view.extend(Alchemy::Admin::ContentsHelper)
     allow(view).to receive(:content_label).and_return(content.name)
   end
 

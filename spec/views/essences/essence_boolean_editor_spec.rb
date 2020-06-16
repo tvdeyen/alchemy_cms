@@ -16,8 +16,7 @@ describe "alchemy/essences/_essence_boolean_editor" do
   before do
     expect(element).to receive(:content_definition_for) { content_definition }
     allow_any_instance_of(Alchemy::Content).to receive(:definition) { content_definition }
-    allow(view).to receive(:render_content_name).and_return(content.name)
-    allow(view).to receive(:render_hint_for).and_return("")
+    view.extend(Alchemy::Admin::ContentsHelper)
   end
 
   subject do

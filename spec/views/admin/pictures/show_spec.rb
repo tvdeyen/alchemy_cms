@@ -19,10 +19,10 @@ describe "alchemy/admin/pictures/show.html.erb" do
   end
 
   before do
-    allow(view).to receive(:admin_picture_path).and_return("/path")
-    allow(view).to receive(:render_message)
-    allow(view).to receive(:search_filter_params) { {} }
+    view.extend Alchemy::BaseHelper
+    view.extend Alchemy::Engine.routes.url_helpers
     view.extend Alchemy::Admin::FormHelper
+    view.class.define_method(:search_filter_params) { {} }
   end
 
   it "displays picture in original format" do

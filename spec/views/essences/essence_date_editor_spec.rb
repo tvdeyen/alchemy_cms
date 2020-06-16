@@ -7,7 +7,7 @@ RSpec.describe "alchemy/essences/_essence_date_editor" do
   let(:essence) { Alchemy::EssenceDate.new }
 
   before do
-    view.class.send(:include, Alchemy::Admin::BaseHelper)
+    view.class.send(:include, Alchemy::Admin::ContentsHelper)
     allow(view).to receive(:content_label).and_return(content.name)
   end
 
