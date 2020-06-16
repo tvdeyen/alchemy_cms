@@ -55,13 +55,18 @@ module Alchemy
 
       context "user having signed in before" do
         before do
-          expect(user).to receive(:sign_in_count).and_return(5)
-          expect(user).to receive(:last_sign_in_at).and_return(Time.current)
+          user.class.define_method(:sign_in_count) { 5 }
+          user.class.define_method(:last_sign_in_at) { Time.current }
         end
 
         it "assigns @first_time" do
           get :index
           expect(assigns(:first_time)).to eq(false)
+        end
+
+        after do
+          user.class.remove_method(:sign_in_count)
+          user.class.remove_method(:last_sign_in_at)
         end
       end
 

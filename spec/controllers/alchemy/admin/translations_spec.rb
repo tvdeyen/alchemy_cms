@@ -18,26 +18,26 @@ describe Alchemy::Admin::DashboardController do
       end
 
       it "should be possible to set the locale of the admin backend via params" do
-        get :index, params: {admin_locale: "nl"}
+        get :index, params: { admin_locale: "nl" }
         expect(::I18n.locale).to eq(:nl)
       end
 
       it "should store the current locale in the session" do
-        get :index, params: {admin_locale: "nl"}
+        get :index, params: { admin_locale: "nl" }
         expect(session[:alchemy_locale]).to eq(:nl)
       end
 
       it "should be possible to change the current locale in the session" do
-        get :index, params: {admin_locale: "de"}
+        get :index, params: { admin_locale: "de" }
         expect(session[:alchemy_locale]).to eq(:de)
-        get :index, params: {admin_locale: "en"}
+        get :index, params: { admin_locale: "en" }
         expect(session[:alchemy_locale]).to eq(:en)
       end
     end
 
     context "with unknown locale" do
       it "it uses the users default language" do
-        get :index, params: {admin_locale: "ko"}
+        get :index, params: { admin_locale: "ko" }
         expect(::I18n.locale).to eq(:de)
       end
     end
@@ -64,11 +64,12 @@ describe Alchemy::Admin::DashboardController do
             expect(::I18n.locale).to eq(:es)
           end
 
-          context "if user language is an instance of a model" do
-            let(:language) { create(:alchemy_language) }
+          context "if user has language attribute" do
             let(:dummy_user) { mock_model(Alchemy.user_class, alchemy_roles: %w(admin), language: language) }
 
-            context "if language doesn't return a valid locale symbol" do
+            context "but language doesn't return a valid locale symbol" do
+              let(:language) { create(:alchemy_language) }
+
               it "should use the browsers language setting" do
                 request.headers["ACCEPT-LANGUAGE"] = "es-ES"
                 get :index
@@ -77,7 +78,7 @@ describe Alchemy::Admin::DashboardController do
             end
 
             context "if language returns a valid locale symbol" do
-              before { allow(language).to receive(:to_sym).and_return(:nl) }
+              let(:language) { "nl" }
 
               it "should use the locale of the user language" do
                 get :index

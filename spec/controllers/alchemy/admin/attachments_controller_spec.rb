@@ -21,8 +21,9 @@ module Alchemy
 
     describe "#index" do
       it "should always paginate the records" do
-        expect_any_instance_of(ActiveRecord::Relation).to receive(:page).and_call_original
-        get :index
+        create_list(:alchemy_attachment, 2)
+        get :index, params: { per_page: 1 }
+        expect(assigns(:attachments).length).to eq(1)
       end
 
       context "when params[:tagged_with] is set" do
