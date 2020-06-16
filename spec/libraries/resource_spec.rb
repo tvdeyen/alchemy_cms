@@ -43,13 +43,13 @@ module Alchemy
 
     let(:columns) do
       [
-        double(:column, {name: "name", type: :string, array: false}),
-        double(:column, {name: "hidden_value", type: :string, array: false}),
-        double(:column, {name: "description", type: :text, array: false}),
-        double(:column, {name: "id", type: :integer, array: false}),
-        double(:column, {name: "starts_at", type: :datetime, array: false}),
-        double(:column, {name: "location_id", type: :integer, array: false}),
-        double(:column, {name: "organizer_id", type: :integer, array: false}),
+        double(:column, { name: "name", type: :string, array: false }),
+        double(:column, { name: "hidden_value", type: :string, array: false }),
+        double(:column, { name: "description", type: :text, array: false }),
+        double(:column, { name: "id", type: :integer, array: false }),
+        double(:column, { name: "starts_at", type: :datetime, array: false }),
+        double(:column, { name: "location_id", type: :integer, array: false }),
+        double(:column, { name: "organizer_id", type: :integer, array: false }),
       ]
     end
 
@@ -88,12 +88,6 @@ module Alchemy
       end
 
       context "when model has alchemy_resource_relations defined" do
-        before do
-          allow(Party).to receive(:alchemy_resource_relations) do
-            {location: {attr_method: "name", type: "string"}}
-          end
-        end
-
         context ", but not an ActiveRecord association" do
           before do
             allow(Party).to receive(:respond_to?) do |arg|
@@ -107,7 +101,11 @@ module Alchemy
           end
 
           it "should raise error." do
+            Party.define_singleton_method(:alchemy_resource_relations) do
+              { location: { attr_method: "name", type: "string" } }
+            end
             expect { Resource.new("admin/parties") }.to raise_error(MissingActiveRecordAssociation)
+            Party.singleton_class.remove_method(:alchemy_resource_relations)
           end
         end
       end
@@ -177,12 +175,12 @@ module Alchemy
 
       it "parses and returns the resource model's attributes from ActiveRecord::ModelSchema" do
         expect(subject).to eq([
-          {name: "name", type: :string},
-          {name: "hidden_value", type: :string},
-          {name: "description", type: :text},
-          {name: "starts_at", type: :datetime},
-          {name: "location_id", type: :integer},
-          {name: "organizer_id", type: :integer},
+          { name: "name", type: :string },
+          { name: "hidden_value", type: :string },
+          { name: "description", type: :text },
+          { name: "starts_at", type: :datetime },
+          { name: "location_id", type: :integer },
+          { name: "organizer_id", type: :integer },
         ])
       end
 
@@ -191,43 +189,38 @@ module Alchemy
       end
 
       it "skips attributes returned by skipped_alchemy_resource_attributes" do
-        allow(Party).to receive(:skipped_alchemy_resource_attributes) { %w(hidden_value) }
-        expect(subject).to include({name: "id", type: :integer})
-        expect(subject).not_to include({name: "hidden_value", type: :string})
+        Party.define_singleton_method(:skipped_alchemy_resource_attributes) { %w(hidden_value) }
+        expect(subject).to include({ name: "id", type: :integer })
+        expect(subject).not_to include({ name: "hidden_value", type: :string })
+        Party.singleton_class.remove_method(:skipped_alchemy_resource_attributes)
       end
 
       context "when resource_relations are not defined" do
         it "includes the attribute" do
-          expect(subject.detect { |a| a[:name] == "location_id" }).to eq({name: "location_id", type: :integer})
+          expect(subject.detect { |a| a[:name] == "location_id" }).to eq({ name: "location_id", type: :integer })
         end
       end
 
       context "with restricted attributes set" do
-        before do
-          allow(Party).to receive(:restricted_alchemy_resource_attributes) do
-            [{name: "name", type: :string}]
-          end
-        end
-
         it "should include the restricted attributes" do
+          Party.define_singleton_method(:restricted_alchemy_resource_attributes) do
+            [{ name: "name", type: :string }]
+          end
           expect(subject).to include(name: "name", type: :string)
+          Party.singleton_class.remove_method(:restricted_alchemy_resource_attributes)
         end
       end
     end
 
     context "when `skipped_alchemy_resource_attributes` is defined as class method in the model" do
-      let(:custom_skipped_attributes) { %w(hidden_name) }
-
-      before do
-        allow(Party).to receive(:skipped_alchemy_resource_attributes) do
-          custom_skipped_attributes
-        end
-      end
-
       describe "#attributes" do
         it "does not return the attributes returned by that method" do
+          Party.define_singleton_method(:skipped_alchemy_resource_attributes) do
+            %w(hidden_name)
+          end
           expect(resource.attributes.detect { |a| a[:name] == "hidden_name" }).to be_nil
           expect(resource.attributes.detect { |a| a[:name] == "name" }).not_to be_nil
+          Party.singleton_class.remove_method(:skipped_alchemy_resource_attributes)
         end
       end
     end
@@ -240,36 +233,32 @@ module Alchemy
       end
 
       context "when model provides custom defined searchable attribute names" do
-        before do
-          allow(Party).to receive(:searchable_alchemy_resource_attributes) do
+        it "returns the custom defined attribute names from the model" do
+          Party.define_singleton_method(:searchable_alchemy_resource_attributes) do
             %w(date venue age)
           end
-        end
-
-        it "returns the custom defined attribute names from the model" do
           is_expected.to eq(["date", "venue", "age"])
+          Party.singleton_class.remove_method(:searchable_alchemy_resource_attributes)
         end
       end
 
       context "when model has a relation defined" do
-        before do
-          allow(Party).to receive(:alchemy_resource_relations) do
+        it "also includes the searchable attributes of the relation" do
+          Party.define_singleton_method(:alchemy_resource_relations) do
             {
-              location: {attr_method: "name", attr_type: :string},
+              location: { attr_method: "name", attr_type: :string },
             }
           end
-        end
-
-        it "also includes the searchable attributes of the relation" do
           is_expected.to eq(["name", "hidden_value", "description", "location_name"])
+          Party.singleton_class.remove_method(:alchemy_resource_relations)
         end
       end
 
       context "with an array attribute" do
         let(:columns) do
           [
-            double(:column, {name: "name", type: :string, array: false}),
-            double(:column, {name: "languages", type: :string, array: true}),
+            double(:column, { name: "name", type: :string, array: false }),
+            double(:column, { name: "languages", type: :string, array: true }),
           ]
         end
 
@@ -292,21 +281,19 @@ module Alchemy
 
       let(:columns) do
         [
-          double(:column, {name: "name", type: :string}),
-          double(:column, {name: "title", type: :string}),
-          double(:column, {name: "synced_at", type: :datetime}),
-          double(:column, {name: "remote_record_id", type: :string}),
+          double(:column, { name: "name", type: :string }),
+          double(:column, { name: "title", type: :string }),
+          double(:column, { name: "synced_at", type: :datetime }),
+          double(:column, { name: "remote_record_id", type: :string }),
         ]
       end
 
-      before do
-        allow(Party).to receive(:restricted_alchemy_resource_attributes) do
+      it "does not contain restricted attributes" do
+        Party.define_singleton_method(:restricted_alchemy_resource_attributes) do
           [:synced_at, :remote_record_id]
         end
-      end
-
-      it "does not contain restricted attributes" do
-        is_expected.to eq([{name: "name", type: :string}, {name: "title", type: :string}])
+        is_expected.to eq([{ name: "name", type: :string }, { name: "title", type: :string }])
+        Party.singleton_class.remove_method(:restricted_alchemy_resource_attributes)
       end
     end
 
@@ -315,19 +302,19 @@ module Alchemy
 
       let(:columns) do
         [
-          double(:column, {name: "title", type: :string}),
-          double(:column, {name: "name", type: :string}),
-          double(:column, {name: "updated_at", type: :datetime}),
-          double(:column, {name: "public", type: :boolean}),
+          double(:column, { name: "title", type: :string }),
+          double(:column, { name: "name", type: :string }),
+          double(:column, { name: "updated_at", type: :datetime }),
+          double(:column, { name: "public", type: :boolean }),
         ]
       end
 
       it "sorts by name, and updated_at" do
         is_expected.to eq([
-          {name: "name", type: :string},
-          {name: "title", type: :string},
-          {name: "public", type: :boolean},
-          {name: "updated_at", type: :datetime},
+          { name: "name", type: :string },
+          { name: "title", type: :string },
+          { name: "public", type: :boolean },
+          { name: "updated_at", type: :datetime },
         ])
       end
     end
@@ -338,7 +325,7 @@ module Alchemy
       before do
         allow(Event).to receive(:alchemy_resource_relations) do
           {
-            location: {attr_method: "name", attr_type: :string},
+            location: { attr_method: "name", attr_type: :string },
           }
         end
       end

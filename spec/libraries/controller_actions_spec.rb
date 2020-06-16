@@ -20,8 +20,10 @@ describe "Alchemy::ControllerActions", type: "controller" do
   describe "#current_alchemy_user" do
     context "with default current_user_method" do
       it "calls current_user by default" do
+        controller.class.define_method(:current_user) { DummyUser.new }
         expect(controller).to receive :current_user
         controller.send :current_alchemy_user
+        controller.class.remove_method(:current_user)
       end
     end
 
@@ -33,8 +35,10 @@ describe "Alchemy::ControllerActions", type: "controller" do
       end
 
       it "calls the custom method" do
+        controller.class.define_method(:current_admin) { DummyUser.new }
         expect(controller).to receive :current_admin
         controller.send :current_alchemy_user
+        controller.class.remove_method(:current_admin)
       end
     end
 

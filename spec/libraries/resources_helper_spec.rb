@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../../lib/alchemy/i18n"
-require_relative "../../lib/alchemy/resource"
-require_relative "../../lib/alchemy/resources_helper"
+require "rails_helper"
 
 module Namespace
   class MyResource
@@ -12,7 +10,7 @@ end
 module EngineResource
 end
 
-class ResourcesController
+class ResourcesController < ApplicationController
   include Alchemy::ResourcesHelper
 
   def resource_handler
@@ -20,11 +18,11 @@ class ResourcesController
   end
 end
 
-class ResourcesControllerForEngine
+class ResourcesControllerForEngine < ApplicationController
   include Alchemy::ResourcesHelper
 
   def resource_handler
-    @resource_handler ||= Alchemy::Resource.new("admin/engine_resources", {"engine_name" => "my_engine"})
+    @resource_handler ||= Alchemy::Resource.new("admin/engine_resources", { "engine_name" => "my_engine" })
   end
 end
 
@@ -32,11 +30,13 @@ describe Alchemy::ResourcesHelper do
   let(:controller) { ResourcesController.new }
   let(:resource_item) { double("resource-item") }
 
-  before {
-    allow(controller).to receive(:main_app).and_return "main_app_proxy"
+  around do |example|
+    controller.class.define_method(:main_app) { "main_app_proxy" }
     controller.instance_variable_set("@my_resource", resource_item)
     controller.instance_variable_set("@my_resources", [resource_item])
-  }
+    example.run
+    controller.class.remove_method(:main_app)
+  end
 
   describe "path-helpers" do
     describe "#resource_url_proxy" do
@@ -46,10 +46,11 @@ describe Alchemy::ResourcesHelper do
 
       context "when resource is in engine" do
         let(:controller_for_engine) { ResourcesControllerForEngine.new }
-        before { allow(controller_for_engine).to receive("my_engine").and_return("my_engine_proxy") }
 
         it "returns the engine's proxy" do
+          controller_for_engine.class.define_method(:my_engine) { "my_engine_proxy" }
           expect(controller_for_engine.resource_url_proxy).to eq("my_engine_proxy")
+          controller_for_engine.class.remove_method(:my_engine)
         end
       end
     end
@@ -119,7 +120,7 @@ describe Alchemy::ResourcesHelper do
     subject { controller.render_attribute(resource_item, attributes, options) }
 
     let(:options) { {} }
-    let(:attributes) { {name: "name"} }
+    let(:attributes) { { name: "name" } }
 
     it "should return the value from resource attribute" do
       allow(resource_item).to receive(:name).and_return("my-name")
@@ -167,7 +168,7 @@ describe Alchemy::ResourcesHelper do
       end
 
       context "but with options[:truncate] set to 10" do
-        let(:options) { {truncate: 10} }
+        let(:options) { { truncate: 10 } }
 
         it "does not truncate the values" do
           expect(subject.length).to eq(10)
@@ -175,7 +176,7 @@ describe Alchemy::ResourcesHelper do
       end
 
       context "but with options[:truncate] set to false" do
-        let(:options) { {truncate: false} }
+        let(:options) { { truncate: false } }
 
         it "does not truncate the values" do
           expect(subject.length).to eq(51)
@@ -203,7 +204,7 @@ describe Alchemy::ResourcesHelper do
       end
 
       context "with options[:datetime_format] set to other format" do
-        let(:options) { {datetime_format: "OTHR"} }
+        let(:options) { { datetime_format: "OTHR" } }
 
         it "uses this format" do
           expect(controller).to receive(:l).with(now, format: "OTHR")
@@ -232,7 +233,7 @@ describe Alchemy::ResourcesHelper do
       end
 
       context "with options[:time_format] set to other format" do
-        let(:options) { {time_format: "OTHR"} }
+        let(:options) { { time_format: "OTHR" } }
 
         it "uses this format" do
           expect(controller).to receive(:l).with(now, format: "OTHR")
