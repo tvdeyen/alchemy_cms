@@ -13,13 +13,18 @@ $dark-orange: #eca96e;
 $very-dark-orange: darken($dark-orange, 20%);
 $white: #fff;
 
+$dark-black: #1f272b;
+
 $text-color: rgba($dark-gray-blue, 0.8) !default;
+$dark-text-color: rgba($white, 0.8) !default;
 $muted-text-color: rgba($dark-gray-blue, 0.5) !default;
 $icon-color: rgba($dark-gray-blue, 0.75) !default;
+$dark-icon-color: rgba($white, 0.75) !default;
 $linked-color: $orange !default;
 $anchor-color: $very-dark-orange !default;
 
 $body-background-color: $light-gray !default;
+$body-dark-background-color: $dark-black !default;
 
 $default-font-family: "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif !default;
 $mono-font-family: Menlo, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace !default;
@@ -36,6 +41,7 @@ $dialog-box-shadow: 0 8px 16px rgba(35, 35, 35, 0.5) !default;
 $dialog-overlay-color: rgb(100, 100, 100) !default;
 $dialog-overlay-opacity: 0.4 !default;
 $dialog-background-color: $light-gray !default;
+$dialog-dark-background-color: $dark-black !default;
 
 $default-padding: 4px !default;
 $default-margin: $default-padding !default;
@@ -121,10 +127,12 @@ $main-menu-text-color: $white !default;
 $main-menu-icon-color: $white !default;
 $main-menu-entry-max-width: 110px !default;
 $toolbar-bg-color: $medium-gray !default;
+$toolbar-dark-bg-color: #2a3337 !default;
 $toolbar-height: 46px !default;
 $element-toolbar-height: 37px !default;
 $header-height: 29px !default;
 $header-background: #d8d8d8 !default;
+$dark-header-background: $dark-black !default;
 $text-shadow-light: rgba($white, 0.5) 0 0 4px !default;
 $transition-duration: 250ms !default;
 $transition-easing: linear !default;
@@ -137,6 +145,8 @@ $table-row-even-background-color: $white !default;
 $table-row-odd-background-color: rgba($white, 0.5) !default;
 $table-row-hover-color: rgba($light_yellow, 0.5) !default;
 
+$elements-window-background: $light-gray;
+$elements-window-dark-background: $dark-black;
 $elements-window-width: 22.5vw !default;
 $elements-window-min-width: 400px !default;
 $element-header-bg-color: $medium-gray !default;
