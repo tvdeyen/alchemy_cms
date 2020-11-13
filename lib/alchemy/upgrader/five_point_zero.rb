@@ -36,6 +36,11 @@ module Alchemy
           log "Root page not found.", :skip
         end
       end
+
+      def install_npm_module
+        desc "Add @alchemy_cms/admin npm module"
+        run "yarn add @alchemy_cms/admin"
+      end
     end
   end
 end

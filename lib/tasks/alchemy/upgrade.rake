@@ -42,6 +42,7 @@ namespace :alchemy do
         "alchemy:upgrade:5.0:install_gutentag_migrations",
         "alchemy:upgrade:5.0:remove_layout_roots",
         "alchemy:upgrade:5.0:remove_root_page",
+        "alchemy:upgrade:5.0:install_npm_module",
       ]
 
       desc "Install Gutentag migrations"
@@ -57,6 +58,11 @@ namespace :alchemy do
       desc "Remove root page"
       task remove_root_page: [:environment] do
         Alchemy::Upgrader::FivePointZero.remove_root_page
+      end
+
+      desc "Install alchemy/admin npm module"
+      task install_npm_module: [:environment] do
+        Alchemy::Upgrader::FivePointZero.install_npm_module
       end
     end
   end
