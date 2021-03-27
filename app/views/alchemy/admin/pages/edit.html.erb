@@ -189,6 +189,7 @@
       Alchemy.ElementEditors.init();
       Alchemy.SelectBox('.element-editor');
       Alchemy.Tinymce.init(<%= @page.richtext_contents_ids.to_json %>);
+      Alchemy.Quill.init(document.getElementById('element_area'));
       $('#fixed-elements').tabs().tabs('paging', {
         follow: true,
         followOnSelect: true,

@@ -4,11 +4,12 @@
   data: essence_richtext_editor.data_attributes do %>
   <%= content_label(essence_richtext_editor) %>
   <div class="tinymce_container">
-    <%= text_area_tag(
+    <%= hidden_field_tag(
       essence_richtext_editor.form_field_name,
-      essence_richtext_editor.ingredient || '',
-      class: essence_richtext_editor.tinymce_class_name,
-      id: "tinymce_#{essence_richtext_editor.id}"
+      essence_richtext_editor.ingredient
     ) %>
+    <div class="quill-editor">
+      <%= essence_richtext_editor.ingredient %>
+    </div>
   </div>
 <% end %>
