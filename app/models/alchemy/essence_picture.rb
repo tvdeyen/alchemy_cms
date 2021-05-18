@@ -144,6 +144,7 @@ module Alchemy
     end
 
     # Settings for the graphical JS image cropper
+
     def image_cropper_settings
       Alchemy::ImageCropperSettings.new(
         render_size: point_from_string(render_size.presence || content.settings[:size]),
@@ -174,6 +175,8 @@ module Alchemy
         mask[0] / (image_file_width || 1),
         mask[1] / (image_file_height || 1),
       ].max
+
+      return [image_file_width, image_file_height] if zoom.zero?
 
       [(mask[0] / zoom), (mask[1] / zoom)].map(&:round)
     end
