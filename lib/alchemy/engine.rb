@@ -59,6 +59,12 @@ module Alchemy
           Alchemy.user_class.stampable(stamper_class_name: Alchemy.user_class.name)
         end
       end
+      if config.respond_to?(:assets)
+        # Do not precompile Turbo assets, because we use the importmap and it might break apps using Uglifier
+        config.assets.precompile -= Turbo::Engine::PRECOMPILE_ASSETS
+        # Do not precompile importmap-rails assets, because we do not use the shim and it might break apps using Uglifier
+        config.assets.precompile -= %w[es-module-shims.js es-module-shims.min.js es-module-shims.js.map]
+      end
     end
 
     initializer "alchemy.webp-mime_type" do
